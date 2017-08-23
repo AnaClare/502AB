@@ -1,0 +1,172 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath}
+
+\title{Math 502AB - Lecture 1}
+\author{Dr. Jamshidian}
+\date{August 21, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Chapter 1: Probability Theory}
+
+\begin{itemize}
+    \item The foundation of statistics is probability theory, and the foundation of probability theory is set theory.
+    \item \textbf{Definition:} 
+    
+    The set of all possible outcomes of an experiment is referred to as the \textbf{sample space}, and it is denoted by $\mathcal{S}$
+    
+    \item \textbf{Definition:} 
+    
+    An \textbf{event} is defined as any subset of the sample space
+    
+    \item Our task: Define a probability function $P(\cdot)$ on subsets of $\mathcal{S}$ which give us probabilities
+    
+    \item \textbf{Example:}
+    
+    Say you flip a coin two times. The sample space is then:
+    \begin{equation*}
+        \mathcal{S} = \{ HH, HT, TH, TT\}
+    \end{equation*}
+\end{itemize}
+
+
+\subsection{Basic Definitions}
+\begin{enumerate}
+    \item \textbf{Probability Space:} A \textit{probability space} is a triplet 
+    \begin{equation*}
+        (\mathcal{S}, \mathcal{B}, P)
+    \end{equation*}
+    
+    where $\mathcal{S}$ is a set of outcomes, $\mathcal{B}$ is a set of events (A $\sigma$-algebra, or Borel field, which is defined as sets over your sample space), and $P$ which is a function that maps $P:\mathcal{B} \rightarrow [0,1]$, i.e. assigning probabilities to elements of $\mathcal{B}$ (events).
+    
+    \item \textbf{$\sigma$-algebra:} If $\mathcal{B}$ is a $\sigma$-algebra, then it consists of subsets of $\mathcal{S}$ which satisfy the following properties:
+    \begin{enumerate}
+        \item $\emptyset \in \mathcal{B}$
+        \item $A \in \mathcal{B} \Rightarrow A^c \in \mathcal{B}$
+        \item If $A_1, A_2, ... \in \mathcal{B}$, then $\bigcup\limits_{i=1}^{\infty} A_{i} \in \mathcal{B}$
+    \end{enumerate}
+    
+    \textbf{Examples of $\sigma$-algebra, or Borel Fields:}
+    \begin{enumerate}
+    \item Trivial $\sigma$-algebra (Borel field)
+    
+    \begin{equation*}
+        \mathcal{B} = \{\emptyset, \mathcal{S}\}
+    \end{equation*}
+    
+    \item Consider the set $\mathcal{S}$ = \{H,T\}, the set of outcomes of a coin flip. Then a $\sigma$-algebra would be:
+    \begin{equation*}
+        \mathcal{B} = \{\emptyset, \{H\}, \{T\}, \{H,T\}\}
+    \end{equation*}
+    
+    \item Given the sample space $\mathcal{S} = (-\infty, \infty)$, then the $\sigma$-algebra is the set of all intervals of the form $[a,b]$, $(a,b]$, $[a,b)$, $(a,b)$
+    
+    \end{enumerate}
+    
+    \item Without $P$, the couple $(\mathcal{S},\mathcal{B})$ is called a \textbf{measurable space}. This means that, if we have these two things, then we can put a measure on $\mathcal{B}$
+    
+    \item \textbf{Measure:} A non-negative countably additive set function, that is, a function:
+    \begin{equation*}
+        \mu: \mathcal{B} \rightarrow \mathbb{R}
+    \end{equation*}
+    
+    with the following parameters:
+    \begin{enumerate}
+        \item $\mu(A) \geq \mu(\emptyset)=0$, $\forall A \in \mathcal{B}$
+        \item If $A_1, A_2,... \in \mathcal{B}$ is a countable or finite sequence of disjoint sets in $\mathcal{B}$, then:
+        \begin{equation*}
+            \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) = \sum\limits_{i=1}^\infty \mu(A_i)
+        \end{equation*}
+        
+        Essentially, since the sets are \textit{disjoint} we can add together the measures. 
+    \end{enumerate}
+    \item \textbf{Probability Measure:} Following up from the previous definition of \textit{measure space}, if $\mu(\mathcal{S}) = 1$, we call $\mu$ a \textbf{probability measure}, and we denote it by $P(\cdot)$.
+\end{enumerate}
+    
+    \subsection{Axioms of Probability}
+    
+    To sum, a probability measure, $P(\cdot)$, is defined on $(\mathcal{S},\mathcal{B})$ with the following properties (axioms):
+    \begin{enumerate}
+        \item $P(A) \geq 0$, $\forall A \in \mathcal{B}$
+        \item $P(\mathcal{S}) = 1$
+        \item If $A_1, A_2,...$ are disjoint, then $P(\bigcup\limits_{i=1}^{\infty} A_{i}) = \sum\limits_{i=1}^\infty P(A_i)$. This is also referred to as \textbf{Countable Additivity}.
+    \end{enumerate}
+
+\subsubsection{A Few Results:}
+\begin{enumerate}
+    \item $P(\emptyset) = 0$
+    
+    \textbf{Proof:} Let $A_1 = A_2 = ...$ be a set of $\emptyset$ sets. Obviously, if they are empty sets, then they are disjoint ($A_i \cap A_j = \emptyset$, $\forall i \neq j$). By set theory, we have:
+    \begin{equation*}
+        P(\emptyset) = P(\bigcup\limits_{i=1}^{\infty} A_{i})
+    \end{equation*}
+    
+    Using the third axiom, we can write this as:
+    \begin{equation*}
+    \begin{split}
+        P(\bigcup\limits_{i=1}^{\infty} A_{i}) &= \sum\limits_{i=1}^\infty P(A_i)\\
+        \Rightarrow P(\emptyset) &= \sum\limits_{i=1}^\infty P(\emptyset)\\
+        &\Rightarrow P(\emptyset) = 0, \quad \text{by axiom 1}
+    \end{split}
+    \end{equation*}
+    
+    \item $P(A^c) = 1-P(A)$
+    
+    \item If $A$ and $B$ are two events $P(B\cap A^c) = P(B\\A) = P(B)-P(A\cap B)$
+    
+    \item $P(A\cup B) = P(A) + P(B) - P(A\cap B)$
+    
+    \item $A \subset B \Rightarrow P(A) \leq P(B)$
+\end{enumerate}
+
+\subsubsection{A Few Notes:}
+
+\begin{itemize}
+    \item Countable Additivity $\Rightarrow$ Finite Additivity
+    
+    \item \textbf{Finite Additivity:} If $A_1, A_2,...,A_n$ are $n$ disjoint sets, then:
+    
+    \begin{equation*}
+         P\left(\bigcup\limits_{i=1}^{n} A_{i}\right) = \sum\limits_{i=1}^n P(A_i)
+    \end{equation*}
+    
+    \textbf{Proof:} Let $A_{n+1} = A_{n+2} = ...$ all be $\emptyset$. Then we have:
+    
+    \begin{equation*}
+    \begin{split}
+         P\left(\bigcup\limits_{i=1}^{n} A_{i}\right) &= P\left[\left(\bigcup\limits_{i=1}^{n} A_{i}\right) \bigcup \left(\bigcup\limits_{i=n+1}^{\infty} A_{i}\right)\right]\\
+         &= P\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) = \sum\limits_{i=1}^\infty P(A_i), \quad \text{by countable additivity}\\
+         &= \sum\limits_{i=1}^n P(A_i) + \sum\limits_{i=n+1}^\infty P(A_i)\\
+         &= \sum\limits_{i=1}^n P(A_i), \quad \text{as wanted.}
+    \end{split}
+    \end{equation*}
+\end{itemize}
+
+\subsubsection{$P(\cdot)$ is a Continuous set Function}
+
+In calculus, we said $f(x)$ is continuous at $x=a$ if:
+
+\begin{equation*}
+f(a) = f\left(\lim_{x\to a} x\right) = \lim_{x\to a} f(x)    
+\end{equation*}
+
+\noindent Let $A_1 \supset A_2 \supset ...$ be a decreasing sequence of events. Then:
+\begin{equation*}
+    \lim_{n\to\infty} A_n = \bigcap\limits_{i=1}^\infty A_i
+\end{equation*}
+
+\noindent Similarly, let $A_1 \subset A_2 \subset ...$ be a sequence of increasing events. Then:
+
+\begin{equation*}
+    \lim_{n\to\infty} A_n = \bigcup\limits_{i=1}^\infty A_i
+\end{equation*}
+
+\noindent We will prove next class a theorem which will tell us:
+
+\begin{equation*}
+    P\left[ \lim_{n\to\infty} A_i \right] = \lim_{n\to\infty} P(A_i)
+\end{equation*}
+
+\end{document}
