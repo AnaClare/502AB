@@ -1,0 +1,209 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 6}
+\author{Dr. Jamshidian}
+\date{September 11, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1 (HW review not in $\LaTeX$)}
+
+\textbf{Theorem:} 
+
+Let $X$ and $Y$ be two random variables such that all of their \textit{moments} exist. Then:
+\begin{enumerate}
+    \item If $X$ and $Y$ have a bounded support, then
+    \begin{equation*}
+        F_x(u) = F_Y(u) \quad \forall u \quad \text{iff}\quad E(X^r) = E(Y^r) \quad \forall r = 0,1,2,...
+    \end{equation*}
+    \item If the MGF exists and $M_X(t) = M_Y(t)$ $\forall t$ in a neighborhood of zero, then $F_X(u) = F_Y(u)$ for all $u$
+\end{enumerate}
+
+
+\section{Lecture - Part 2}
+
+Bounded support is important in (1) of the previous theorem.
+\begin{equation*}
+    x_1 \sim f_1(x) = \frac{1}{\sqrt{2\pi}x} e^{-(\log x)^2/2}, \quad x \geq 0
+\end{equation*}
+
+\begin{equation*}
+    x_2 \sim f_2(x) = f_1(x) [1 + \sin(2\pi \log x ) ], \quad x \geq 0
+\end{equation*}
+
+\begin{equation*}
+    E(x_1^r) = E(x_2^r), \quad r = 0,1,2,...
+\end{equation*}
+
+\begin{equation*}
+    \int\limits_0^\infty x^r \frac{1}{\sqrt{2\pi}x} e^{-(\log x)^2/2} dx = \int\limits_0^\infty x^r (1+ \sin 2\pi \log x) f_1(x) dx
+\end{equation*}
+
+\noindent The idea is that these two integrals are the same \textit{for all values} of $r$. If the support is \textit{not} bounded, and all of the moments are the same, this \textbf{does not mean} the density is the same.
+
+
+\subsection{Convergence in Distribution}
+
+\textbf{Definition:} 
+
+Let $X_1, X_2,...$ be a sequence of random variables with corresponding \textit{cdf}'s $F_{X_1}, F_{X_2},...$. Furthermore, let $X$ be a random variable with \textit{cdf} $F_X$. We say that $X_i$'s \textbf{converge in distribution} to $X$ if 
+\begin{equation*}
+    \lim\limits_{n\to \infty} F_{X_n}(x) = F_X(x)
+\end{equation*}
+
+\noindent or every point $x$ at which $F_X$ is continuous.
+
+\subsubsection{Example:}
+\begin{enumerate}
+    \item Consider a sequence of random variables $X_1$, $X_2$,... with corresponding \textit{cdf}'s:
+    \begin{equation*}
+        F_X(x) = 1-\left(1+\frac{x}{n}\right)^{-n} \quad x > 0
+    \end{equation*}
+    
+    \begin{equation*}
+    \begin{split}
+        \lim_{n\to\infty} F_X(n) &= 1-e^{-x} \quad x > 0\\
+        X_i &\xrightarrow{D} X \sim exp(1)
+    \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\noindent \textbf{Theorem:} 
+
+If $X_1, X_2,...$ is a sequence of random variables with \textit{mgf}'s $M_{X_1}(t), M_{X_1}(t),...$ respectively and if
+\begin{equation*}
+    \lim_{n\to\infty} M_{X_n}(t) = M_X(t)
+\end{equation*}
+
+\noindent for all $t$ in a neighbohood of zero, where $M_X(t)$ is the \textit{mgf} of a random variable $X$, then $ X_n &\xrightarrow{D} X$
+\\~\\
+
+\noindent One identity that is useful a lot is:
+\begin{equation*}
+    \lim_{n\to\infty} \left(1 + \frac{a_n}{n} \right)^n = e^a \quad \text{if } \lim_{n\to\infty} a_n = a
+\end{equation*}
+
+\noindent \textbf{Example:} 
+
+Consider the \textit{mgf} of $binomial(n,p)$ [i.e. $X_n \sim binomial(n,p)$]
+\begin{equation*}
+    \begin{split}
+        M_{X_n}(t) &= \left[pe^t + (1-p)\right]^n\\
+                    &= \left[1 + \frac{1}{n}(e^t-1)np \right]^n
+    \end{split}
+\end{equation*}
+
+Suppose $np \to \lambda$, as $n \to \infty$, then:
+\begin{equation*}
+    \lim_{n\to\infty} M_{X_n}(t) = e^{\lambda(e^t-1)}
+\end{equation*}
+\begin{equation*}
+    \Rightarrow X_n \to X \sim Poisson(\lambda)
+\end{equation*}
+
+\noindent \textbf{Example: 38(b)}
+
+$Y = 2px$, $p\downarrow 0$
+\begin{equation*}
+\begin{split}
+    M_Y(t) &= E(e^{2tpx}) = M_X(2tp)\\
+        &= \left( \frac{p}{1-(1-p)e^{2pt}} \right)^r \xrightarrow[p \downarrow 0]{WTS} \left(\frac{1}{1-2t}\right)^r
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+    \lim_{p\to 0} \left[ \frac{p}{1-(1-p)e^{2pt}}\right] &= \lim_{p\to 0} \left[ \frac{p}{1-(1-p)[1+2pt + \frac{(2pt)^2}{2!} + \mathcal{O}(p^2)} \right]\\
+   &= \lim_{p\to 0} \left[ \frac{p}{1-1+ p - 2pt + 2p^2t - \frac{(2pt)^2}{2} + \mathcal{O}(p^2)} \right]\\
+   &= \lim_{p\to 0} \left[ \frac{p}{p[1-2t+ \mathcal{O}(p)]} \right] = \frac{1}{1-2t}
+\end{split}
+\end{equation*}
+
+\\~\\
+
+\noindent \textbf{Theorem:}
+
+If $Y= aX + b$, then:
+\begin{equation*}
+    M_Y(t) =  e^{bt}M_X(at)
+\end{equation*}
+
+\textbf{Proof:}
+\begin{equation*}
+M_Y(t) = E(e^{tY}) = E(p^{t(ax+b)}) = e^{tb}E(e^{atx}) = e^{tb}M_X(at)    
+\end{equation*}
+\\~\\
+\noindent \textbf{Leibnitz' Rule:} If $f(x,\theta), a(\theta), b(\theta)$ are differentiable function with respect to $\theta$, then:
+\begin{equation*}
+\begin{split}
+    \frac{d}{d\theta} \int\limits_{a(\theta)}^{b(\theta)} f(x,\theta) dx = f(b(\theta),\theta) \frac{d}{d\theta} b(\theta) &- f(a(\theta),\theta) \frac{d}{d\theta} a(\theta)\\ 
+    &+ \int\limits_{a(\theta)}^{b(\theta)}\frac{\partial}{\partial \theta} f(x,\theta)dx
+\end{split}
+\end{equation*}
+
+\subsection{Chapter 3: Common Families of Distributions}
+
+\begin{enumerate}
+    \item \textbf{Discrete Uniform}
+    \begin{equation*}
+        f(X=x|N) = \frac{1}{N} \quad x = 1,2,...,N
+    \end{equation*}
+
+    To come up with the expectation and variance, there are two identities which are useful:
+    \begin{equation*}
+        \sum\limits_{i=1}^n i = \frac{n(n+1)}{2} \quad \sum\limits_{i=1}^n i^2 = \frac{n(n+1)(2n+1)}{6}
+    \end{equation*}
+    
+    \begin{equation*}
+        E(X) = \sum\limits_{x=1}^N X \frac{1}{N} = \frac{N+1}{2}, \quad Var(X) = \frac{(N+1)(N-1)}{2}
+    \end{equation*}
+    
+    \item \textbf{Bernoulli Random Variable} $X \sim Bernoulli(p)$
+    \begin{equation*}
+        f(x=0|p) = 1-p \quad f(x=1|p) = p
+    \end{equation*}
+    
+    \begin{equation*}
+        E(X) = p, \quad Var(X) = p(1-p)
+    \end{equation*}
+    
+    \item \textbf{Binomial Random Variable}: Let $X_1, X_2,...,X_n \overset{iid}{\sim} Bernoulli(p) $
+    \begin{equation*}
+        X = \sum\limits_{i=1}^n x_i \sim Binomial(n,p)
+    \end{equation*}
+    
+    \begin{equation*}
+        f(x|n,p) = {n \choose x} p^x(1-p)^{n-x}, \quad x = 0,1,...,n
+    \end{equation*}
+    
+    \begin{equation*}
+        E(X) = np, \quad Var(X) = np(1-p), \quad M_X(t) = [pe^t + (1-p)]^n
+    \end{equation*}
+    
+    \item \textbf{Poisson Distribution:} $X \sim Poisson(\lambda)$
+    \begin{equation*}
+        f(x|\lambda) = e^{-\lambda} \frac{\lambda^x}{x!} \quad x = 0,1,2,...
+    \end{equation*}
+    
+    \begin{equation*}
+        E(X) = \lambda, \quad Var(X) = \lambda
+    \end{equation*}
+    
+    \item \textbf{Hypergeometric Distribution:} Suppose that you have $M$ red balls and $N-M$ white balls (total of $N$ balls). Say we want to select $K$ balls without replacement. If $X$ is the number of red balls, then:
+    \begin{equation*}
+        f(x|N,M,K) = \frac{{M \choose X} {{N-M}\choose{K-X}}}{{N\choose K}}
+    \end{equation*}
+    
+    \begin{equation*}
+        x = 0,...,K, \quad M \geq X, \quad N-M \geq K-X
+    \end{equation*}
+    
+    If this was done with replacement, it would be \textit{binomial}. \textbf{Without} replacement it is \textit{hypergeometric}
+    
+\end{enumerate}    
+    
+
+\end{document}
