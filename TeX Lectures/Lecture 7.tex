@@ -1,0 +1,301 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 7}
+\author{Dr. Jamshidian}
+\date{September 13, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Poisson Approximation To Binomial}
+
+Let $X \sim binomial(n,p)$. Then:
+
+\begin{equation*}
+        \begin{split}
+        \frac{f(k|n,p)}{f(k-1|n,p)} &= \frac{(n-k+1)p}{k(1-p)}\\
+        &= \frac{np-kp+p}{k-kp}
+    \end{split}    
+\end{equation*}
+
+\begin{itemize}
+    \item The way the poisson approximation to the binomial holds is when $n \to \infty$, $p \to 0$, and $np \to \lambda$
+    
+    \begin{equation*}
+        \frac{f(k|n,p)}{f(k-1|n,p)} = \frac{\lambda}{k} \quad (*)
+    \end{equation*}
+    
+    \item For large $n$ and small $p$: $np \equiv \lambda,$ $p \equiv \frac{\lambda}{n}$
+    
+    \begin{equation*}
+        f(0 | n,p) = (1-p)^n = \left(1-\frac{\lambda}{n}\right)^n \to e^{-\lambda}
+    \end{equation*}
+    
+    \textbf{Recall:} $Y \sim poisson(\lambda)$ means:
+    
+    \begin{equation*}
+        f_Y(k|\lambda) = \frac{e^{-\lambda}\lambda^k}{k!}
+    \end{equation*}
+    
+    So we now have the convergence to $e^{-\lambda} = f_Y(0|\lambda)$. Similarly, we have:
+    
+    \begin{equation*}
+        f(1 | n,p) \cong \lambda f(0|n,p) \to \lambda e^{-\lambda} = f_Y(1|\lambda)
+    \end{equation*}
+    
+    \begin{equation*}
+        f(2|n,p) \cong \frac{1}{2}\lambda f(1|n,p) \to \frac{1}{2} \lambda^2 e^{-\lambda} = f_Y(2|\lambda)
+    \end{equation*}
+    
+    And, by induction, you can show that, in general:
+    \begin{equation*}
+        f(k|n,p) \to \frac{1}{k!} \lambda^k e^{-\lambda} = f_Y(k|\lambda)
+    \end{equation*}
+    
+\end{itemize}
+
+
+\subsection{Deriving the Poisson \textit{pmf}}
+\begin{equation*}
+    f_Y(k|\lambda) = \frac{e^{-\lambda}\lambda^k}{k!}
+\end{equation*}
+
+Consider events that occur at random points in time, and consider the number of events in a given time interval. In particular, consider an interval of length $t$ and divide this interval into $n$ equal sub-intervals.
+
+(Insert cool number line photo here)
+
+Let $h = \frac{t}{n}$. We would like to show that the number of events in the interval $[0,t]$ has a \textit{poisson} distribution.
+\\~\\
+\noindent \textbf{Assumptions:}
+\begin{enumerate}
+    \item The probability that exactly one event occurs in a given interval of length $h$ is equal to $\lambda h + o(h)\quad \left[\frac{o(h)}{h} \to 0 \right]$. In other words, this is linear in $h$. The $o(h)$ term goes to zero faster than $h$
+    \item For small $h$, the probability that two or more events occur in an interval of length $h$ is $o(h)$
+    \item Occurrences of events in disjoint sub-intervals are independent
+\end{enumerate}
+
+\noindent Under these assumptions, we will show that the number of events in the interval $[0,t]$ has a \textit{poisson} distribution with parameter $\lambda t$.
+
+\begin{itemize}
+    \item Let $N(t)$ be the number of events in the interval $[0,t]$. We now want to find:
+\begin{equation*}
+    P\left[ N(t) = k \right] = ?
+\end{equation*}
+
+\item Let $E=k$ of the intervals contain exactly one event, and the remaining $n-k$ intervals contain zero events.
+
+\item The above implies $E^c$ is at least one interval containing two or more events.
+\end{itemize}
+
+\begin{equation*}
+    P\left[ N(t) = k \right] = P\left\{ \left[ N(t) = k \right] \cap E \right\} + P\left\{ \left[ N(t) = k \right] \cap E^c\right\}
+\end{equation*}
+
+Letting the first intersection equal $A$ and the second intersetion equal $B$, we can see that $B \subset E^c$ implies: 
+
+\begin{equation*}
+\begin{split}
+    P(B) &\leq P(E^c)\\
+    &= P \left[\bigcup\limits_{i=1}^n \text{Interval } i \text{ contains two or more events} \right]\\
+    &\leq \sum\limits_{i=1}^n P\left(\text{Interval } i \text{ contains two or more events}\right)\\
+    &= \sum\limits_{i=1}^n o(h) = \sum\limits_{i=1}^n o\left(\frac{t}{n}\right) \to 0 \quad \text{as } n \to \infty
+\end{split}
+\end{equation*}
+
+Thus, $P(B) \to 0$ as $n \to \infty$.
+
+We know that $A = E$ since $E \subset \{N(t) = k\}$. $P(E)$ is the probability that $k$ of the intervals contain exactly one event and the remaining $n-k$ intervals contain 0 events.
+
+\begin{equation*}
+    P(\text{Exactly one event occurs in an interval}) = \lambda h + o (h)
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+P(\text{0 Events in an interval}) &= 1 - P(\text{1 in an interval}) - P(\text{2+ in an interval})\\
+&= 1 - (\lambda h + o(h)) - o(h) = 1- \lambda h + o(h)
+\end{split}
+\end{equation*}
+
+There are ${n \choose k}$ possibility for intervals which contain exactly 1 event:
+\begin{equation*}
+    {n \choose k} (\lambda h + o(h))^k (1-\lambda h + o(h))^{n-k} \sim binomial(n,\lambda h + o(h))
+\end{equation*}
+
+In this formula we have $p = \lambda h + o(h)$.
+\begin{equation*}
+\begin{split}
+    \Rightarrow np &= n\lambda h + n o(h) - n \lambda \frac{t}{n} + n o\left(\frac{t}{n}\right)\\
+    p &= \lambda h + o(h) = \lambda \left(\frac{t}{n}\right) + o\left(\frac{t}{n} \right) \rightarrow 0
+\end{split}
+\end{equation*}
+
+\noindent Thus the claim that the \textit{poisson} distribution models ``counts" effectively holds \textit{only when} the assumptions in \textbf{1.2} hold.
+
+\section{Lecture - Part 2: Discrete Distributions}
+
+\subsection{Negative Binomial}
+
+\begin{equation*}
+    E(Y) = r\left(\frac{1-p}{p}\right), \quad Var(Y) = \frac{r(1-p)}{p^2}
+\end{equation*}
+
+We will show that as $r \to \infty$, $p \to 1$, and $r(1-p) \to \lambda$, then:
+\begin{equation*}
+    NBinom(r,p) \to Poisson(\lambda)
+\end{equation*}
+
+\subsection{Geometric Distribution}
+
+The \textit{geometric distribution} is a special case of the \textit{negative binomial} where $r = 1$, making $X$ ``the number of trials until your first success". 
+
+\begin{equation*}
+    f_X(x|p) = p(1-p)^{x-1} \quad x = 1,2,...
+\end{equation*}
+
+\begin{equation*}
+    E(X) = \frac{1}{p}, \quad Var(x) = \frac{1-p}{p^2}
+\end{equation*}
+
+\subsubsection{Memoryless property of the \textit{geometric distribution}}
+
+For integers $s > t$, we have:
+\begin{equation*}
+    P(X > s | X > t) = P(X > s-t)
+\end{equation*}
+
+\noindent \textbf{Proof:}
+\begin{equation*}
+    \begin{split}
+        P(X>s|X>t) &= \frac{P(X>s \cap X>t)}{P(X>t)}\\
+            &= \frac{P(X>s)}{P(X>t)}\\
+            &= \frac{(1-p)^s}{(1-p)^t} = (1-p)^{s-t}\\
+            &= P(X > s-t)
+    \end{split}
+\end{equation*}
+
+
+
+
+\noindent \textbf{Example:}
+
+Let $X$ be the number of samples required to reach a smoker, with the probability of success $p$. If $s = 10$ and $t = 6$ then:
+\begin{equation*}
+    P(X > 10 | X > 6) = P(X>4)
+\end{equation*}
+
+\section{Lecture - Part 2: Continuous Distributions (Ch 3.3)}
+
+\subsection{Uniform Distribution}
+We say that $X \sim unif[a,b]$ if:
+
+\begin{equation*}
+f_X(x|a,b) = \begin{cases} \frac{1}{b-a} & a \leq X \leq b\\
+                        0 & \text{ otherwise}
+\end{cases}
+\end{equation*}
+
+\begin{equation*}
+    E(X) = \frac{b+a}{2}, \quad Var(x) = \frac{(b-a)^2}{12}
+\end{equation*}
+
+
+\subsection{Gamma Distribution}
+
+\begin{equation*}
+    f(x|\alpha,\beta) = \frac{1}{\Gamma(\alpha)\beta^\alpha} x^{\alpha-1} e^{-x/\beta} \quad x,\alpha,\beta > 0
+\end{equation*}
+
+\subsubsection{Gamma-Poisson Relationship}
+
+Let $\alpha$ be an integer, $X \sim gamma(\alpha,\beta)$, and $Y \sim poisson\left(\frac{x}{\beta}\right)$ for any given $x$. Then
+
+\begin{equation*}
+    P(X\leq x ) = P(Y \geq \alpha)
+\end{equation*}
+
+\noindent \textbf{Proof (by induction)}
+
+\textbf{$\alpha$ = 1}:
+
+    \begin{equation*}
+    \begin{split}
+        P(X\leq x) &= \int\limits_0^x \frac{1}{\Gamma(1)\beta^2} t^{1-1} e^{-t/\beta} dt\\
+        &= \int\limits_0^x \frac{1}{\beta} e^{-t/\beta} = 1- e^{-x/\beta}\\
+        &= P(Y\geq 1)
+    \end{split}
+    \end{equation*}
+    
+Suppose the statement holds for $\alpha = n-1$. That is $P(X \leq x) = P(Y \geq n-1)$. We need to show that the statement holds for $\alpha = n$
+
+\begin{equation*}
+    P(X \leq x ) = P(Y \geq n)
+\end{equation*}
+
+Suppose that $\alpha = n$
+
+\begin{equation*}
+    P(X \leq x) = \int\limits_0^x \frac{1}{\Gamma(n)\beta^\alpha} t^{n-1} e^{-t/\beta}
+\end{equation*}
+
+And... Using integration by parts (let $u = t^{n-1}$ and $dv = e^{-t/\beta}dt$), we can prove it.
+
+\subsection{Exponential distribution}
+
+A special case of $gamma(\alpha,\beta)$ is the $exponential(\beta)$ distribution.
+
+\begin{equation*}
+    X \sim gamma(\alpha = 1, \beta) \iff X \sim exponential(\beta)
+\end{equation*}
+
+The exponential random variable hs memoryless property as well:
+
+\begin{equation*}
+    P(X>s | X>t) = P(X > s-t)
+\end{equation*}
+
+\subsection{Weibull Distribution}
+
+If $X \sim exp(\beta)$ then $Y = X^{1/\gamma}$, with ($\gamma$ > 0), is said to have a $weibull(\gamma,\beta)$ distribution:
+
+\begin{equation*}
+    F_Y(y|\gamma,\beta) = \frac{\gamma}{\beta} y^{\gamma-1} e^{-y^2/\beta} \quad y, \gamma, \beta > 0
+\end{equation*}
+
+\subsection{Normal (Gaussian) Distribution}
+
+If $X \sim N(\mu,\sigma^2)$, then $Z = \frac{x-\mu}{\sigma} \sim N(0,1)$. Thus it is important to know that:
+\begin{equation*}
+    M_Z(t) = e^{t^2/2}
+\end{equation*}
+
+\subsection{Beta Distribution}
+
+We say that $X \sim Beta(\alpha,\beta)$ if:
+
+\begin{equation*}
+    f(x|\alpha,\beta) = \frac{1}{\mathcal{B}(\alpha,\beta)} x^{\alpha-1} (1-x)^{\beta-1} \quad 0<x<1, a,\beta >0
+\end{equation*}
+
+Where $\mathcal{B}(\alpha,\beta)$ is the beta function as defined by:
+
+\begin{equation*}
+    \mathcal{B}(\alpha,\beta) = \int_0^1 x^{\alpha-1}(1-x)^{\beta-1} dx = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}    
+\end{equation*}
+
+If $\alpha = \beta$, you get a symmetric distribution about $x = \frac{1}{2}$. With $E(X) = \frac{1}{2}$ and $Var(X) = \frac{1}{8\alpha + 4}$
+
+\subsection{Cauchy Distribution}
+
+If $X \sim Cauchy(\theta)$, then:
+\begin{equation*}
+    f(x|\theta) = \frac{1}{\pi} \cdot \frac{1}{1+(x-\theta)^2} \quad -\infty < x < \infty
+\end{equation*}
+
+$E(X)$ does not exist. 
+
+
+\end{document}
