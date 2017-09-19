@@ -1,0 +1,300 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 8}
+\author{Dr. Jamshidian}
+\date{September 18, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Homework Review}
+
+\begin{itemize}
+    \item \textbf{Problem 14:} We want to show:
+    
+    \begin{equation*}
+        \sum\limits_{x=1}^\infty \frac{-(1-p)^x}{x\log p} = 1
+    \end{equation*}
+    
+    We have seen Taylor expansion before:
+    \begin{equation*}
+        f(x) = f(x_0) + f'(x_0)(x-x_0) + \frac{f''(x_0)}{2!}(x-x_0)^2 + ... + \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k+...
+    \end{equation*}
+    
+    Our goals is to show that the Taylor expansion for $\log p$ is:
+    \begin{equation*}
+        \log p = \sum_{x=1}^\infty \frac{-(1-p)^x}{x}
+    \end{equation*}
+    
+    That is:
+    \begin{equation*}
+    \begin{split}
+        \log p &= (p-1) - \frac{(p-1)^2}{2!} + \frac{2(p-1)^2}{3!} - \frac{6(p-1)^4}{4!} + ...\\
+        &= \sum_{x=1}^\infty \frac{(-1)^{x+1}}{x}(p-1)^x
+    \end{split}
+    \end{equation*}
+    
+    To solve, consider the odd and even sums.
+    
+    To find E[X] we have:
+    \begin{equation*}
+        \begin{split}
+            E[X] = \sum_{x=1}^\infty \frac{-x(1-p)^x}{x\log p} &= \frac{-1}{\log p} \sum_{x=1}^\infty (1-p)^x\\
+            &= \frac{-1}{\log p} \left(\frac{1-p}{p}\right)
+        \end{split}
+    \end{equation*}
+    
+    \begin{equation*}
+            E[X^2] = \sum_{x=1}^\infty \frac{-x^2(1-p)^x}{x\log p} = \frac{-1}{\log p} \sum_{x=1}^\infty x(1-p)^x
+    \end{equation*}
+    
+    Recall that:
+    \begin{equation*}
+        \begin{split}
+            x &\sim geometric(p) \\
+            f_X(x) &= (1-p)^{x-1}p\\
+            E[X] &= \frac{1}{p}\\
+            \sum_{x=1}^\infty xp&(1-p)^{x-1} = \frac{1}{p}
+        \end{split}
+    \end{equation*}
+    
+    So we have:
+    \begin{equation*}
+        E[X^2] = -\frac{1}{\log p} \frac{1}{p}(1-p) \sum_{x=1}^\infty xp(1-p)^{x-1} = -\frac{1}{\log p} \frac{(1-p)}{p^2}
+    \end{equation*}
+    
+    \item \textbf{Problem 13b:} 
+    \begin{equation*}
+        P(X_T = x) = \frac{{r+x-1\choose x} p^r (1-p)^x}{1-p^r} \quad x = 1,2,...
+    \end{equation*}
+    
+    \begin{equation*}
+    \begin{split}
+        E[x(x-1)] &= \frac{1}{1-p^r} \sum_{x=1}^\infty x(x-1)\frac{(r+x-1)!}{x!(r-1)!}p^r(1-p)^x \\
+        &= \frac{1}{1-p^r} \sum_{x=2}^\infty \frac{(r+x-1)!}{(x-2)!(r-1)!}p^r(1-p)^x
+    \end{split}
+    \end{equation*}
+    
+    This looks like the \textit{pmf} of the negative binomial. To get there, we do a \textit{change in variables} letting $y = x-2$
+    
+    \begin{equation}
+        = \frac{1}{1-p^r} \sum_{y=0}^\infty \frac{(r+y+1)!}{y!(r-1)!}
+    \end{equation}
+    
+    The negative binomial \textit{pmf} is:
+    \begin{equation*}
+        f_X(x) = {r+x-1 \choose x} p^r (1-p)^x \quad x = 0,1,...
+    \end{equation*}
+    
+    So, to make it this way in (1), we need to include the terms up to $r+1$:
+    \begin{equation}
+        = \frac{r(r+1)}{1-p^r} \sum_{y=0}^\infty {r+y+1 \choose y} p^r (1-p)^{y+2}
+    \end{equation}
+    
+    Note that we need the \textit{pmf} for our new distibution:
+    \begin{equation*}
+        \begin{split}
+            X &\sim NB(r+2,p)\\
+            f_X(x) &= {r+x+1 \choose x} p^{r+2} (1-p)^x
+        \end{split}
+    \end{equation*}
+    
+    Going back to (2), we can simplify to find our answer:
+    \begin{equation*}
+        E[X(X-1)] = E[X^2] - E[X] = \frac{(1-p)^2 r(r+1)}{p^2(1-p)^r} \sum_{y=0}^\infty {r+y+1 \choose y} p^{r+1}(1-p)^y
+    \end{equation*}
+    
+    
+    \textbf{Solving directly:} If we consider
+    \begin{equation*}
+        E[X^2] = \sum_{x=1}^\infty x^2 \frac{{r+x-1\choose x} p^r (1-p)^x}{1-p^r}
+    \end{equation*}
+    
+    We can note that the top term is the \textit{pmf} for the negative binomial, so we can factor out the denominator and we are done.
+    
+    \item \textbf{Problem 20:} Consider
+    \begin{equation*}
+        f_X(x) = \frac{2}{\sqrt{2\pi}} e^{-x^2/2} \quad x \geq 0
+    \end{equation*}
+    
+    And $Y = g(x)$ for $Y = X^2$
+    
+    \begin{equation*}
+        \begin{split}
+            F_Y(y) &= P(Y \leq y) = P(X^2 \leq Y)\\
+                    &= P(0\leq X \leq \sqrt{Y})\\
+                    & F_X(\sqrt{y}) - F_X(0)
+        \end{split}
+    \end{equation*}
+    
+    \begin{equation*}
+        f_Y(y) = f_X(\sqrt{y})\left(\frac{1}{2}y^{-1/2}\right)
+    \end{equation*}
+    
+    \begin{equation*}
+        \begin{split}
+            F_Y(y) &= \frac{2}{\sqrt{2\pi}} e^{-y/2} \frac{1}{2} (y^{-1/2})\\
+            &= \frac{1}{\sqrt{2}\Gamma(\frac{1}{2})} y^{-1/2}e^{-y/2}\\
+            Y&\sim gamma\left(\frac{1}{2},2\right)
+        \end{split}
+    \end{equation*}
+    
+    \item \textbf{Problem 12:} Done during office hours
+    
+    \item \textbf{Problem 6:} $X \sim binomial(n=2000,p=0.01)$
+    
+    To approximate it:
+    
+    \begin{equation*}
+        X \sim N(\mu = 2000(0.01), \sigma^2 = 2000(0.01)(0.99)
+    \end{equation*}
+    
+    \item \textbf{Problem 15:} If two functions have \textit{moment generating functions}, you can show convergence of the distributions by showing convergence in the \textit{mgf} themselves
+    
+    \begin{equation*}
+        \begin{split}
+            \left(1 + \frac{a_r}{r} \right) &\to e^a\\
+           \text{If: } a_r &\to a
+        \end{split}
+    \end{equation*}
+    
+    \end{itemize}
+    
+    
+
+\section{Lecture - Part 2: Continuous Distributions, Continued}
+
+\subsection{Section 3.4 - Exponential Family}
+
+These distributions have very important properties that have many implications, as we will learn.
+
+A family of \textit{pdf}s (or \textit{pmf}s) is called \textbf{an exponential family} if it can be expressed as 
+
+\begin{equation*}
+    f(x|\overrightarrow{\theta}) = h(x) c(\overrightarrow{\theta}) exp\left\{ \sum_{i=1}^k w_i\left(\overrightarrow{\theta}\right)t_i(x) \right\}
+\end{equation*}
+
+Where $\overrightarrow{\theta} = (\theta_1, \theta_2,...,\theta_p)$ is a vector of parameters $h(x),t_1(x),t_2(x),...,t_k(x)$ are functions of $x$ not involving $\overrightarrow{\theta}$, and $c(\overrightarrow{\theta})$ and $w_i(\overrightarrow{\theta})$ are functions of $\overrightarrow{\theta}$ not involving $x$.
+
+\subsubsection{Examples:}
+\begin{enumerate}
+    \item Let $X \sim binomial(n,p)$ with $p$ being the only parameter. For a given $n$, it is expnential family:
+    \begin{equation*}
+    \begin{split}
+        f(x|p) &= {n \choose x} p^x (1-p)^{n-x}\\
+                &= {n \choose x}\left( \frac{p}{1-p}\right)^x (1-p)^n\\
+                &= {n\choose x}(1-p)^n exp\left\{x\log \left(\frac{p}{1-p}\right) \right\}
+    \end{split}
+    \end{equation*}
+    
+    In this example, we have:
+    \begin{equation*}
+        \begin{split}
+            h(x) &= {n \choose x}\\
+            c(\theta) &= (1-p)^n\\
+            t_1(x) &= x\\
+            w_1(x) &= \log \left(\frac{p}{1-p} \right)
+        \end{split}
+    \end{equation*}
+    
+    \item Let $X\sim gamma(\alpha,\beta)$
+    \begin{equation*}
+    \begin{split}
+        f_X(x|\alpha,\beta) &= \frac{1}{\Gamma(\alpha)\beta^\alpha} x^{\alpha-1} e^{-x/\beta}\\
+        &= \frac{1}{\Gamma(\alpha)\beta^\alpha} \frac{1}{x} exp\left\{\alpha \log x\right\} e^{-x/\beta}\\
+        &=\frac{1}{\Gamma(\alpha)\beta^\alpha} \frac{1}{x} exp\left\{\alpha \log x - \frac{1}{\beta}x \right\}
+    \end{split}
+    \end{equation*}
+    
+   \item Consider $X$ with pdf
+   \begin{equation*}
+        f_X(x|\theta) = 
+       \begin{cases}
+       \theta e^{\theta^2} e^{-x/\theta} & x > \theta > 0\\
+       0 & x \leq \theta
+       \end{cases}
+   \end{equation*}
+   Is this an exponential family? No, $X$ is dependent on $\theta$!
+\end{enumerate}
+
+\subsubsection{Theorem}
+
+If $X$ is a \textit{pdf} (or \textit{pmf}) from an exponential family of distributions, then:
+\begin{enumerate}
+    \item \begin{equation*}
+        E\left[\sum_{i=1}^k \frac{\partial w_i(\overrightarrow{\theta})}{\partial (\theta_j)} t_i(X)\right] = \frac{\partial}{\partial \theta_j} \log c(\overrightarrow{\theta})
+    \end{equation*}
+    
+    \item \begin{equation*}
+        Var\left[\sum_{i=1}^k \frac{\partial w_i(\overrightarrow{\theta})}{\partial (\theta_j)} t_i(X)\right] = \frac{\partial^2}{\partial \theta_j^2} \log c(\overrightarrow{\theta}) - E\left[\sum_{i=1}^k \frac{\partial^2 w_i(\overrightarrow{\theta})}{\partial \theta_j^2} t_i(X)\right]
+    \end{equation*}
+\end{enumerate}
+    
+    \textbf{Proof:}
+    
+    Since we have an exponential density, we write:
+    \begin{equation*}
+        1 = \int_{-\infty}^\infty h(x) c(\theta) exp\left[\sum_{i=1}^k w_i(\theta) t_i(x)\right]dx
+    \end{equation*}
+    
+    We will denote the $exp$ term as $g(\theta,x)$. We need to take the derivative of everything with respect to $\theta_j$.
+    
+    \begin{equation*}
+        \begin{split}
+            0 &= \int_{-\infty}^\infty \frac{\partial}{\partial \theta_j} \left[ h(x) c(\theta) g(\theta,x) \right] dx\\
+            &= \int_{-\infty}^\infty h(x) \left[ \left(\frac{\partial}{\partial \theta_j}c(\theta) \right) g(\theta,x) + c(\theta)\left(\frac{\partial}{\partial \theta_j} g(\theta,x) \right) \right] dx\\
+            &= (*) \int_{-\infty}^\infty \left[\frac{\partial}{\partial \theta_j}\log c(\theta)\right] c(\theta)h(x)g(\theta,x) dx + (**)
+            \int_{-\infty}^\infty h(x)c(\theta)\frac{\partial}{\partial \theta_j} g(\theta,x)dx \\
+        \end{split}
+    \end{equation*}
+    
+    Note that:
+    
+    \begin{equation*}
+        \frac{\partial}{\partial \theta_j} g(\theta,x) = \left[\frac{\partial}{\partial \theta_j} \sum_{i=1}^k w_i(\theta)t_i(x) \right]g(\theta,x)
+    \end{equation*}
+    
+    \noindent $(*)$:  We see that the density was the right hand side, so we have it equal to $\frac{\partial}{\partial \theta_j} \log c(\theta)$
+    \\~\\
+    \noindent $(**)$: 
+    \begin{equation*}
+        E\left[\frac{\partial}{\partial \theta_j} \sum_{i=1}^k w_i(\theta)t_i(x) \right]    
+    \end{equation*}
+
+    Thus, since we have shown $(*) + (**) = 0$, we have proven the identity holds.
+\\~\\
+   \noindent \textbf{Example:} Recall that, if $X\sim binomial(n,p)$, then:
+   \begin{equation*}
+       \begin{split}
+           h(x) &= {n \choose x} \\
+           c(p) &= (1-p)^n\\
+           w_i(\theta) &= \log \frac{p}{1-p}\\
+           t_1(x) = x
+       \end{split}
+   \end{equation*}
+   
+   So, let's compute the expected value:
+   
+   \begin{equation*}
+   \begin{split}
+        \frac{\partial w_1}{\partial p} &= \frac{\partial}{\partial p}\left(\log \frac{p}{1-p} \right)\\
+        E\left[\frac{\partial}{\partial p} \log \frac{p}{1-p} X \right] &= \frac{1}{p(1-p)} E[X]
+   \end{split}
+    \end{equation*}
+    
+    \begin{equation*}
+            \frac{-\partial}{\partial p} \log (1-p)^n = \frac{n}{1-p}
+    \end{equation*}
+    
+    Now, we set them equal:
+    
+    \begin{equation*}
+        \begin{split}
+            \frac{1}{p(1-p)} E(X) &= \frac{n}{1-p}\\
+            \Rightarrow E(X) &= np
+        \end{split}
+    \end{equation*}
+   
+   \end{document}
