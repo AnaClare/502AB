@@ -1,0 +1,322 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 5}
+\author{Dr. Jamshidian}
+\date{September 6, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+\subsection{Examples: Computing Expectations}
+
+\begin{enumerate}
+    \item Suppose that $x\sim gamma(\alpha,\beta)$. Obtain $E(X)$.
+    
+    First, note that you do not need to memorize densities (they will be given). To find this expectation, we know that:
+    \begin{equation*}
+        E(X) = \int\limits_{-\infty}^\infty x f_x(x) dx
+    \end{equation*}
+    
+    In this example, we have:
+    \begin{equation*}
+    \begin{split}
+        E(X) &= \int\limits_0^\infty x \left[\frac{1}{\Gamma(\alpha)\beta^\alpha} x^{\alpha-1}e^{-x/\beta}\right]dx\\
+        &= \int\limits_0^\infty  \left[\frac{1}{\Gamma(\alpha)\beta^\alpha} x^{\alpha}e^{-x/\beta}\right]dx\\
+    \end{split}
+    \end{equation*}
+    
+    \textbf{Side Note:} When talking about \textbf{kernel} of a density, we are talking about the part of the density involving the random variable (typically $X$). The kernel of a density implies that when integrating it over the entire space of the random variable $X$, you get a constant term. Since a probability distribution requires this integral to be equal to 1, then to get from a \textit{kernel} to a density, you need to divide the kernel by this constant.
+    
+    To illustrate:
+    
+    \begin{equation*}
+        \int\limits_0^\infty x^{\alpha-1} e^{-x/\beta}dx = \beta^{\alpha}\Gamma(\alpha)
+    \end{equation*}
+    
+    which, not coincidentally, is the denominator of the constant term in the PDF of the gamma distribution. 
+    
+    So, back to our example, we have:
+    \begin{equation*}
+        \frac{1}{\Gamma(\alpha)\beta^\alpha} \int\limits_0^\infty x^{\alpha}e^{-x/\beta}dx
+    \end{equation*}
+    
+    which is the \textit{kernel} of the distribution $gamma(\alpha+1,\beta)$. Thus we have:
+    \begin{equation*}
+        E(X) = \frac{\Gamma(\alpha+1)\beta^{\alpha+1}}{\Gamma(\alpha)\beta^{\alpha}} = \frac{\alpha \Gamma(\alpha)\beta}{\Gamma(\alpha)} = \alpha\beta
+    \end{equation*}
+    
+    \textbf{Note:} One thing to always keep in mind, is that if we are using the \textit{kernel}, we have to be integrating over the right region. 
+    
+    \item Suppose that $x\sim Poisson(\lambda)$. Obtain $E(X).$
+    
+    \begin{equation*}
+        \begin{split}
+            E(X) &= \sum\limits_{x=0}^\infty x \frac{e^{-\lambda}\lambda^x}{x!} = \sum\limits_{x=1}^\infty x \frac{e^{-\lambda}\lambda^x}{x!}\\
+            &= \sum\limits_{x=1}^\infty \frac{e^{-\lambda}\lambda^x}{(x-1)!}
+        \end{split}
+    \end{equation*}
+    
+    There is a potential issue here, since our summation bounds are not the same for the \textit{kernel} as they were before (we had $x=0$ as the starting value). Thus, we need a change in variables. Letting $y=x-1$, we have:
+    
+    \begin{equation*}
+        \begin{split}
+            E(X) &= e^{-\lambda} \sum\limits_{y=0}^\infty \frac{\lambda^{y+1}}{y!}\\
+            &= \lambda e^{-\lambda} \sum\limits_{y=0}^\infty \frac{\lambda^{y}}{y!}\\
+            &= \lambda e^{-\lambda} e^{\lambda} = \lambda
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsection{Expectation of a Function of a R.V.}
+
+\textbf{Theorem:} Let $X$ be a random variable and let $Y = g(X)$, for some function $g$
+\begin{enumerate}
+    \item If $X$ is continuous with pdf $f_X(x)$ and $\int\limits_{-\infty}^\infty |g(x)| f_X(x) < \infty$, then
+    \begin{equation*}
+        E(Y) = \int\limits_{-\infty}^\infty g(x) f_X(x) dx
+    \end{equation*}
+    
+    \item  If X is discrete with pmf $f_X(x)$, and $\sum\limits_x |g(x)|f_X(x) < \infty$, then:
+    \begin{equation*}
+        E[g(x)] = \sum\limits_x g(x) f_X(x)
+    \end{equation*}
+\end{enumerate}
+
+\noindent This theorem isn't obvious, but there are large implications. This isn't obvious because if you know the distribution of $X$, then the distribution of some $g(x)$ might be completely different. Here is an example:
+
+\begin{equation*}
+    \begin{split}
+        Y = g(X) &= -\log(X)\\
+        X &\sim unif(0,1)\\
+        Y &\sim exp(1)\\
+        E(Y) &= \int\limits_0^\infty y e^{-y}dy\\
+        E(Y) &= E[g(X)] = \int\limits_0^1 -\log x \cdot 1 dx
+    \end{split}
+\end{equation*}
+
+\noindent \textbf{Proof:} The continuous case requires measure theory. So, let's look at the discrete case:
+
+Let $D_x$ and $D_y$ denote the set of possible values for the random variables $X$ and $Y$, respectively. Defining $*: E[(g(X)] = \sum\limits_X g(x)f_X(x)$ and $Y=g(X)$, we want to show that $**: \sum\limits_Y y f_Y(y) = *$
+
+\begin{equation*}
+\begin{split}
+    \sum_{x\in \mathcal{D}_X} g(x) f_X(x) &= \sum_{y\in \mathcal{D}_Y} \sum_{\{x \in \mathcal{D}_X : g(x) = y\}} g(x) f_X(x)\\
+    &= \sum_{y\in \mathcal{D}_Y} \sum_{\{x \in \mathcal{D}_X : g(x) = y\}} y f_X(x)\\
+    &= \sum_{y\in \mathcal{D}_Y} y \sum_{\{x \in \mathcal{D}_X : g(x) = y\}} f_X(x)\\
+    &= \sum_{y\in \mathcal{D}_Y} y P(g(x) = y)\\
+    &= \sum_{y\in \mathcal{D}_Y} y f_Y(y)
+\end{split}
+\end{equation*}
+
+\noindent The key idea in this proof is that, for each $y$, we are going to get the sum of \textit{all the} $x$ values which map to $y$.
+
+\subsection{Properties of Expectation}
+\begin{enumerate}
+    \item $E[ax+b] = aE[x] + b$
+    \item $E[a\cdot g_1(x) + b\cdot g_2(x) + c] = a E[g_1(x)] + bE[g_2(x)] + c$ provided that the expected value of $g_1, g_2 < \infty$ 
+    
+    \textbf{Proof:} The question we're asked is does the sum of two functions with expected values have an expected value itself. 
+    
+    \begin{equation*}
+    \begin{split}
+        &\int_{-\infty}^\infty |a g_1(x) + b g_2(x) + c| f_X(x) dx\\
+        &\leq \int_{-\infty}^\infty \left(|a g_1(x)| + |b g_2(x)| + |c|\right) f_X(x) dx\\
+        &\text{by triangle inequality}
+    \end{split}
+    \end{equation*}
+    
+    Since each of these component $g_i$'s is finite, the integral is finite and we are done.
+    
+    \item If $g_1(x) \geq g_2(x) \quad \forall x$, then $E[g_1(x)] \geq E[g_2(x)]$
+    
+    \item If $a \leq g(x) \leq b \Rightarrow a \leq E[g(x)] \leq b$
+\end{enumerate}
+
+\subsubsection*{Example:}
+
+Find the \textit{minimum} over $b$ of $E(X-b)^2$
+
+\begin{equation*}
+    \begin{split}
+        E[X-b]^2 &= E[X-E(X) + E(X) - b]^2\\
+        &= E[(X-E(X))^2 + 2(X-E(X))(E(X)-b) + (E(X)-b)^2]\\
+        &= E[(X-E(X))]^2 + 2E[(X-E(X))(E(X)-b)] + E[(E(X)-b)]^2\\
+    \end{split}
+\end{equation*}
+
+\noindent We note that the first term is independent of $b$ and the second term is $0$. So, to minimize this equality, it is sufficient to find the value which minimizes the last term. Thus, $b = E(X)$ is the minimum over $b$.
+
+\section{Lecture - Part 2}
+
+\subsection{Moments and MGF (Section 2.3)}
+
+\subsubsection*{Definition}
+For a random variable, $X$, its $n^{th}$ moment is defined by:
+
+\begin{equation*}
+    \mu_n' = E(X^n)
+\end{equation*}
+
+And its $n^{th}$ \textbf{central moment} is defined by:
+
+\begin{equation*}
+    \mu_n = E[X-E(X)]^n
+\end{equation*}
+
+In particular, the second central moment is called the \textit{variance}.
+
+\subsubsection*{Theorem:}
+\begin{equation*}
+    Var(X) = E(X^2) - [E(X)]^2
+\end{equation*}
+
+This is easy to show by expanding out the term $E[(X-E(X))]^2$.
+
+
+\subsubsection*{Examples:}
+\begin{enumerate}
+    \item Let $X \sim gamma(\alpha, \beta)$. Obtain $Var(X)$.
+    
+    \begin{equation*}
+        Var(X) = E(X^2) - (E(X))^2 = E(X^2) - \alpha^2 \beta^2
+    \end{equation*}
+    
+    So to find this result, we need to find $E(X^2)$:
+    
+    \begin{equation*}
+    \begin{split}
+        E(X^2) &= \int_0^\infty x^2 \frac{1}{\Gamma(\alpha)\beta^\alpha} x^{\alpha-1} e^{-x/\beta}\\
+        &= \frac{1}{\Gamma(\alpha)\beta^\alpha} \int_0^\infty x^{\alpha+1} e^{-x/\beta}\\
+        &= \frac{\Gamma(\alpha+2)\beta^{\alpha+2}}{\Gamma(\alpha)\beta^\alpha} =  \frac{(\alpha+1)\alpha \Gamma(\alpha)}{\Gamma(\alpha)}\beta^2 = \alpha(\alpha+1)\beta^2
+    \end{split}
+    \end{equation*}
+    
+    By noting that the right hand side on the second line is the \textit{kernel} of $gamma(\alpha+1,\beta)$.
+    
+    \item Suppose that $X \sim poisson(\lambda)$. Obtain $Var(X)$.
+    
+    \begin{equation*}
+        Var(X) = E(X^2) - (\lambda)^2
+    \end{equation*}
+    
+    So we need to find $E(X^2)$:
+    
+    \begin{equation*}
+        \begin{split}
+            E[X^2] &= \sum_{x=1}^\infty x^2 \frac{e^{-\lambda}\lambda^x}{x!}\\
+                    &= \sum_{x=1}^\infty x \frac{e^{-\lambda}\lambda^x}{(x-1)!}\\
+                    &= \sum_{x=1}^\infty (x-1+1) \frac{e^{-\lambda}\lambda^x}{(x-1)!}\\
+                    &= \sum_{x=1}^\infty (x-1) \frac{e^{-\lambda}\lambda^x}{(x-1)!} + \sum_{x=1}^\infty \frac{e^{-\lambda}\lambda^x}{(x-1)!}\\
+                    &= \lambda \sum_{y=0}^\infty y \frac{e^{-\lambda}\lambda^y}{y!} + \lambda \sum_{x=0}^\infty \frac{e^{-\lambda}\lambda^y}{y!}\\
+                    &= \lambda^2 + \lambda \Rightarrow Var(X) = \lambda^2
+        \end{split}
+    \end{equation*}
+    
+    We can do a different approach, that is, using \textit{factorial moments}. In other words, note that:
+    
+    \begin{equation*}
+        E[X(X-1)] = E(X^2) - E(X)
+    \end{equation*}
+    
+    So, we have:
+    
+    \begin{equation*}
+    \begin{split}
+        E[X(X-1)] &= \sum_{x=0}^\infty x(x-1) \frac{e^{-\lambda} \lambda^x}{x!}\\
+        &= \lambda^2 \sum_{x=2}^\infty \frac{e^{-\lambda} \lambda^{x-2}}{(x-2)!}\\
+        &= \lambda^2 \sum_{y=0}^\infty \frac{e^{-\lambda} \lambda^{y}}{y!}\\
+        &= \lambda^2
+    \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsubsection*{Theorem:}
+\begin{equation*}
+    Var(aX+b) = a^2 Var(X)
+\end{equation*}
+
+\subsection{Moment Generating Functions}
+
+\subsubsection*{Definition:}
+Let $X$ be a random variable. Then the \textit{moment generating function} (MGF) of $X$ is denoted by:
+
+\begin{equation*}
+    M_X(t) = E(e^{tX})
+\end{equation*}
+
+Provided that the expectation exists for some $t$ in a neighborhood of 0. 
+
+\subsubsection*{Example:}
+
+Obtain the \textit{MGF} for $X\sim gamma(\alpha,\beta)$.
+
+\begin{equation*}
+    \begin{split}
+        E[e^{tX}] &= \int_0^\infty e^{tx} \frac{1}{\Gamma(\alpha) \beta^\alpha} x^{\alpha-1} e^{-x/\beta} dx\\
+        &=\frac{1}{\Gamma(\alpha) \beta^\alpha} \int_0^\infty x^{\alpha-1} e^{-x(\frac{1}{\beta}-t)} dx\\
+    \end{split}
+\end{equation*}
+
+This is the kernel of $gamma(\alpha, \frac{\beta}{1-t\beta})$. But what is the condition under which this integral will be finite? We know both parameters have to be positive, so:
+
+\begin{equation*}
+    E[e^{tX}] = \frac{1}{\Gamma(\alpha) \beta^\alpha} \left[\Gamma(\alpha) \left( \frac{\beta}{1-t\beta} \right)\right], \quad \text{for } t < \frac{1}{\beta}
+\end{equation*}
+
+\subsubsection*{Theorem:}
+
+If $M_X(t)$ is the \textit{moment generating function} of $X$, then:
+\begin{equation*}
+    M_X^{(n)} (0) = \frac{d^n}{dt^n} M_X(t) = E[X^n], \text{ when evaluated at $t=0$ }
+\end{equation*}
+
+To show this:
+
+\begin{equation*}
+    \begin{split}
+        \frac{d^n}{dt^n} M_X(t) &= \frac{d^n}{dt^n} E\left[e^{tX}\right]\\
+                                &= E\left[ \frac{d^n}{dt^n} e^{tX}\right]\\
+                                &= E\left[X^n e^{tX}\right]\\
+    \end{split}
+\end{equation*}
+
+This implies that the $n^{th}$ derivative of the moment generating function evaluated at $0$ is $E(X^n)$.
+
+\subsubsection*{Example:}
+
+\begin{enumerate}
+    \item Consider $X\sim gamma(\alpha,\beta)$. Use the \textit{MGF} to obtain $E(X)$ and $Var(X)$.
+    
+    \begin{equation*}
+        M_X(t) = \left(\frac{1}{1-t\beta}\right)^\alpha
+    \end{equation*}
+    
+    We then have:
+    \begin{equation*}
+    \begin{split}
+        M_X'(t) &= -\alpha(1-t\beta)^{-\alpha-1}(-\beta)\\
+        M_X'(0) &= \alpha\beta\\
+        &\text{ }\\
+        M_X''(t) &= \alpha\beta(-\alpha-1)(1-t\beta)^{-\alpha-2}(-\beta)\\
+        E(X^2) = M_X''(0) &= \alpha(\alpha+1)\beta^2\\
+        &\Rightarrow Var(X) = \alpha \beta^2
+    \end{split}
+    \end{equation*}
+    
+    \item Obtain the \textit{MGF} for $X \sim poisson(\lambda)$:
+    
+    \begin{equation*}
+        \begin{split}
+            E[e^{tX}] &= \sum_{x=0}^\infty e^{tX} \frac{e^{-\lambda}\lambda^x}{x!}\\
+                    &= \sum_{x=0}^\infty \frac{e^{-\lambda}(\lambda e^t)^x}{x!}\\
+                    &= e^{-\lambda} \sum_{x=0}^\infty \frac{(\lambda e^t)^x}{x!}\\
+                    &= e^{-\lambda} \cdot e^{\lambda e^{t}} = e^{\lambda e^t - \lambda}
+        \end{split}
+    \end{equation*}
+    
+\end{enumerate}
+
+\end{document}
