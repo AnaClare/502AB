@@ -1,0 +1,359 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 9}
+\author{Dr. Jamshidian}
+\date{September 20, 2017}
+\begin{document}
+
+\maketitle
+\section{Lecture - Part 1}
+
+\subsection{Exponential Family, Continued}
+
+\textbf{Recall:}
+
+The exponential family of distribution is of the form:
+\begin{equation*}
+    f(x|\theta) = h(x) c(\theta) \exp \left\{ \sum_{i=1}^k w_i(\theta)t_i(x) \right\}
+\end{equation*}
+
+\subsubsection{The Natural Paramaterization}
+
+A reparameterization of the exponential family where the density is written in the form:
+
+\begin{equation*}
+    f(x|\eta) = h(x) c^*(\eta) \exp\left[\sum_{i=1}^k \eta_i t_i(x) \right]
+\end{equation*}
+
+Where $h(x)$ and $t_i(x)$ are the same as before, but the parameters enter linearly in the sum. The difference is in the summation part. In the \textit{natural parameterization}, we have parameters expressed in linear functions (ie. $\alpha$ instead of $\log \alpha$).
+
+The set $H$ as defined below is referred to as the \textit{natural parameter space}:
+\begin{equation*}
+H = \left\{(\eta_1,...,\eta_p): \int_{-\infty}^\infty h(x) \exp\left[ \sum_{i=1}^k \eta_i t_i(x)\right] dx < \infty \right\}
+\end{equation*}
+
+This means that we have:
+\begin{equation*}
+    c^*(\eta) = \left[\int_{-\infty}^\infty h(x) \exp\left\{ \sum_{i=1}^k \eta_i t_i(x)\right\} dx \right]^{-1}
+\end{equation*}
+
+\subsubsection*{Examples}
+
+\begin{enumerate}
+    \item $X \sim gamma(\alpha,\beta)$
+    
+    \begin{equation*}
+        f_X(x) = \frac{1}{\Gamma(\alpha)\beta^\alpha} \frac{1}{x} \exp\left\{ \alpha \log x - \frac{1}{\beta} x\right\}
+    \end{equation*}
+    
+    Since $\frac{1}{\beta}$ appears in the summation portion, this is \textit{not} a natural parameterization. We then rewrite the expression to find the natural parameterization:
+    \begin{equation*}
+        \begin{split}
+            \eta_1 &= \alpha \quad \text{and} \quad \eta_2 = \frac{1}{\beta}\\
+            \Rightarrow f_X(x) &= \frac{\eta_2^{\eta_1}}{\Gamma(\eta_1)}\cdot \frac{1}{x}\cdot  \exp\left\{ \eta_1 \log x - \eta_2 x\right\}
+        \end{split}
+    \end{equation*}
+    
+    Thus, our natural parameterization is:
+    \begin{equation*}
+        H = \left\{\left(\alpha,\frac{1}{\beta}\right): \quad \alpha>0, \beta>0  \right\}
+    \end{equation*}
+    
+    
+    \item Use the above parameterization to obtain $E(X)$ and $E[\log X]$ for $x \sim gamma(\alpha,\beta)$
+    
+    Recall:
+    \begin{equation*}
+        E\left[\sum_{i=1}^k \frac{\partial w_i(\eta)}{\partial \eta_j} t_i(x) \right] = - \frac{\partial}{\partial \eta_j} \log c(\eta)
+    \end{equation*}
+    
+    In general, expected value might be very difficult to compute using integration. This is the motivation behind taking the derivative.
+    
+    \begin{equation*}
+        E\left[ \frac{\partial w_1(\eta)}{\partial \eta_1} t_1(x) + \frac{\partial w_2(\eta)}{\partial \eta_2} t_2(x) \right] = E[\log x]
+    \end{equation*}
+    
+    \begin{equation*}
+        \begin{split}
+            LHS &= E\left[ \frac{\partial w_1(\eta)}{\partial \eta_1} t_1(x) + \frac{\partial w_2(\eta)}{\partial \eta_2} t_2(x) \right] = E[\log x]\\
+            RHS &= -\frac{\partial}{\partial \eta_1}\left[\log\left( \frac{\eta_2^{\eta_1}}{\Gamma(\eta_1)} \right) \right]\\
+            &= -\frac{\partial}{\partial \eta_1}\left[\eta_1 \log\eta_2 - \log \Gamma(\eta_1) \right]\\
+            &= - \log \eta_2 + \frac{\Gamma'(\eta_1)}{\Gamma(\eta_1)}
+        \end{split}
+    \end{equation*}
+    
+    \begin{equation*}
+        \begin{split}
+            LHS &= -E[X]\\
+            RHS &= -\frac{\partial}{\partial \eta_2} \left[ \eta_1 \log\eta_2 - \log \Gamma(\eta_1) \right]\\
+                &= -\frac{\eta_1}{\eta_2} = - \alpha\beta
+        \end{split}
+    \end{equation*}
+    
+    \item $X \sim N(\mu,\sigma^2)$
+
+    \begin{equation*}
+    \begin{split}
+        f_X(x) &= \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left\{ -\frac{1}{2\sigma^2}(x-\mu)^2 \right\}\\
+        &= \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left\{ -\frac{1}{2\sigma^2}(x^2-2\mu x + \mu^2) \right\}\\
+        &= \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{\mu^2}{2\sigma^2}} \exp \left\{ -\frac{1}{2\sigma^2}x^2 + \frac{\mu}{\sigma^2} x \right\}\\
+    \end{split}
+    \end{equation*}    
+    
+    We note that:
+    \begin{equation*}
+        \eta_1 = \frac{1}{\sigma^2}\quad \eta_2 = \frac{\mu}{\sigma^2} \Rightarrow \sigma^2 = \frac{1}{\eta_1} \quad \mu = \frac{\eta_2}{\eta_1}
+    \end{equation*}
+    
+    We can now write that
+    \begin{equation*}
+        \begin{split}
+            f_X(x) &= \frac{1}{\sqrt{2\pi}} \eta_1^{0.5} e^{0.5\frac{\eta_2^2}{\eta_1}} \exp\left\{ -\frac{1}{2} \eta_1 x^2 + \eta_2 x \right\}
+        \end{split}
+    \end{equation*}
+    
+    \begin{equation*}
+        \begin{split}
+            LHS &= E\left[ \sum_{i=1}^k \frac{\partial w_i(\eta)}{\partial \eta_j} t_i(x) \right] \\
+                &= E[X], \text{ since it is the natural parameter here}\\
+            RHS &= -\frac{\partial}{\partial \eta_j} \log c(\eta)\\
+                &= -\frac{\partial}{\partial \eta_2} \left[\frac{1}{2}\log \eta_1 - \frac{1}{2}\frac{\eta_2^2}{\eta_1}\right] = \frac{\eta_2}{\eta_1} = \mu
+        \end{split}
+    \end{equation*}
+    
+    \subsection{Curved Exponential Families}
+    \subsubsection{Full Exponential vs Curved Exponential Families}
+    
+    A \textit{curved exponential} family of distributions is a family with densities of the form
+    
+    \begin{equation*}
+        f(x|\theta) = h(x) c(\theta) \exp \left\{\sum_{i=1}^k w_i(\theta)t_i(x) \right\}
+    \end{equation*}
+    
+    for which $\dim \theta < k$. If $\dim(\theta) = k$ then the family is called \textit{full exponential family.}
+    
+    \noindent \textbf{Examples:}
+    \begin{enumerate}
+        \item $X \sim \gamma(\alpha,\beta)$ which has $k=2$. Since $\theta = \{ (\alpha, \beta): \quad \alpha>0,\beta>0\}$ this is a \textit{full exponential family}. 
+    
+        Consider a special case where $\alpha = \beta$. In this case, $k=2$ still, but $\dim \theta = 1$.
+        
+        \item $X \sim \chi_{(p)}^2 \sim gamma(\frac{p}{2},2)$ 
+    \end{enumerate}
+    
+\end{enumerate}
+
+\section{Lecture - Part 2}
+
+\textbf{Quick Note:} There has been one part of $h(x)$ that has been omitted. Say for example, we are writing the \textit{pdf} for a distribution, let's say for the \textit{gamma}:
+
+\begin{equation*}
+    f(x|\theta) = \frac{1}{\Gamma(\alpha)\beta^\alpha} \frac{1}{x} \exp \left\{\alpha \log x - \frac{1}{\beta} x \right\}    
+\end{equation*}
+
+\noindent Now, this is supposed to be $\forall x$, but this is \textit{non-zero} only when $x>0$. So we add an indicator function:
+
+\begin{equation*}
+    f(x|\theta) = \frac{1}{\Gamma(\alpha)\beta^\alpha} \frac{1}{x} \exp \left\{\alpha \log x - \frac{1}{\beta} x \right\}  \mathcal{I}_{[X\geq 0]}
+\end{equation*}
+
+Where $\mathcal{I}$ is the indicator function, and gets absorbed by $h(x)$.
+
+\begin{equation*}
+    h(x) = \frac{1}{x} \mathcal{I}_{[X\geq 0]}
+\end{equation*}
+
+\subsection{Location Scale Families (Section 3.5)}
+
+The idea is to start with a standard form of a distribution and add parameters to \textit{rescale} and \textit{shift} the density or pmf. We have seen this before in the \textit{standard normal} distribution $Z \sim N(0,1)$. By adding $\mu$ and $\sigma^2$, you change the location and scale.
+
+\subsubsection*{Theorem:}
+    Let $f(x)$ be any \textit{pdf}. Then for any $\mu$ and $\sigma>0$:
+    
+    \begin{equation*}
+        g(x|\mu,\sigma) = \frac{1}{\sigma} f\left(\frac{x-\mu}{\sigma}\right)
+    \end{equation*}
+
+To show this, we need to show that $g(x) > 0, \quad \forall x$ and that the integral over the domain is equal to 1.
+
+\subsubsection*{Proof:}
+$g(x|\mu,\sigma)\geq 0 \quad \forall x$ is obvious.
+
+\begin{equation*}
+    \begin{split}
+        \int_{-\infty}^\infty g(x|\mu,\sigma)dx  &= \int_{-\infty}^\infty \frac{1}{\sigma} f\left(\frac{x-\mu}{\sigma}\right)dx\\
+        \text{Letting } u &= \frac{x-\mu}{\sigma} \Rightarrow  du = \frac{1}{\sigma}dx\\
+        &\Rightarrow \int_{-\infty}^\infty f(u)du = 1
+    \end{split}
+\end{equation*}
+
+
+\subsubsection*{Definitions:}
+    \begin{enumerate}
+        \item \textbf{Location Family:} Let $f(x)$ be a \textit{pdf}. Then the family of \textit{pdf}'s $f(x-\mu)$, indexed by the parameter $\mu$ is called the \textbf{location family} with standard \textit{pdf} $f(x)$. $\mu$ is referred to as the location parameter.
+        
+        \item \textbf{Scale Family:} The family $\frac{1}{\sigma} f(\frac{x}{\sigma})$ is called a \textbf{scale family} for the \textit{pdf} $f(x)$, with scale $\sigma$
+        
+        \item \textbf{Location-Scale Family} The family $\frac{1}{\sigma} f(\frac{x-\mu}{\sigma})$ is called a \textbf{location-scale family} for the \textit{pdf} $f(x)$ with scale $\sigma$ and location parameter $\mu$ 
+    \end{enumerate}
+
+\subsubsection*{Theorem:}
+    Let $f_Z$ be any \textit{pdf}, and let $\mu \in \mathbb{R}$ and $\sigma \in \mathbb{R}^+$. Then $x$ has density $f_X(x) = \frac{1}{\sigma}f_Z(\frac{x-\mu}{\sigma})$ \textbf{iff} $x = \mu + \sigma Z$, where $Z$ has density $f_Z$
+
+\subsubsection*{Proof}
+    ($\Leftarrow$): Suppose $x=\mu + \sigma Z$. Then:
+    \begin{equation*}
+        \begin{split}
+            F_X(x) = P(X \leq x) &= P(\mu + \sigma Z \leq x)\\
+                &= P\left(Z \leq \frac{x-\mu}{\sigma}\right) \\
+                &= F_Z\left(\frac{x-\mu}{\sigma}\right)\\
+                f_X(x) &= \frac{1}{\sigma} f_Z\left(\frac{x-\mu}{\sigma}\right)
+        \end{split}
+    \end{equation*}
+    
+    \noindent ($\Rightarrow$): Suppose that
+    \begin{equation*}
+        f_X(x) = \frac{1}{\sigma}f_Z(\frac{x-\mu}{\sigma})
+    \end{equation*}
+    
+    We need to show:
+    \begin{equation*}
+        P(X\leq a) = P(\mu + \sigma Z \leq a), \quad \forall a
+    \end{equation*}
+    
+    \begin{equation*}
+    \begin{split}
+        P(X \leq a) &= \int_{-\infty}^a f_X(x) dx\\
+        &= \int_{-\infty}^a \frac{1}{\sigma} f_Z\left( \frac{x-\mu}{\sigma}\right) dx\\
+        &\text{Let } z = \frac{x-\mu}{\sigma} \Rightarrow dz = \frac{1}{\sigma} dx\\
+        &= \int_{-\infty}^{\frac{a-\mu}{\sigma}} f_Z(z) dz = P\left(Z \leq \frac{a-\mu}{\sigma}\right)\\
+        &= P(\sigma z + \mu \leq a)
+    \end{split}
+    \end{equation*}
+    
+    
+    \subsubsection*{Example:}
+    Suppose you have $X \sim cauchy$ (which has no defined expected value and variance):
+    
+    \begin{equation*}
+        f(x) = \frac{1}{\pi} \cdot \frac{1}{1+x^2} \quad -\infty < x < \infty
+    \end{equation*}
+    
+    Then the function:
+    \begin{equation*}
+        \frac{1}{\sigma} f\left( \frac{x-\mu}{\sigma}\right) = \frac{1}{\pi\sigma} \cdot \frac{1}{1+\left(\frac{x-\mu}{\sigma} \right)^2} \quad -\infty < x < \infty
+    \end{equation*}
+    
+    is a density despite not having a true $\mu$ or $\sigma$
+    
+    
+    \subsection{Inequalities and Identities (Section 3.6)}
+    
+    \subsubsection{Markov Inequality}
+    \subsubsection*{Theorem}
+    Let $X$ be a random variable and $g(x)$ be a \textit{non-negative} function. Then for any scalar $r>0$
+    \begin{equation*}
+        P(g(x) > r) \leq \frac{E[g(x)]}{r}
+    \end{equation*}
+    
+    \subsubsection*{Proof:}
+    
+    \begin{equation*}
+        \begin{split}
+            E[g(x)] &= \int_{-\infty}^\infty g(x) f_X(x) dx\\
+                    &\geq \int g(x) f_X(x) dx \quad \{ x: g(x) > r \}\\
+                    &\geq \int r f_X(x) dx \quad \{ x: g(x) > r \}\\
+                    &= r \int f_X(x) dx \quad \{ x: g(x) > r \} = r\cdot P[g(x)>r]
+        \end{split}
+    \end{equation*}
+    
+    \subsubsection{Chebychev Inequality}
+    \subsubsection*{Theorem:}
+    
+    Let $\mu$ and $\sigma$ be \textit{mean} and \textit{standard deviation} for a random variable $X$. Consider the function $g(x) = \frac{(x-\mu)^2}{\sigma^2} > 0$. 
+    
+    \noindent \textbf{Side Note:}
+    \begin{equation*}
+        E[g(x)] = E\left[ \frac{(x-\mu)^2}{\sigma^2} \right] = \frac{1}{\sigma^2} E[(x-\mu)^2] = 1
+    \end{equation*}
+    
+    Then, we have:
+    \begin{equation*}
+        P\left( \frac{(x-\mu)^2}{\sigma^2} > r \right) \leq \frac{1}{r}
+    \end{equation*}
+    
+    Let $t^2 = r$. Then, we have:
+    \begin{equation*}
+        \begin{split}
+            P\left( \frac{(x-\mu)^2}{\sigma^2} > t^2 \right) &\leq \frac{1}{t^2}\\
+            \Rightarrow P(|x-\mu| > t\sigma ) &\leq \frac{1}{t^2}
+        \end{split}
+    \end{equation*}
+    
+    What the \textit{Chebyshev Inequality} tells us is that $x$ ($X\sim$ some distribution with mean and finite variance) can't get too far away from $\mu$ with high probability. In other words, consider the case where $t = 2$. Then we have:
+    \begin{equation*}
+        P(|x-\mu| > 2\sigma) \leq \frac{1}{4}
+    \end{equation*}
+    
+    In other words, the probability that $x$ is more than 2 standard deviations away from $\mu$ is bounded by probability = $0.25$. Often the probability estimates by \textit{Chebyshev} are very conservative.
+    
+    \subsubsection*{Example:}
+    Consider $X \sim exp(1)$ with $\mu = 1$, $\sigma = 1$. By \textit{Chebyshev inequality}:
+    \begin{equation*}
+        \begin{split}
+            P(|X-1| > 2) &= 1-P(|X-1|\leq 2)\\
+            &= 1 - P(0 < X < 3) \leq \frac{1}{4}
+        \end{split}
+    \end{equation*}
+    
+    Exact value:
+    
+    \begin{equation*}
+        P(0<X<3) = \int_0^3 e^{-x} dx = e^{-3} \approx 0.05
+    \end{equation*}
+    
+    \noindent It is \textbf{not possible} to come up with a general inequality with \textit{tighter bounds}. The Chebychev bounds can not be improved upon without changing assumptions on $X$. To prove this, it is sufficient to come up with an example which has the exact bounds. 
+    
+    \newpage
+    \subsubsection*{Example:}
+
+    
+\begin{tabular}{|l|l|l|l|}
+\hline
+X      & -1            & 0             & 1             \\ \hline
+$f(x)$ & $\frac{1}{8}$ & $\frac{6}{8}$ & $\frac{1}{8}$ \\ \hline
+\end{tabular} $\quad$ which has $E[X] = 0$ and $var(X) = \frac{1}{4}$
+\\~\\
+Taking $t=2$ we have:
+\begin{equation*}
+    P\left(|X-0| \geq 2 \left(\frac{1}{2}\right)\right) = P(|X|\geq 1) = \frac{1}{4}
+\end{equation*}
+
+
+\subsubsection*{Example:}
+
+Suppose $Z \sim N(0,1)$. Then:
+\begin{equation*}
+    P(|Z|>t) \leq \sqrt{\frac{2}{\pi}} \frac{e^{-t^2/2}}{t}
+\end{equation*}
+
+\noindent \textbf{Side Note:} By \textit{Chebyshev}, we have $P(|Z|>2) \leq \frac{1}{4}$
+
+\begin{equation*}
+    P(|Z|>2) \leq \sqrt{\frac{2}{\pi}} \frac{e^{-2}}{2} = 0.054
+\end{equation*}
+
+\subsubsection*{Proof:}
+
+\begin{equation*}
+    \begin{split}
+        P(|Z|>t) &= 2 P(Z > t)\\
+                &= 2 \int_{t}^\infty \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}z^2}dz\\
+                &\leq \sqrt{\frac{2}{\pi}} \int_t^\infty \frac{z}{t} e^{-\frac{1}{2}z^2}dz \text{ , since $z > t$ we are multiplying by something $>$ 1}\\
+                &= \sqrt{\frac{2}{\pi}} \frac{e^{-t^2/2}}{t}
+    \end{split}
+\end{equation*}
+    
+   \end{document}
