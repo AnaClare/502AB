@@ -1,0 +1,290 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath}
+
+\title{Math 502AB - Lecture 4}
+\author{Dr. Jamshidian}
+\date{August 30, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{PMF and PDF's (Section 1.6)}
+
+\subsubsection*{Definition:}
+
+A \textit{probability mass function} (\textbf{pmf}) for a discrete random variable $X$ is defined by:
+
+\begin{equation*}
+ f_X(x) = P(X=x) \quad \forall x
+\end{equation*}
+
+\textbf{Example:} Given $X\sim binomial(n,p)$, then it's \textit{pmf} is:
+
+\begin{equation*}
+    f_X(x) = P(X=x) = {n\choose x}p^x (1-p)^{n-x} \quad x = 0,1,2,...,n
+\end{equation*}
+
+\subsubsection*{Definition:}
+
+For a \textit{continuous random variable}, the \textbf{probability density function} (\textit{pdf}) is a function $f_X(x)$ such that:
+
+\begin{equation*}
+    F_X(x) = \int_{-\infty}^x f_X(t) dt
+\end{equation*}
+
+\subsubsection*{Theorem:}
+
+A function $f_X(x)$ is a \textit{pdf} (or \textit{pmf}) of a random variable $X$ \textbf{iff}, over the entire sample space:
+\begin{enumerate}
+    \item $f_X(x) \geq 0 \quad \forall x$
+    \item \textbf{Discrete:} $\sum f_X(x) = 1$
+    \item \textbf{Continuous:} $\int f_X(x) dx = 1$
+\end{enumerate}
+
+\subsubsection*{Proof:}
+
+($\Rightarrow$): Suppose that $f_X(x)$ is a density. 
+\begin{enumerate}
+    \item $f_X(x) = F'(x) \geq 0$ since $F(x)$ is \textit{non-decreasing}
+    \item \begin{equation*}
+    \begin{split}
+        F_X(x) &= \int_{-\infty}^x f_X(t) dt\\
+        \lim_{x\to\infty} F_X(x) &= \lim_{x\to\infty} \int_{-\infty}^x f_X(t) dt\\
+        1 &= \int_{-\infty}^\infty f_X(t) dt
+    \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\noindent ($\Leftarrow$): Hint on this proof:
+
+If we have properties (1) and (2), we need to show that $f$ is a density, namely the function
+
+\begin{equation*}
+    F_X(x) = \int_{-\infty}^x f_X(t) dt    
+\end{equation*}
+
+satisfies the three required properties of a \textit{cdf}.
+
+
+\subsection{Transformations and Expectations (Section 2.1)}
+
+\subsubsection{Distributions of a function of a Random Variable}
+
+If $X$ is a random variabble, then $Y = g(X)$ is also a random variable, where $g$ is some function. The idea here is, suppose you know the distribution of $X$, and you want to find the distribution of $g(X)$. How would you do it?
+\\~\\
+\noindent \textbf{Hint:}
+\begin{itemize}
+    \item If $X$ is a discrete random variable, obtain the \textit{pmf} of $Y$
+    \item If $X$ is a continuous random variable, start with obtaining the \textit{cdf} of $Y$
+\end{itemize}
+
+\subsubsection*{Examples:}
+
+\begin{enumerate}
+    \item \textbf{(Negative Binomial)} Consider independent Bernoulli experiments. Let $X$ = the number of trials required to get $r$ successes, when the probability of success for each trial is $p$. Obtain the \textit{pmf} for $X$.
+    
+    \begin{equation*}
+        \begin{split}
+            P(X=r) &= p^r\\
+            P(X=r+1) &= {r \choose r-1} p^{r}(1-p)\\
+            P(X=r+2) &= {r+1 \choose r-1} p^{r}(1-p)^2
+        \end{split}
+    \end{equation*}
+    
+    So, we have the \textit{pmf} as:
+    
+    \begin{equation*}
+        f_X(x) = {x-1 \choose r-1} p^{r} (1-p)^{x-r}\quad x=r,r+1,...
+    \end{equation*}
+
+    Our book considers the \textit{negative binomial} as $Y$ = the number of failures before the $r^{th}$ success. In this case, $Y$ is related to $X$ by
+    \begin{equation*}
+        Y = X-r
+    \end{equation*}
+    
+    \item (Gamma Distribution) Consider a random variable $X$ with density:
+    \begin{equation*}
+        f_X(x|\alpha,\beta) = \frac{1}{\Gamma(\alpha)\beta^\alpha} x^{\alpha-1} e^{-x/\beta}, \quad x \geq 0; \alpha,\beta > 0
+    \end{equation*}
+    
+    Where
+    \begin{equation*}
+        \Gamma(\alpha) = \int_0^\infty t^{\alpha-1}e^{-t}dt
+    \end{equation*}
+    
+    is said to have a gamma distribution with parameters $\alpha$ and $\beta$. We write $X \sim gamma(\alpha,\beta)$.
+    
+    \textbf{Problem:} Let $Y = cX$, where $c > 0$. Obtain the \textit{pdf} of $Y$
+    
+    For $y \geq 0$:
+    \begin{equation*}
+        \begin{split}
+            F_Y(y) &= P(Y \leq y) = P(cX \leq y)\\
+            &= P\left(X \leq \frac{y}{c}\right) = \int_0^{y/c} f_X(x|\alpha,\beta)dx\\
+            \frac{d}{dy} F_Y(y) &= \frac{d}{dy} \int_0^{y/c} f_X(x|\alpha,\beta)dx\\
+            &= f_X\left(\frac{y}{c} | \alpha,\beta\right) \cdot \frac{1}{c}
+        \end{split}
+    \end{equation*}
+    
+    So, then we have:
+    
+    \begin{equation*}
+    \begin{split}
+        f_Y(y) &= \frac{1}{\Gamma(\alpha)\beta^\alpha} \left(\frac{y}{c}\right)^{\alpha-1} e^{-y/c\beta} \cdot \frac{1}{c}\\
+        &= \frac{1}{\Gamma(\alpha)(\beta c)^\alpha} y^{\alpha-1} e^{-y/\beta c} \sim gamma(\alpha, \beta c)
+    \end{split}
+    \end{equation*}
+    
+    \item Let $X \sim N(\mu, \sigma^2)$ with density
+    \begin{equation*}
+        f_X(x) = \frac{1}{\sqrt{2\pi}\sigma} e^{-0.5\left(\frac{x-\mu}{\sigma}\right)^2}
+    \end{equation*}
+    
+    And let $Z \sim N(0,1)$. Determine the distribution of $Y = Z^2$
+    
+    \textbf{Solution:} For $y \geq 0$
+    \begin{equation*}
+        \begin{split}
+            F_Y(y) &= P(Y \leq y) = P(Z^2 \leq y)\\
+            &= P(-\sqrt{y} \leq Z \leq \sqrt{y})\\
+            &= F_Z(\sqrt{y}) - F_X(-\sqrt{y})
+        \end{split}
+    \end{equation*}
+    
+    But integrating that would be complicated. So what do we do? We take the derivative of both sides:
+    \begin{equation*}
+        \begin{split}
+            f_Y(y) &= F_Y'(y)\\
+            &= \frac{d}{dy}[F_Z(\sqrt{y}) - F_Z(-\sqrt{y})]\\
+            &= f_Z(\sqrt{y})\cdot\left(\frac{1}{2} y^{-0.5}\right) + f_Z(-\sqrt{y})\cdot\left(\frac{1}{2} y^{-0.5}\right)\\
+            &= y^{-0.5} f_Z(\sqrt{y})\\
+            &= \frac{1}{\sqrt{2\pi}} e^{-0.5 y} \cdot y^{-0.5}\\
+            &= \frac{1}{2^{0.5}\Gamma(0.5)} e^{-0.5 y} \cdot y^{-0.5} \sim gamma(\alpha = 0.5, \beta = 2)
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\section{Lecture - Part 2}
+
+\subsubsection*{Theorem:}
+
+Let $X$ be a continuous random variable, and let $Y = g(X)$ where $g$ is a differentiable function, and it is strictly monotone in the support of $X$. Then, $Y$ has the density:
+\begin{equation*}
+    f_Y(y) = f_X(g^{-1}(y)) \left|\frac{d}{dy} g^{-1}(y) \right|
+\end{equation*}
+
+\subsubsection*{Theorem:}
+
+Let $X$ have a continuous \textit{cdf} $F_X(x)$. Then the random variable $Y=F_X(x) \sim unif(0,1)$.
+\subsubsection*{Proof:}
+    Need to show that
+    \begin{equation*}
+        F_Y(y) = \begin{cases}
+            y & 0 < y < 1\\
+            0 & y \leq 0\\
+            1 & y \geq 1
+        \end{cases}
+    \end{equation*}
+    
+    For $0 \leq y \leq 1$:
+    \begin{equation*}
+    \begin{split}
+        F_Y(y) &= P(Y \leq y) = P(F_X(x) \leq y)\\
+                &= P(X \leq F_X^{-1} (y)) \text{, if $F_X$ is strictly increasing}\\
+                &= F_X(F_X^{-1}(y)) = y
+    \end{split}
+    \end{equation*}
+
+    But the \textit{cdf} doesn't have to be strictly increasing. However, this theorem still holds. Define:
+    \begin{equation*}
+        F_X^{-1}(y) = inf \left\{ x: F_X(x) \geq y \right\}
+    \end{equation*}
+    
+    This makes the inverse function uniquely defined, since the probability of $x$ being in the bounds where the \textit{cdf} might be flat is zero.
+    
+    \subsection{Expected Value of a Random Variable (Section 2.2)}
+    \subsubsection*{Definition:}
+    Let $X$ be a random variable. If $X$ is a continuous random variable with pdf $f(x)$ and
+    \begin{equation*}
+        \int_{-\infty}^\infty |x| f_X(x) dx < \infty
+    \end{equation*}
+    
+    then the expectation of $X$ is:
+    \begin{equation*}
+        E(X) = \int_{-\infty}^\infty x f_X(x) dx
+    \end{equation*}
+    
+    \noindent If $X$ is a discrete random variable with \textit{pmf} $f_X(x)$ and
+    \begin{equation*}
+        \sum_{\text{all } x} |x|f_X(x) < \infty
+    \end{equation*}
+    
+    then the expectation of $X$ is:
+    \begin{equation*}
+        \sum_{\text{all } x} xf_X(x) < \infty
+    \end{equation*}
+    
+    \subsubsection{Discrete Case}
+    
+    Consider a series of the form:
+    
+    \begin{equation*}
+        \sum_{n=1}^\infty a_n 
+    \end{equation*}
+    
+    \noindent A series is convergent if the sequence of its partial sums converges. That is $\{ S_n\}_{n=1}^\infty$ converges where $S_n = \sum_{i=1}^n a_i$. 
+    \\~\\
+    \noindent The above series is \textbf{absolutely convergent} if $\sum_{i=1}^n |a_n|$ converges. A sequence is \textbf{conditionally convergent} if the sequence $\sum_{i=1}^n a_i$ converges, but the sequence $\sum_{i=1}^n |a_i|$ does not.
+    
+    \subsubsection*{Theorem:}
+    If the series $\sum_{n=1}^\infty a_n$ \textbf{converges conditionally}, then for any given real number $c$, there is a rearrangement of the terms $a_n$ such that
+    \begin{equation*}
+        \sum_{i=1}^\infty a_i = c
+    \end{equation*}
+    
+    \subsubsection*{Example:}
+    
+    Consider the \textit{harmonic series}:
+    \begin{equation*}
+        \sum_{n=1}^\infty \frac{(-1)^{n+1}}{n} = 1 - \frac{1}{2} + \frac{1}{3} + ... = \ln 2
+    \end{equation*}
+    
+    If we rearrange the series as follows:
+    \begin{equation*}
+        1 + \frac{1}{3} - \frac{1}{2} + \frac{1}{5} + \frac{1}{7} - \frac{1}{4} + ... = 3\ln 2
+    \end{equation*}
+    
+    \subsubsection{Continuous Case}
+    
+    Consider the following example where the density
+    \begin{equation*}
+        f(x) = \frac{1}{\pi} \cdot \frac{1}{1+x^2} \quad -\infty < x < \infty
+    \end{equation*}
+    
+    \noindent We then have that:
+    \begin{equation*}
+        \int_{-\infty}^\infty f(x) dx = 1
+    \end{equation*}
+    
+    \noindent But note that the following integral does not exist:
+    \begin{equation*}
+        \int_{-\infty}^\infty \frac{1}{\pi} \cdot \frac{x}{1+x^2} dx = 1
+    \end{equation*}
+    
+    \noindent Why? Note that:
+    \begin{equation*}
+        \int_{-\infty}^\infty \frac{x}{1+x^2} dx = \lim_{r\to\infty} \int_{-r}^r \frac{x}{1+x^2} dx = 0, \text{ because odd function}
+    \end{equation*}
+        
+    Written in another form, we have:
+    
+    \begin{equation*}
+        \lim_{r\to\infty} \int_{-r}^{kr} \frac{x}{1+x^2} dx = \lim_{r\to\infty} \frac{1}{2}\log\left(\frac{1+k^2r^2}{1+r^2} \right) = \log (k)
+    \end{equation*}
+    
+    To know that a solution to this integral exists, you have to take $|x|$ in the numerator.
+    
+\end{document}
