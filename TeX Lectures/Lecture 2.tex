@@ -1,0 +1,233 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath}
+
+
+\title{Math 502AB - Lecture 2}
+\author{Dr. Jamshidian}
+\date{August 23, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsubsection*{Theorem}
+
+If $A_1, A_2, ...$ are a sequence of increasing or decreasing events, then:
+\begin{equation*}
+    \lim_{n\to\infty} P[A_i] = P\left[\lim_{n\to\infty} A_i \right]
+\end{equation*}
+
+\subsubsection*{Proof}
+
+Suppose that $A_1 \subset A_2 \subset ...$ is a sequence of increasing events, then:
+\begin{equation*}
+    P\left[\lim_{n\to\infty} A_i \right] = P\left[\bigcup_{i=1}^\infty A_i \right] \quad (*)
+\end{equation*}
+
+Note that we can't just go straight to our answer ``due to countable additivity", because these sets are not disjoint. So, let $B_1=A_1$, $B_2 = A_2/A_1$, $B_3 = A_3/A_2,...$. By construction, $B_i \cap B_j = \emptyset$, $\forall i\neq j$ and $\cup_{i=1}^\infty A_i = \cup_{i=1}^\infty B_i$
+
+Then, going back to ($*$), we have:
+\begin{equation*}
+    \begin{split}
+        P\left[\lim_{n\to\infty} A_i \right] &= P\left[\bigcup_{i=1}^\infty B_i \right] = \sum_{i=1}^\infty P(B_i)\\
+        &= \lim_{n\to\infty} \sum_{i=1}^n P(B_i)\\
+        &= \lim_{n\to\infty} P\left(\bigcup_{i=1}^n B_i \right)\\
+        &= \lim_{n\to\infty} P(A_n)
+    \end{split}
+\end{equation*}
+
+Now, suppose that $A_1 \supset A_2 \supset ...$ is a sequence of decreasing events. Then:
+
+\begin{equation*}
+    \begin{split}
+        P\left[\lim_{n\to\infty} A_n \right] &= P\left[\bigcap_{i=1}^\infty A_i \right]\\
+        &= 1- P\left[\bigcap_{i=1}^\infty A_i \right]^c\\
+        &= 1- P\left[\bigcup_{i=1}^\infty A_i^c \right], \text{ by DeMorgan's Law}\\
+        &= 1 - P\left[\lim_{n\to\infty} A_n^c \right], \text{ since } A_1^c \supset A_2^c \supset ...\\
+        &= 1 - \lim_{n\to\infty} P \left[ A^c_n \right], \text{ by first part of proof}\\
+        &= \lim_{n\to\infty} \left[ 1 - P(A_n^c) \right] \\
+        &= \lim_{n\to\infty} P(A_n)
+    \end{split}
+\end{equation*}
+
+\subsection{Axiom of Continuity}
+
+If $A_1 \supset A_2 \supset ...$ is a sequence of decreasing events such that
+\begin{equation*}
+    \lim_{n\to\infty} A_n = \bigcap_{i=1}^\infty A_i = \emptyset \quad \Rightarrow \quad \lim_{n\to\infty} P(A_n) = P\left[\lim_{n\to\infty} A_n \right] = P(\emptyset) = 0
+\end{equation*}
+
+\subsubsection*{Note:}
+
+\textit{Finite additivity} combined with the \textit{axiom of continuity} \textbf{imply} countable additivity. Conversely, \textit{countable additivity} implies finite additivity as well as the axiom of continuity (if we accept countable additivity as an axiom)
+
+\subsection{Law of Total Probability}
+
+Consider a set of events $c_1, c_2, ..., c_n$ such that $c_i \cap c_j = \emptyset$ and $\mathcal{S} = \cup_{i=1}^n c_i$, then $c_1, ..., c_n$ is called a \textbf{partition of} $\mathcal{S}$.
+
+\subsubsection*{Theorem (Law of Total Probability):}
+
+If $c_1, c_2,..., c_n$ is a partition of $\mathcal{S}$, and $A$ is an event, then
+\begin{equation*}
+    P(A) = \sum_{i=1}^n \frac{P(A \cap c_i)}{P(A|c_i) P(c_i)}
+\end{equation*}
+
+\subsubsection*{Proof:}
+\begin{equation*}
+    \begin{split}
+        A = A \cap \mathcal{S} &= A \cap \left[\bigcup_{i=1}^n c_i \right]\\
+        &= \bigcup_{i=1}^n [A \cap c_i]\\
+        P(A) = P\left[\bigcup_{i=1}^n (A\cap c_i) \right] &= \sum_{i=1}^n P(A \cap c_i), \text{ by finite additivity}
+    \end{split}
+\end{equation*}
+
+\subsection{Bode's Inequality}
+\subsubsection*{Theorem:}
+For \textit{any} set of events $A_1, A_2,...$
+\begin{equation*}
+    P\left(\bigcup_{i=1}^\infty A_i \right) \leq \sum_{i=1}^\infty P(A_i)
+\end{equation*}
+
+\subsubsection*{Proof:}
+
+This is an inequality because the sets are not disjoint (picture a Venn Diagram).
+
+\begin{equation*}
+    \begin{split}
+        \text{Let } B_1 &= A_1\\
+        B_2 &= A_2/A\\
+        B_3 &= A_3/[A_1\cup A_2]\\
+            &\vdots\\
+        B_k &= A_k / [A_1\cup ... \cup A_{k-1}]
+    \end{split}
+\end{equation*}
+
+By construction, we have:
+\begin{equation*}
+    \bigcup_{i=1}^\infty A_i = \bigcup_{i=1}^\infty B_i
+\end{equation*}
+
+Moreover, since $B_i \subset A_i$:
+\begin{equation*}
+    P\left[\bigcup_{i=1}^\infty A_i  \right] = P\left[\bigcup_{i=1}^\infty B_i  \right] = \sum_{i=1}^\infty P(B_i) \leq \sum_{i=1}^\infty P(A_i)
+\end{equation*}
+
+\subsection{Bonferroni Inequality}
+\subsubsection*{Theorem:}
+
+Let $A_1,A_2,...,A_n$ be a set of events. Then:
+\begin{equation*}
+    \begin{split}
+        P\left[\bigcap_{i=1}^n A_i \right] &= 1 - P \left[\bigcap_{i=1}^n A_i \right]^c\\
+        &= 1 -  P \left[\bigcap_{i=1}^n A_i^c \right]\\
+        \geq 1 - \sum_{i=1}^n P(A_i^c) &= 1 - \sum_{i=1}^n (1 - P(A_i))\\
+                                        &= 1 - n + \sum_{i=1}^n P(A_i)
+    \end{split}
+\end{equation*}
+
+\section{Lecture - Part 2}
+
+Suppose you have $n$ items
+\begin{itemize}
+    \item $n_1$ of which is type 1
+    \item $n_2$ of which is type 2
+    \item $\vdots$
+    \item $n_k$ of which is type $k$
+\end{itemize}
+
+The number of arrangements of these items is:
+
+\begin{equation*}
+    \frac{n!}{n_1! n_2! n_3! \cdot\cdot\cdot n_k!}
+\end{equation*}
+
+\subsubsection*{Examples:}
+
+\begin{enumerate}
+    \item Consider the word STATISTICS.
+
+\begin{equation*}
+    \begin{split}
+        n &= 10\\
+        S &= 3 \\
+        T &= 3\\
+        A &= 1 \quad \Rightarrow \quad \frac{10!}{3!3!1!1!2!}\\
+        C &= 1\\
+        I &= 2\\
+    \end{split}
+\end{equation*}
+
+    \item (Ex: 1.2.20 in book) Consider the numbers 2, 4, 9,12. Select 4 numbers, with replacement, from these numbers and take the mean of the selected numbers.
+
+    \begin{enumerate}
+        \item How many groups of 4 can we select?
+        \begin{equation*}
+            {n + r - 1 \choose r} = {4 + 4 - 1 \choose 4} = {7 \choose 4} = 35
+        \end{equation*}
+        \item What proportion of possible selections contain 2 4's and 2 9's?
+
+        We first note that the total number of ways to draw 4 numbers is $4^4$. Then we note the number of ways to choose 2 4's and 2 9's. That would be $n=4$, $n_1 = 2$, $n_2 = 2$:
+        \begin{equation*}
+            \frac{4!}{2!2!} = 6 \quad \Rightarrow \quad P(\text{two 4's and two 9's}) = \frac{6}{256}
+        \end{equation*}
+    \end{enumerate}
+
+    \subsection{Conditional Probability}
+
+    In some cases, we are only concerned in the probability of events given that a specific outcome such as $E$ occurs. In this case, $E$ plays the role of ``sample space". Let $P( \cdot )$ be the probability function defined on $\mathcal{S}$ with $P(E) > 0$. Let $F$ be a subset of $\mathcal{S}$, relative to the new sample space $E$. We denote the probability of $F$ as $P(F|E)$
+
+    \begin{enumerate}
+        \item Since $E$ is the sample space, we have:
+        \begin{equation*}
+            P(E|E) = 1
+        \end{equation*}
+
+        \item Since we know that $E$ has occured, we are mainly interested in elements of $E \cap F$ and we have:
+        \begin{equation*}
+            P(F|E) = P(F\cap E | E)
+        \end{equation*}
+
+        \item From the relative frequency point of view:
+        \begin{equation*}
+            \frac{P(E\cap F |E)}{P(E|E)} = \frac{P(E\cap F)}{P(E)} \quad \Rightarrow \quad P(F|E) = \frac{P(E\cap F)}{P(E)}
+        \end{equation*}
+    \end{enumerate}
+
+    \subsubsection*{Independence Rule:}
+    If $P(E|F) = P(E)$, then $E$ and $F$ are independent. Recall that $E$ and $F$ are independent \textbf{iff} $P(E\cap F) = P(E) P(F)$
+
+
+    \subsubsection{Bayes' Rule}
+
+    Given that $A_1,...,A_n$ is a partition of $\mathcal{S}$:
+
+    \begin{equation*}
+        P(A_i|B) = \frac{P(B|A_i)P(A_i)}{\sum_{i=1}^n P(B|A_i)P(A_i)}
+    \end{equation*}
+
+    \subsubsection*{Example:}
+    Consider the prisoner warden question. The warden tells A that B is to be executed. What is the probability that A will be executed?
+
+    Let $W$ be the event that the warden says B is to be executed, and let $A$, $B$, and $C$ be the events that prisoners A, B, and C are pardoned, respectively. Our question now becomes:
+    \begin{equation*}
+        P(A|W) = \frac{P(W|A)\cdot P(A)}{P(W)}
+    \end{equation*}
+
+    Now, using Bayes rule, we calculate $P(W)$
+    \begin{equation*}
+    \begin{split}
+        P(W) &= P(W|A)P(A)  + P(W|B)P(B) + P(W|C)P(C)\\
+            &= \left(\frac{1}{2}\right)\left(\frac{1}{3}\right) + (0)\left(\frac{1}{3}\right) + (1)\left(\frac{1}{3}\right) = \frac{1}{2}
+    \end{split}
+    \end{equation*}
+
+    We then have:
+    \begin{equation*}
+        P(A|W) = \frac{\left(\frac{1}{2}\right)\left(\frac{1}{3}\right)}{\left(\frac{1}{2}\right)} = \frac{1}{3}
+    \end{equation*}
+
+    But note that $P(A|W) = P(A)$, implying the Warden's information is independent from $A$ being pardoned.
+\end{enumerate}
+\end{document}
