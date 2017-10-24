@@ -1,0 +1,255 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 16}
+\author{Dr. Jamshidian}
+\date{October 23, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Section 5.4 - Order Statistics}
+
+Think given the sample $X_1, X_2,...,X_n$, consider the ordered sample:
+\begin{equation*}
+    X_{(1)} \leq X_{(2)} \leq \cdots \leq X_{(n)}
+\end{equation*}
+
+\noindent From these orders, you can consider:
+
+\begin{enumerate}
+    \item $X_{(1)}$ = $min(X_1,...,X_n)$
+    \item $X_{(n)}$ = $max(X_1,...,X_n)$
+    \item Median: 
+    
+    \begin{equation*}
+        \begin{cases}
+            X_{\left(\frac{n+1}{2}\right)} & \text{ $n$ is odd}\\
+            \frac{X_{\left(\frac{n}{2}\right)} + X_{\left(\frac{n}{2} + 1\right)}}{2} & \texttt{ $n$ is even}
+        \end{cases}
+    \end{equation*}
+\end{enumerate}
+
+We can calculate the \textbf{Distribution of} $X_{(n)}$:
+\begin{equation*}
+    \begin{split}
+        F_{X_{(n)}} &= P\left(X_{(n)} \leq x \right)\\
+                    &= P\left( max(X_1,...,X_n) \leq x \right)\\
+                    &= P\left( X_1 \leq x, X_2 \leq x,...,X_n \leq x\right)\\
+                    &= \prod_{i=1}^n P(X_i \leq x) = \left(F_{x_1}(x) \right)^n\\
+        f_{x_{(n)}}(x) &= n \left(F_{x_1}(x) \right)^{n-1} f_{x_1}(x)
+    \end{split}
+\end{equation*}
+
+We can calculate the \textbf{Distribution of} $X_{(1)}$:
+\begin{equation*}
+    \begin{split}
+        F_{X_{(1)}} &= P\left(X_{(1)} \leq x \right)\\
+                    &= 1- P\left(X_{(1)} \geq x \right)\\
+                    &= 1- P\left( min(X_1,...,X_n) > x \right)\\
+                    &= 1- P\left( X_1 > x, X_2 > x,...,X_n > x\right)\\
+                    &= 1 - \prod_{i=1}^n P(X_i > x) = 1 - \left(1 - F_{x_1}(x) \right)^n\\
+        f_{x_{(1)}}(x) &= n  f_{x_1}(x) \left(1 - F_{x_1}(x) \right)^{n-1}
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Example:}
+
+Suppose that $n$ system components are connected in a series, so that if one of the components fails. Let $T_1,...,T_n$ denote the lifetime of the components, with:
+
+\begin{equation*}
+    T_i \sim exp(\lambda) \quad \quad T_i \sim iid
+\end{equation*}
+
+Let $V$ be the length of time that the system operates. Obtain the distribution of $V$.
+
+\begin{equation*}
+    \begin{split}
+        V &= min(T_1,T_2,...,T_n)\\
+        f_V(x) &= n \frac{1}{\lambda} e^{-x/\lambda} \left(e^{-x/\lambda} \right)^{n-1} \quad x > 0
+    \end{split}
+\end{equation*}
+
+
+\subsubsection*{Theorem:}
+The \textit{pdf} of the $k^{th}$ order statistic $X_{(k)}$ is:
+\begin{equation*}
+    f_{x_{(k)}} (x) = \frac{n!}{(k-1)!(n-k)!} f(x) \left(F(x)\right)^{k-1} \left[ 1 - F(x) \right]^{n-k}
+\end{equation*}
+
+\subsubsection*{Proof:}
+
+The differential argument is based on:
+
+\begin{equation*}
+    f_{x_{(k)}} (x) dx \cong \int_{x}^{x+dx} f_{X_{(k)}}(t) dt
+\end{equation*}
+
+Essentially, given an arbitrarily small differential, we want to calculate the probability that $x < X_{(k)} < x+dx$. So:
+
+\begin{equation*}
+        P\left(x < X_{(k)} < x + dx \right) \cong \int_{x}^{x+dx} f_{X_{(k)}} (x) dx
+\end{equation*}
+
+\noindent On the other hand, in order for $X_{(k)}$ to fall in this range, we need $k-1$ observations below $x$, and $n-k$ observations above $x+dx$. The probability that something falls below $x$ is $F_X(x)$, and the probability that something is above $x+dx$ is $1 - F_X(x + dx)$. This forms a \textit{multinomial} distribution:
+
+\begin{equation*}
+\begin{split}
+    P(x < X_k < x + dx) &= \binom{n}{k-1,1,n-k} \left (F_X(x) \right)^{k-1} f(x) dx \left(1 - F_X(x + dx)\right)^{n-k}\\
+    &\cong \binom{n}{k-1,1,n-k} \left (F_X(x) \right)^{k-1} \left(1 - F_X(x + dx)\right)^{n-k} f(x) dx
+\end{split}
+\end{equation*}
+
+\subsubsection*{Example:}
+
+If $X_1,...,X_n \sim unif(0,1)$ (\textbf{iid}), then the $k^{th}$ order statistic is:
+\begin{equation*}
+    \begin{split}
+        f_{x_{(k)}} (x) &= \frac{n!}{(k-1)!(n-k)!} x^{k-1} (1-x)^{n-k} \quad 0 \leq x \leq 1\\
+        X_{(k)} &\sim Beta(\alpha = k, \beta = n-k+1)\\
+        E\left[X_{(k)} \right] &= \frac{k}{n+1}
+    \end{split}
+\end{equation*}
+
+\noindent Let $n = 11$. If we wanted to find the \textit{median}, $X_{(6)}$, we will have:
+\begin{equation*}
+    E\left[X_{(6)} \right] = \frac{6}{12}
+\end{equation*}
+
+\section{Lecture - Part 2}
+
+\subsection{Joint Distributions of Order Statistics}
+
+\subsubsection*{Theorem:}
+
+Let $X_1,...,X_n$ be \textit{iid} from a distribution with \textit{pdf} $f(x)$ and \textit{cdf} $F(x)$. Then, the joint density of $X_{(i)}$ and $X_{(j)}$, 1 $\leq i < j \leq n$ is:
+
+\begin{equation*}
+\begin{split}
+    f_{X_{(i)},X_{(j)}} (u,v) = &\frac{n!}{(i-1)!(j-i-1)!(n-j)!} f(u) f(v) \left[F(u) \right]^{i-1}\\
+    &\times \left[F(v)-F(u) \right]^{j-i-1} \left[1-F(v) \right]^{n-j}
+\end{split}
+\end{equation*}
+
+\subsubsection*{Proof:}
+
+Again, we can use a similar differential argument. We have:
+
+\begin{equation*}
+    \begin{split}
+        f_{X_{(i)},X_{(j)}} (u,v) \cong &\binom{n}{i-1,j-i-1,1,n-j} \left[F(u) \right]^i-1 f(u) du \left[F(v) - F(u+du) \right]^{j-i-1}\\
+        &\times f(v) dv \left(1-F(v+dv) \right)^{n-j}
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Example:}
+
+Let $X_1,...,X_n \sim Unif(0,1)$ (\textbf{iid}). Obtain the distribution of the range:
+\begin{equation*}
+    R = X_{(n)} - X_{(1)}
+\end{equation*}
+
+First, we need the joint distribution:
+\begin{equation*}
+\begin{split}
+    f_{X_{(1)},X_{(n)}} (u,v) &= n(n-1) f(u) f(v) [F(v)-F(u)]^{n-2}, \quad u \leq v\\
+                                &= n(n-1)(v-u)^{n-2}
+\end{split}
+\end{equation*}
+
+Now, we need the \textit{cdf}:
+\begin{equation*}
+    \begin{split}
+        F_R(r)  &= P(R\leq r) \\
+                &= P(V-U \leq r)\\
+                &= P(V \leq U + r)
+    \end{split}
+\end{equation*}
+
+We now integrate this:
+
+\begin{equation*}
+    \begin{split}
+        * &= \int_{0}^{1-r} \int_{u}^{r+u} n(n-1)(v-u)^{n-2} dv du + \int_{1-r}^{1}\int_{u}^1 n(n-1)(v-u)^{n-2}dvdu\\
+        &= n r^{n-1} - (n-1)r^n
+    \end{split}
+\end{equation*}
+
+And we end up with:
+\begin{equation*}
+    \begin{split}
+        f_R(r) &= n(n-1)r^{n-2}(1-r) \quad 0 \leq r \leq 1\\
+        R &\sim Beta(n-1,2)
+    \end{split}
+\end{equation*}
+
+
+\subsubsection*{Theorem:}
+
+For $X_1 \leq X_2 \leq ... \leq X_n$:
+
+\begin{equation*}
+    f_{X_{(1)},...,X_{(n)}}(x_1,x_2,...,x_n) = n! f(x_1) f(x_2) \cdots f(x_n)
+\end{equation*}
+
+\subsubsection*{Proof (Consider n=3):}
+
+Let $x_1 \leq x_2 \leq x_3$. Consider the \textit{CDF}:
+
+\begin{equation*}
+    F_{X_{(1)},X_{(2)},X_{(3)}}(x_1,x_2,x_3) = P(X_{(1)} \leq x_1, X_{(2)} \leq x_2, X_{(3)} \leq x_3)
+\end{equation*}
+
+    Let $N_1$ be the number of $x_1,x_2,x_3$ that fall below $x_1$.
+    
+    Let $N_2$ be the number of $x_1,x_2,x_3$ that fall between $x_1$ and $x_2$.
+    
+    Let $N_3$ be the number of $x_1,x_2,x_3$ that fall between $x_2$ and $x_3$.
+\\~\\
+We are observing three values. 
+    \begin{enumerate}
+        \item One possibility is that all three fall below the first value: 
+        
+        $(N_1 = 3, N_2 = 0, N_3 = 0)$
+        \begin{equation*}
+            P = \left(F(x_1) \right)^3
+        \end{equation*}
+        
+        \item One possibility is to get two below the first value, one between $x_1$ and $x_2$: 
+        
+        $(N_1 = 2, N_2 = 1, N_3 = 0)$
+        \begin{equation*}
+            P = \binom{3}{2} \left(F(x_1) \right)^2 (F(x_2)-F(x_1))
+        \end{equation*}
+        
+        \item One possibility is to get two below the first value, one between $x_2$ and $x_3$: 
+        
+        $(N_1 = 2, N_2 = 0, N_3 = 1)$
+        \begin{equation*}
+            P = \binom{3}{2} \left(F(x_1) \right)^2 (F(x_3)-F(x_2))
+        \end{equation*}
+        
+        \item One possibility is to get one below the first value, two between $x_1$ and $x_2$: 
+        
+        $(N_1 = 1, N_2 = 2, N_3 = 0)$
+        
+        \begin{equation*}
+            P = \binom{3}{2} \left(F(x_1) \right) (F(x_2)-F(x_1))^2
+        \end{equation*}
+        
+        \item One possibility is to get one below the first value, one between $x_1$ and $x_2$, and one between $x_2$ and $x_3$: 
+        
+        $(N_1 = 1, N_2 = 1, N_3 = 1)$
+        
+        \begin{equation*}
+            3!\cdot  F(x_1) (F(x_2)-F(x_1))(F(x_3)-F(x_2))
+        \end{equation*}
+        
+    \end{enumerate}
+    
+    \noindent It turns out that the \textbf{CDF} we wish to find is the sum of all of these probabilities.
+
+\end{document}
