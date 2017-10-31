@@ -1,0 +1,228 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 10}
+\author{Dr. Jamshidian}
+\date{September 25, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Identities}
+
+\subsubsection*{Examples}
+\begin{enumerate}
+    \item Consider $X \sim Poisson(\lambda)$. Then, we have:
+    \begin{equation*}
+        P(X=x+1) = \frac{\lambda}{x+1} P(X=x)
+    \end{equation*}
+
+    To prove something like this, it isn't very difficult:
+    \begin{equation*}
+        \begin{split}
+            P(X=x+1) &= \frac{e^{-\lambda} \lambda^{x+1}}{(x+1)!}\\
+                &= \frac{\lambda}{x+1} \cdot \frac{e^{-\lambda}\lambda^x}{x!}\\
+                &= \frac{\lambda}{x+1}\cdot P(X=x)
+        \end{split}
+    \end{equation*}
+    \item Consisder $X \sim gamma(\alpha,\beta)$ with $\alpha > 1$. Then for any $a$ and $b$:
+    \begin{equation*}
+        P(a < X < b) = \beta\left(f(a|\alpha,\beta) - f(b|\alpha,\beta) \right) + P(a< Y < b)
+    \end{equation*}
+
+    Where $Y \sim gamma(\alpha-1,\beta)$.
+
+    \noindent \textbf{Proof:}
+
+    \begin{equation*}
+        \begin{split}
+            P(a < X < b) &= \frac{1}{\beta^\alpha \Gamma(\alpha)} \int_a^b e^{-x/\beta} x^{\alpha-1} dx\\
+            \text{Let } u = x^{\alpha - 1} &\quad dv = e^{-x/\beta}dx\\
+            \Rightarrow du = (\alpha-1) x^{\alpha-2}dx &\quad v = -\beta e^{-x/\beta}
+        \end{split}
+    \end{equation*}
+
+    Then we have:
+    \begin{equation*}
+        \begin{split}
+            \frac{1}{\beta^\alpha \Gamma(\alpha)} &\left\{ -\beta x^{-\alpha-1}e^{-x/\beta}\Biggr|_{a}^b + \int_a^b (\alpha-1) x^{\alpha-2} \beta e^{-x/\beta} dx \right\}\\
+            &= \beta \left\{ f(a|\alpha,\beta) - f(b|\alpha,\beta) \right\} + \int_a^b \frac{1}{\beta^{\alpha-1}\Gamma(\alpha-1)} x^{\alpha-2}e^{-x/\beta}dx\\
+            &= \beta\left(f(a|\alpha,\beta) - f(b|\alpha,\beta) \right) + P(a< Y < b)
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsection{Stein's Lemma}
+
+Let $Z \sim N(0,1)$ and $g(x)$ be a differentiable function that satisfies $E|g'(z)| < \infty$. Then:
+\begin{equation*}
+    E[z\cdot g(z)] = E[g'(z)]
+\end{equation*}
+
+\subsubsection*{Proof:}
+
+We have:
+
+\begin{equation*}
+    f(z) = \frac{1}{\sqrt{2\pi}} e^{-z^2/2} \Rightarrow f'(z) = \frac{1}{\sqrt{2\pi}} - z e^{-z^2/2} = -z f(z)
+\end{equation*}
+
+\begin{equation*}
+    \begin{split}
+        E[g'(z)] &= \int_{-\infty}^\infty g'(z) f_Z(z) dz\\
+        &= \int_{-\infty}^0 g'(z)f_Z(z) dz \text{ (1*) } + \int_0^\infty g'(z)f_Z(z)dz \text{ (2*) }
+    \end{split}
+\end{equation*}
+
+\noindent \textbf{(2*):}
+
+\begin{equation*}
+    \begin{split}
+        \int_0^\infty g'(z) \left[\int_{-\infty}^z f_Z'(t) dt \right] dz &= \int_0^\infty \int_{-\infty}^z g'(z) f_Z'(t) dt dz\\
+        &= \int_0^\infty \int_{-\infty}^z -t f_Z(t) g'(z)dt dz\\
+        &= \int_{-\infty}^0 \int_0^\infty -g'(z) t f_Z(t) dzdt + \int_0^\infty \int_t^\infty - g'(z)tf_Z(t) dz dt\\
+        &= \int_0^\infty tf_Z(t) \left[\int_0^\infty g'(z)dz \right] dt - \int_0^\infty tf_Z(t)g'(z) dt dz\\
+        &= \int_0^\infty tf_Z(t) \left[ \int_0^\infty g'(z) dz - \int_t^\infty g'(t)dz \right] dt\\
+        &= \int_0^\infty tf_Z(t) \left[\int_0^t g'(z) dz \right] dt\\
+        &= \int_0^\infty tf_Z(t) \left[ g(t) - g(0) \right] dt
+    \end{split}
+\end{equation*}
+
+\noindent \textbf{(2*):} Similarly, it can be shown that
+\begin{equation*}
+    \int_{-\infty}^0 g'(z) f_Z(z) dz = \int_{-\infty}^0 tf_Z(t) [g(t) - g(0)]dt
+\end{equation*}
+
+Combining \textbf{(1*)} and \textbf{(2*)} we get:
+\begin{equation*}
+    \begin{split}
+        \int_{-\infty}^\infty t[g(t) - g(0)] f_Z(t) dt &= E[Zg(Z) - Zg(0)]\\
+        &= E[Zg(Z)]- g(0)E[Z]\\
+        &= E[zg(z)]
+    \end{split}
+\end{equation*}
+
+\subsection{Stein's Lemma (Case: $N(\mu,\sigma^2)$}
+
+Let $X \sim N(\mu, \sigma^2)$, then $Z = \frac{X-\mu}{\sigma} \sim N(0,1)$. By the lemma that we just proved, we have:
+
+\begin{equation*}
+    E\left[\frac{X-\mu}{\sigma}g\left(\frac{X-\mu}{\sigma} \right) \right] = E \left[g'\left(\frac{X-\mu}{\sigma}\right) \right]
+\end{equation*}
+
+Let $h(x) = g\left(\frac{x-\mu}{\sigma} \right)$ and $h'(x) = \frac{1}{\sigma} g'\left(\frac{x-\mu}{\sigma} \right)$. This implies that:
+
+\begin{equation*}
+    E\left[\left(\frac{X-\mu}{\sigma}\right) h(X) \right] = E\left[\sigma h'(x) \right]
+\end{equation*}
+
+And, equivalently:
+
+\begin{equation*}
+    E\left[(X-\mu) h(X) \right] = E\left[\sigma^2 h'(x) \right]
+\end{equation*}
+
+\subsubsection*{Example:}
+
+Consider obtaining higher order moments of $X \sim N(\mu,\sigma^2)$. We know that $E(X) = \mu$, $E(X^2) = \mu^2 + \sigma^2$. But what if we wanted to find $E(X^3)$?
+
+Let $h(x) = x^2$. Then:
+\begin{equation*}
+    \begin{split}
+        E[(X-\mu)X^2] &= E[\sigma^2(2X)]\\
+        E[X^3] - \mu E[X^2] &= 2\sigma^2E(X)\\
+        \Rightarrow E[X^3] &= \mu(\mu^2 + \sigma^2) + 2\sigma^2 \mu
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Theorem:}
+Let $X_p \sim \chi_{(p)}^2$. Then:
+\begin{equation*}
+    E[h(X_p)] = p E \left[ \frac{h(X_{p+2})}{X_{p+2}} \right]
+\end{equation*}
+
+\subsubsection*{Proof:}
+
+\begin{equation*}
+    \begin{split}
+        E[h(X_p)] &= \int_0^\infty \frac{h(x)}{\Gamma\left(\frac{p}{2} \right) 2^{p/2}} x^{\frac{p}{2}-1} e^{-x/2} dx\\
+        &= \frac{1}{\Gamma\left(\frac{p}{2}\right) 2^{p/2}} \int_0^\infty x^{\frac{p}{2}-1} e^{-x/2} h(x) \cdot \frac{x}{x} dx\\
+        &= \frac{1}{\Gamma\left(\frac{p}{2}\right) 2^{p/2}} \int_0^\infty \frac{h(x)}{x} x^{p/2} e^{-x/2}  dx
+    \end{split}
+\end{equation*}
+
+We recognize that The right side is the \textit{kernel} of a $\chi^2_{(p+2)}$ distribution, since $\frac{p}{2} = \frac{p+2}{2} -1$. So we then have:
+
+\begin{equation*}
+    \begin{split}
+        \Gamma\left(\frac{p}{2}\right) &= \frac{\frac{p}{2}\Gamma\left(\frac{p}{2}\right) 2^{p/2}}{p/2}\\
+        &= \frac{\Gamma\left( \frac{p}{2}+1\right) 2^{\frac{p}{2} + 1}}{p} = \frac{\Gamma\left( \frac{p+2}{2}\right) 2^{\frac{p+2}{2}}}{p}
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Example:}
+
+Consider $X_p \sim \chi^2_{(p)}$. Let $h(x) = x$. Now, using the above theorem, we have:
+
+\begin{equation*}
+    E[X_p] = p E\left[\frac{X_{p+2}}{X_{p+2}} \right] = p
+\end{equation*}
+
+Let's calculate the variance. We will let $h(x) = x^2$, and, by the theorem we have:
+
+\begin{equation*}
+    \begin{split}
+        E[X_p^2] &= pE\left[\frac{X_{p+2}^2}{X_{p+2}} \right] = p E[x_{p+2}] = p(p+2)\\
+        \Rightarrow Var(X_p) &= E[X_p^2] - E[X_p]^2 = p(p+2) - p^2 = 2p
+    \end{split}
+\end{equation*}
+
+\subsection{Discrete Case Identities}
+
+\subsubsection*{Poisson (Hwang Theorem)}
+
+Suppose that $X \sim poisson(\lambda)$ and $g(x)$ is a function such that $-\infty < E[g(X)] < \infty$ and $-\infty < g(-1) < \infty$. Then we have:
+
+\begin{equation*}
+    E[\lambda g(X)] = E[X g(X-1)]
+\end{equation*}
+
+\subsubsection*{Proof:}
+
+We first note that:
+
+\begin{equation*}
+    E[\lambda g(X)] = \sum_{x=0}^\infty \lambda g(x) \frac{e^{-\lambda}\lambda^x}{x!}
+\end{equation*}
+
+Letting $y = x+1$, we get $x = y-1$:
+\begin{equation*}
+    \sum_{y=1}^\infty \lambda g(y-1) \frac{e^{-\lambda}\lambda^{y-1}}{(y-1)!}
+\end{equation*}
+
+Using the same trick as the other theorem, we multiply by $\frac{y}{y}$ to get:
+
+\begin{equation*}
+    \begin{split}
+        \sum_{y=1}^\infty &\lambda y g(y-1) \frac{e^{-\lambda} \lambda^{y-1}}{y(y-1)!}\\
+        &= \sum_{y=1}^\infty y g(y-1) \frac{e^{-\lambda} \lambda^{y}}{y!}\\
+        &= \sum_{y=0}^\infty y g(y-1) \frac{e^{-\lambda} \lambda^{y}}{y!} = E[Yg(Y-1)]\\
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Example:}
+
+Consider $X \sim poisson(\lambda)$. Then we know that $E[X] = \lambda$ and $E[X^2] = \lambda + \lambda^2$. Now, suppose that we let $g(x) = x^2$. Then we have:
+\begin{equation*}
+    \begin{split}
+        E[\lambda X^2] &= E[X(X-1)^2]\\
+        \lambda E[X^2] &= E[X(X^2-2X+1)]\\
+        E[X^3] &= \lambda E[X^2] + 2E[X^2] - E[X]\\
+        &= (\lambda + 2) (\lambda + \lambda^2) - \lambda
+    \end{split}
+\end{equation*}
+
+\end{document}
