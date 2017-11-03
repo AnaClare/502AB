@@ -1,0 +1,219 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 15}
+\author{Dr. Jamshidian}
+\date{October 16, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Chapter 5 - Properties of Random Samples}
+
+\subsubsection*{Definition:}
+
+The random variables $X_1,...,X_n$ are called a \textit{random sample of size} $n$ from the population $f(x)$ if $X_1,...,X_n$ are distributed \textbf{independently and identically (iid)} $\sim f(x)$
+
+\subsubsection*{Example:}
+Let $X = $ Average weight of a newborn baby $\sim N(7,1.5)$. A sample will be observations from this population $X_1,...,X_n \sim X$ (\textbf{iid})
+
+\subsubsection{Joint Distribution of Random Sample}
+
+\noindent The joint distribution of $X_1,...,X_n$ has information about $X_1,...,X_n$
+\begin{equation*}
+    f_{X_1,...,X_n}(X_1,...,X_n) = \prod_{i=1}^n f(x_i | \theta)
+\end{equation*}
+
+\subsubsection*{Example:}
+
+Consider $X_1,...,X_n \sim poisson(\lambda = 1)$
+\begin{equation*}
+\begin{split}
+    P(X_1=x_1,...,X_n = x_n) &= \prod_{i=1}^n \frac{e^{-\lambda}\lambda^{x_i}}{x_i!}\\
+    P(X_1 = 0,...,X_n = 0) &= e^{-\lambda n}
+\end{split}
+\end{equation*}
+
+\subsubsection{Sampling from a Finite Population}
+
+Suppose that a population has $N$ elements, $\{y_1, y_2,...,y_N\}$. Let $X_1$ denote the $1^{st}$ sample taken and $X_2$ denote the $2^{nd}$ sample taken.
+
+\begin{equation*}
+    \begin{split}
+        P(X_1 = y_k) &= \frac{1}{N}\\
+        P(X_2 = y_k) &= \sum_{i=1}^N P(X_2 = y_k | X_1 = y_i) P(X_1 = y_i) \quad i \neq k\\
+            &= \sum_{i=1}^N \left(\frac{1}{N-1}\right) \left(\frac{1}{N} \right) = \frac{1}{N}
+    \end{split}
+\end{equation*}
+
+\subsection{Statistics}
+
+\subsubsection*{Definition}
+
+Given a sample of size $n$ and a sample $X_1,...,X_n$ from a population, a \textbf{statistic} is defined to be a function of $X_1,...,X_n$ (not including parameters)
+\begin{equation*}
+    Y = T(X_1,...,X_n)
+\end{equation*}
+
+Where $Y$ is a random variable, and the distribution of $Y$ is referred to as the sampling distribution
+
+\subsubsection*{Examples:}
+\begin{enumerate}
+    \item Sample mean $\overline{x}$
+    \begin{equation*}
+       \frac{1}{n} \sum_{i=1}^n x_i
+    \end{equation*}
+
+    \item Median
+
+    \item Sample Variance
+    \begin{equation*}
+        \frac{1}{n-1} \sum_{i=1}^n (X_i - \overline{X})^2
+    \end{equation*}
+\end{enumerate}
+
+\subsubsection*{Theorem:}
+Let $x_1,...,x_n$ be any numbers. Then:
+\begin{equation*}
+    \min_{a} = \sum_{i=1}^n (x_i-a)^2 = \sum_{i=1}^n (x_i - \overline{x})^2
+\end{equation*}
+
+Where $\overline{x}$ is defined as above.
+\subsubsection*{Proof:}
+\begin{equation*}
+    \sum_{i=1}^n (x_i-a)^2 = \sum_{i=1}^n (x_i - \overline{x} + \overline{x} - a)^2
+\end{equation*}
+
+Using the fact that $\sum_{i=1}^n (x_i - \overline{x}) = 0$, the result follows (and is left as an exercise to the reader)
+
+\subsubsection*{Identity:}
+\begin{equation*}
+    \sum_{i=1}^n (x_i - \overline{x})^2 = \sum_{i=1}^n x_i^2 - n\overline{x}
+\end{equation*}
+
+\subsubsection*{Lemma:}
+Let $X_1,...,X_n$ be \textbf{iid} and $g(x)$ be a function such that $E(g(x_i))$ and $Var(g(x_i))$ are finite. Then:
+\begin{equation*}
+    \begin{split}
+        E\left[\frac{1}{n}\sum_{i=1}^n g(x_i) \right] &= E[g(x_i)]\\
+        Var() &= 3
+    \end{split}
+\end{equation*}
+
+\section{Lecture - Part 2}
+\subsection{Properties of $\overline{X}$ and $S^2$}
+
+\subsubsection*{Theorem:}
+
+Let $X_1,...,X_n$ be a random sample from a population with $E(X_i) = \mu$ and $var(X_i) = \sigma^2$. Then:
+\begin{equation*}
+    \begin{split}
+        E(\overline{X}) &= \mu\\
+        Var(\overline{X}) &= \frac{\sigma^2}{n}\\
+        E(S^2) &= \sigma^2
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Proof:}
+\begin{equation*}
+    \begin{split}
+        E(\overline{X}) &= E\left( \frac{1}{n}\sum_{i=1}^n x_i \right) = \frac{1}{n}\sum_{i=1}^n E(x_i ) = \frac{1}{n}\sum_{i=1}^n \mu = \mu\\
+        Var(\overline{X}) &= Var\left[\frac{1}{n} \sum_{i=1}^n x_i \right] = \frac{1}{n^2} \sum_{i=1}^n Var(x_i) = \frac{1}{n^2}n\sigma^2 \\
+        E(S^2) &= E\left[\frac{1}{n-1}\sum_{i=1}^n (x_i - \overline{x})^2 \right]\\
+        &= E \left[\frac{1}{n-1} \left(\sum_{i=1}^n x_i^2 - n \overline{x}^2 \right) \right]\\
+        &= \frac{1}{n-1}\sum_{i=1}^n E(x_1^2) - \frac{n}{n-1} E(\overline{x}^2)\\
+        &= \frac{1}{n-1}\left[n(\sigma^2 + \mu^2) - n\left(\frac{\sigma^2}{n} + \mu^2 \right) \right]\\
+        &= \sigma^2
+    \end{split}
+\end{equation*}
+
+Using some tedious calculations, it can be shown that:
+\begin{equation*}
+    Var(S^2) = \frac{1}{n}\left[\theta_4 - \frac{n-3}{n-1} \theta_2^2 \right]
+\end{equation*}
+
+Where
+\begin{equation*}
+    \theta_4 = E(x_i-\mu)^4 \quad \quad \theta_2 = E(x_i - \mu)^2 = \sigma^2
+\end{equation*}
+\\~\\
+
+\noindent Under which conditions are $\overline{x}$ \textit{uncorrelated} with $S^2$?
+
+It can be shown that:
+\begin{equation*}
+    S^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \overline{x})^2 = \frac{1}{2n(n-1)}\sum_{i=1}^n \sum_{j=1}^n (x_i - x_j)^2
+\end{equation*}
+
+\textbf{WLOG}, assume that $E(X_i) = 0$ (since shifts do not affect \textit{covariance}).
+
+\begin{equation*}
+    \begin{split}
+        Cov(\overline{X},S^2) &= E[\overline{X}S^2] - E(\overline{X}) E(S^2)\\
+        &= \frac{1}{2n^2(n-1)}E\left[\sum_{k=1}^n \sum_{i=1}^n \sum_{j=1}^n x_k(x_i-x_j)^2 \right]
+        &\text{Note that $i=j$ makes this zero}\\
+        &\sum_{k=1}^n \sum_{i=1}^n \sum_{j=1}^n E(x_k(x_i-x_j)^2)\\
+        &= \sum\sum\sum\{i\neq j,  i = k \neq j\} + \sum\sum\sum\{i \neq j, j = k \neq i \}
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Theorem:}
+
+Let $X_1,...,X_n \sim N(\mu,\sigma^2)$ \textbf{iid}. Then:
+\begin{enumerate}
+    \item $\overline{X}$ and $S^2$ are independent
+    \item $\overline{X}\sim N(\mu,\frac{\sigma^2}{n})$
+    \item $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{(n-1)}$
+\end{enumerate}
+
+\subsubsection*{Proof:}
+\begin{enumerate}
+    \item Since shift and scale do not effect independence, WLOG, we assume that $X_1,...,X_n \sim N(0,1)$.
+
+    \begin{equation*}
+        \begin{split}
+            S^2 &= \frac{1}{n-1} \left[(x_1-\overline{x})^2 \sum_{i=2}^n (x_i-\overline{x})^2  \right]\\
+            &= \frac{1}{n-1} \left[\left(\sum_{i=2}^n (x_i - \overline{x}) \right)^2 + \sum_{i=2}^n (x_i - \overline{x})^2 \right]
+        \end{split}
+    \end{equation*}
+
+    Since $S^2$ is a function of $X_2,...,X_n$, it is sufficient to show that $\overline{X}$ is independent of $(X_2-\overline{X}),...,(X_n-\overline{X})$.
+
+    Let:
+    \begin{equation*}
+        \begin{split}
+            Y_1 = \frac{1}{n}\sum_{i=1}^n x_i &\Rightarrow X_1 = n Y_1- \sum_{i=1}^n x_i\\
+            &\Rightarrow X_1 = -\sum_{i=2}^n Y_i + Y_1\\
+            Y_2 = x_2 - \frac{1}{n}\sum x_i &\Rightarrow X_2 = Y_1 + Y_2\\
+            &\vdots\\
+            Y_n = x_n - \frac{1}{n}\sum x_i &\Rightarrow X_n = Y_n + Y_1
+        \end{split}
+    \end{equation*}
+
+    Yielding the Jacobian:
+
+    \begin{equation*}
+        \mathcal{J}^{-1} = \begin{pmatrix}
+        1 & -1 & -1 & \cdots & -1\\
+        1 & 1 & 0 & \cdots & 0\\
+        1 & 0 & 1 & \cdots & 0\\
+        \vdots & \vdots & \vdots & \vdots & \vdots\\
+        1 & 0 & \cdots & 0 & 1
+        \end{pmatrix}
+    \end{equation*}
+
+    The Joint density of $X_1,...,X_n$
+
+    \begin{equation*}
+        \begin{split}
+            f_{X_1,...,X_n}(x_1,...,x_n) &= \frac{1}{(2\pi)^{n/2}} \exp \left\{-\frac{1}{2}\sum_{i=1}^n x_1^2 \right\}\\
+            f_{Y_1,...,Y_n}(y_1,...,y_n) &= \frac{n}{(2\pi)^{n/2}}\exp \left\{-\frac{1}{2} \left(y_1 - \sum_{i=2}^n y_i \right)^2 - \frac{1}{2} \sum_{i=2}^n (y_i + y_1)^2  \right\}\\
+            &= \frac{n}{(2\pi)^{n/2}}\exp \left\{-\frac{1}{2} n y_1^2 \right\} \cdot \exp \left\{-\frac{1}{2}\left[\left(\sum_{i=2}^n y_i \right)^2 - \sum_{i=2}^n y_i^2 \right] \right\}
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\end{document}
