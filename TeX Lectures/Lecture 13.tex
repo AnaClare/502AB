@@ -1,0 +1,111 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+\usepackage{graphicx}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+
+\title{Math 502AB - Lecture 13}
+\author{Dr. Jamshidian}
+\date{October 9, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsubsection{Theorem: Conditional Variance Identity}
+
+\begin{equation*}
+    Var(Y) = Var(E[Y|X]) + E[Var(Y|X)]
+\end{equation*}
+
+Where:
+
+\begin{equation*}
+\begin{split}
+    Var(E[Y|X]) &= E\left(E[Y|X] \right)^2 - \left(E(E[Y|X])\right)^2\\
+    E[Var(Y|X)] &= E\left[E(Y^2|X) - (E[Y|X])^2 \right]
+\end{split}
+\end{equation*}
+
+
+\subsubsection*{Proof:}
+
+\begin{equation*}
+\begin{split}
+    Var[E(Y|X)] &= E[E(Y|X)^2] - E[Y]^2\\
+    E[Var(Y|X)] &= E[E(Y^2|X)] - E[E(Y|X)]^2\\
+                &= E[Y^2] - E[E(Y|X)]^2
+\end{split}
+\end{equation*}
+
+If we add these two together, we get $Var(Y)$.
+
+
+\subsubsection*{Example:}
+
+Consider the Beta-binomial distribution. That is, consider:
+
+\begin{equation*}
+    \begin{split}
+        X|P &\sim binomial(n,\mathcal{P})\\
+        \mathcal{P} &\sim Beta(\alpha,\beta)
+    \end{split}
+\end{equation*}
+
+Find the variance of $X$.
+
+\begin{equation*}
+    \begin{split}
+        Var(X) &= Var[E(X|\mathcal{P})] + E[Var(X|\mathcal{P})]\\
+        &= Var[n\mathcal{P}] + E[n\mathcal{P}(1-\mathcal{P})]\\
+        &= n^2 Var(\mathcal{P}) + n E[\mathcal{P}] - nE[\mathcal{P}^2]\\
+        &= \cdots
+    \end{split}
+\end{equation*}
+
+
+\subsubsection*{Example}
+
+This is \textbf{Problem 4.33} in the book. Say we have $N$ insects, where each insect lays $X_i$ \textbf{(iid)} eggs where $X_i \indep N$. We want to find $H$, the distribution of the \textit{total number of eggs}.
+
+\begin{equation*}
+    \begin{split}
+        N &\sim Poisson(\lambda)\\
+        X_i &\sim logarithmic(p)\\
+        P(X_i=x) &= \frac{-(1-p)^x}{x\log p} \quad x = 1,2,\dots\\
+        H &= X_1 + \dots + X_N | N
+    \end{split}
+\end{equation*}
+
+To find $H$, we want to find the \textit{moment generating function}:
+\begin{equation*}
+     M_H(t) = E[e^{tH}] = E_N[E(e^{tH}|N)]
+\end{equation*}
+
+We note:
+\begin{equation*}
+    \begin{split}
+        E[e^{tH}|N] &= E[e^{t(x_1+...+x_N)}|N]\\
+                    &= \prod_{i=1}^N E[e^{tx_i}|N]\\
+                    &= [E(e^{tx_1}|N)]^N\\
+                E(e^{tx_1}|N) &= \sum_{x=1}^\infty e^{tx} \frac{-(1-p)^x}{x\log p}\\
+                        &= -\frac{1}{\log p }\left[-\log \left(1-e^t(1-p) \right)\right]
+    \end{split}
+\end{equation*}
+
+So, we have:
+
+\begin{equation*}
+    \begin{split}
+        E[e^{tH}] &= E[E(e^{tH}|N)]\\
+            &= E_N\left(\frac{\log(1-e^t(1-p)}{\log p} \right)^N\\
+            &= \sum_{n=0}^\infty \left(\frac{\log(1-e^t(1-p)}{\log p} \right)^n \frac{e^{-\lambda} \lambda^n}{n!}\\
+            &= ... \text{ (algebra)}\\
+            &= \left(\frac{p}{1-e^{t(1-p)}} \right)^{-\lambda/\log p}\\
+        H &\sim Neg. Binom.\left(r = -\frac{\lambda}{\log p}, p\right)
+    \end{split}
+\end{equation*}
+
+
+\end{document}
