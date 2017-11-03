@@ -1,0 +1,367 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+\usepackage{graphicx}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+
+\title{Math 502AB - Lecture 12}
+\author{Dr. Jamshidian}
+\date{October 4, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Independent Events}
+
+\subsubsection{Theorem:}
+
+If $X \indep Y$, then for functions $g$ and $h$:
+\begin{equation*}
+    E[g(X)h(Y)] = E[g(X)]E[h(Y)]
+\end{equation*}
+
+\subsubsection*{Proof:}
+\begin{equation*}
+    \begin{split}
+        E[g(X)h(Y)] &= \int_{-\infty}^\infty \int_{-\infty}^\infty g(x) h(y) f_{X,Y}(x,y)dxdy\\
+        &= \int_{-\infty}^\infty \int_{-\infty}^\infty g(x) h(y) f_X(x) f_Y(y) dx dy \quad \text{ by independence}\\
+        &= \left(\int_{-\infty}^\infty g(x) f_X(x) dx\right) \left( \int_{-\infty}^\infty h(y) f_Y(y) dy\right)\\
+        &= E[g(X)]E[h(Y)]
+    \end{split}
+\end{equation*}
+
+\subsubsection{Theorem:}
+
+Let $X \indep Y$. Then for any $A \subset \mathbb{R}$ and $B \subset \mathbb{R}$:
+\begin{equation*}
+    P(X \in A, Y \in B) = P(X \in A) P(Y \in B)
+\end{equation*}
+
+\subsubsection*{Proof:}
+
+Let
+\begin{equation*}
+    g(x) = \mathcal{I}_{\{X \in A\}}\begin{cases}
+        1 & x \in A\\
+        0 & x \not\in A
+    \end{cases}
+\end{equation*}
+
+And, similarly, define $h(Y) = \mathcal{I}_{\{y \in B\}}$. Note that, since an indicator function is simply a \textit{Bernoulli} random variable, we then have:
+\begin{equation*}
+\begin{split}
+    P(X \in A, Y \in B) &= E[g(X)h(Y)]\\
+        &= E[g(X)]E[h(Y)]\\
+        &= P(X \in A) P(Y \in B)
+\end{split}
+\end{equation*}
+
+
+\subsubsection{Theorem:}
+
+Let $X \indep Y$, and $M_X(t)$ and $M_Y(t)$ be the \textit{moment generating functions} of $X$ and $Y$ respectively. Then, the \textit{mgf} of $Z = X + Y$ is:
+\begin{equation*}
+    M_Z(t) = M_X(t)M_Y(t)
+\end{equation*}
+
+\noindent\textbf{Note: } This theorem is extremely useful when trying to find the distribution of the sum of two random variables (provided that the \textit{moment generating functions} exist for both variables).
+
+\subsubsection*{Proof}
+
+\begin{equation*}
+    \begin{split}
+        M_Z(t) = E[e^{t(X+Y)}] &= E[e^{tX}e^{tY}]\\
+            &=E[e^{tX}]E[e^{tY}]\\
+            &= M_X(t) M_Y(t)
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Example:}
+
+Let $X \indep Y$, and $X\sim N(\mu_1,\sigma_1^2)$ and $Y\sim N(\mu_2,\sigma_2^2)$. Show that
+\begin{equation*}
+    X+Y \sim N(\mu_1 + \mu_2, \sigma_1^2 + \sigma_2^2)
+\end{equation*}
+
+\begin{equation*}
+    \begin{split}
+        M_{X+Y}(t) &= M_X(t) M_Y(t)\\
+            &= \exp \left( \mu_1 t + \frac{\sigma_1^2 t^2}{2} \right) \cdot \exp \left(\mu_2 t + \frac{\sigma_2^2 t^2}{2} \right)\\
+            &= \exp \left( \left(\mu_1+ \mu_2\right) t + \frac{\sigma_1^2 + \sigma_2^2}{2} t^2 \right)
+    \end{split}
+\end{equation*}
+
+
+\subsection{Bivariate Transformations}
+
+Suppose we have two random variables $X$ and $Y$ an we are interested in the distribution involving: 
+\begin{equation*}
+    \begin{cases}
+        U = g_1(x,y)\\
+        V = g_2(x,y)
+    \end{cases}
+\end{equation*}
+\begin{itemize}
+    \item The first problem we will look at is a function of two random variables, which is a random variable itself (for example: $X+Y$, as in the above example). 
+    \item The second problem we will look at is, given $U$ and $V$, we want to understand the joint distribution of these two random variables.
+\end{itemize}
+
+
+\subsubsection{Problem 1:}
+
+\subsubsection*{Examples:}
+
+\begin{enumerate}
+    \item Let $X \indep Y$, with $X\sim Poisson(\lambda)$ and $Y\sim Poisson(\theta)$. Obtain the distribution of $U = X + Y$.
+    
+    The easy way to approach this problem is by using the \textit{moment generating function}. However, here we will look at the \textit{pmf}:
+    
+    \begin{equation*}
+        \begin{split}
+            P(U = u) = P(X+Y = u) &= \sum_{y=0}^\infty P(X+Y = u | Y=y) P(Y=y)\\
+                                &= \sum_{y=0}^\infty P(X=u-y)P(Y=y)\\
+                                &= \sum_{y=0}^u P(X=u-y)P(Y=y)\\
+                                 &= \sum_{y=0}^u \frac{e^{-\lambda}\lambda^{u-y}}{(u-y)!} \cdot \frac{e^{-\theta}\theta^y}{y!}\\
+                                 &= \frac{e^{-(\lambda+\theta)}}{u!} \sum_{y=0}^u \frac{u!}{(u-y)!y!} \theta^y \lambda^{u-y}\\
+                                 &= \frac{e^{-(\lambda+\theta)}}{u!} (\theta + \lambda)^u\\
+                                 &\sim Poisson(\theta + \lambda)
+        \end{split}
+    \end{equation*}
+    
+    \item Let $f(x,y) = xe^{-x(y+1)}$, $x>0$, $y>0$ be the joint density of $X$ and $Y$. Find the \textit{pdf} of $W = XY$
+    
+    \begin{equation*}
+        \begin{split}
+            F_W(w) = P(W\leq w) &= P(XY\leq w)\\
+            &= P \left(Y \leq \frac{w}{X} \right)\\
+            &= \int_0^\infty \int_0^{\frac{w}{x}} xe^{-x(y+1)} dy dx\\
+            &= 1 - e^{-w}\\
+            w &\sim exp(1)
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsubsection{Problem 2:}
+
+Now, consider the case where $X,Y$ are jointly distributed. Let $U=g_1(X,Y)$ and $V=g_2(X,Y)$, and assume that this transformation can be inverted, such that $X = h_1(U,V)$ and $Y= h_2(U,V)$. Furthermore, assume that $g_1$ and $g_2$ have continuous partial derivatives, and:
+
+\begin{equation*}
+    \mathcal{J}(x,y) = \det\begin{bmatrix}
+                    \frac{\partial g_1}{\partial x} & \frac{\partial g_1}{\partial y}\\
+                    \frac{\partial g_2}{\partial x} & \frac{\partial g_2}{\partial y}
+                \end{bmatrix} \neq 0 \quad \forall x,y
+\end{equation*}
+
+Then:
+\begin{equation*}
+    f_{U,V}(u,v) = f_{X,Y}\left(h_1(u,v),h_2(u,v)\right) \left|\mathcal{J}^{-1} \left(h_1(u,v),h_2(u,v)\right)\right|
+\end{equation*}
+
+\subsubsection*{Examples:}
+
+\begin{enumerate}
+    \item Let $X$ and $Y$ be jointly distributed with joint pdf $f_{X,Y}$. Let $U = X + Y$ and $V = X - Y$. Obtain the joint pdf of $(U,V)$. Solving for $X$ and $Y$, we get $X = \frac{U+V}{2} = h_1(u,v)$ and $Y=\frac{U-V}{2} = h_2(u,v)$. Then, by the process above:
+    
+    \begin{equation*}
+        \begin{split}
+            \mathcal{J} (x,y) &= \begin{vmatrix}
+                1 & 1\\
+                1 & -1
+            \end{vmatrix} = -2\\
+            f_{U,V}(u,v) &= f_{X,Y}\left(\frac{U+V}{2}, \frac{U-V}{2} \right) \cdot \frac{1}{2}
+        \end{split}
+    \end{equation*}
+    
+    \item Let $X,Y \sim Unif(0,1)$ (\textbf{iid}). Obtain the joint pdf of $U = X + Y$ and $V = X-Y$.
+    
+    \begin{equation*}
+        f_{X,Y}(x,y) = f_X(x) f_Y(y) = \begin{cases}
+                                            1 & 0 \leq x \leq 1; \text{ } 0 \leq y \leq 1\\
+                                            0 & \text{otherwise}
+                                        \end{cases}
+    \end{equation*}
+    
+    Thus, by the result of the previous example, we know that
+    \begin{equation*}
+        f_{U,V}(u,v) = \frac{1}{2}
+    \end{equation*}
+    
+    But over \textit{what} range? By drawing a picture, we get:
+    \begin{equation*}
+        f_{U,V}(u,v) = \begin{cases}
+                        \frac{1}{2} & 0\leq u - v \leq 2; \text{ } 0 \leq u + v \leq 2\\
+                        0 & \text{otherwise}
+            \end{cases}
+    \end{equation*}
+    
+    \textbf{Note:} It is important to remember that when making a transformation, it is not only the \textit{density} that is changing, but the \textit{domain as well.}
+    
+    \item Let $Z \sim N(0,1)$ and $X \sim \chi_{(\nu)}^2$. Let $Z \indep X$. Obtain the distribution of
+    \begin{equation*}
+        U = \frac{Z}{\sqrt{X/\nu}}
+    \end{equation*}
+    
+    If you have fractions of two random variables, you might want to define a new \textit{random variable} equal to the denominator:
+    \begin{equation*}
+        V = \sqrt{X/\nu}
+    \end{equation*}
+    
+    \textbf{Note:}
+    \begin{equation*}
+        f_{Z,X} (z,x) = \frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}z^2} \cdot \frac{x^{\nu/2-1}e^{-x/2}}{\Gamma\left(\frac{\nu}{2}\right) 2^{\nu/2}} \quad -\infty < z < \infty, x \geq 0
+    \end{equation*}
+    
+    To find the joint density of $U$ and $V$, we need the \textit{determinant} of the \textbf{Jacobian}:
+    
+    \begin{equation*}
+        |\mathcal{J}| = \begin{vmatrix}
+            - \frac{1}{2^\nu} \left(\frac{x}{\nu}\right)^{-3/2}z & \left(\frac{x}{\nu}\right)^{-1/2}\\
+            \frac{1}{2}\left(\frac{x}{\nu}\right)^{-1/2} \left(\frac{1}{\nu}\right) & 0
+        \end{vmatrix} = - \frac{1}{2}x
+    \end{equation*}
+    
+    So $|\mathcal{J}^{-1}| = 2x$. If we solve $U$ in terms of $Z$ and $X$, we get
+    
+    \begin{equation*}
+        \begin{cases}
+            Z = UV \\
+            X = \nu V^2
+        \end{cases}
+    \end{equation*}
+    
+    Thus, we can plug in these $Z$ and $X$ values into the joint density of $Z$ and $X$ as written above and multiply by the inverse of the Jacobian to get:
+    \begin{equation*}
+        \begin{split}
+            f_{U,V}(u,v) = (2 \nu v^2) \frac{1}{\sqrt{2\pi}} \frac{e^{-\frac{1}{2}u^2 v^2}}{\Gamma\left(\frac{\nu}{2}\right) 2^{\nu/2}} (\nu v^2)^{\frac{\nu}{2}-1}e^{-\nu v^2/2}
+        \end{split}
+    \end{equation*}
+    
+    Then, to get the \textit{pdf} for $U$, we simply integrate out $V$ over its domain.
+    
+    \begin{equation*}
+        f_U(u) = \frac{2}{\sqrt{2\pi}} \frac{\nu^{\nu/2}}{\Gamma\left(\frac{\nu}{2}\right) 2^{\nu/2}} \int_0^\infty v^\nu e^{-\frac{1}{2}v^2(u^2+\nu)}dv
+    \end{equation*}
+    
+    To solve, let $w = v^2$ and do a bunch of algebra to get the $t$-distribution.
+\end{enumerate}
+
+\subsection{Section 4.4 - Hierarchical and Mixture Models}
+
+\subsubsection*{Example:}
+
+A particle counter is imperfect. It detects each particle independently, with probability $p$. The number of incoming particles in a minute has a \textit{Poisson} distribution with parameter $\lambda$. What is the expected number of counted particles?
+
+Let $X = $ the number of particles detected, and $N\sim Poisson(\lambda)$ be the number of incoming particles. The, by the \textit{law of total probability}, we have:
+
+\begin{equation*}
+    \begin{split}
+        f(x) &= P(X=x)\\
+            &= \sum_{\text{all } n} P(X=x|N=n)P(N=n)\\
+            &= \sum_{n=x}^\infty \binom{n}{x} p^x(1-p)^{n-x}\frac{e^{\lambda}\lambda^n}{n!}\\
+            &= \sum_{n=x}^\infty \frac{p^x(1-p)^{n-x}e^{\lambda}\lambda^n}{x!(n-x)!}\\
+            &= \frac{(\lambda p)^x e^{-\lambda}}{x!} \sum_{n=x}^\infty \frac{(1-p)^{n-x}}{(n-x)!}\lambda^{n-x}\\
+            &= \frac{(\lambda p)^x e^{-\lambda}}{x!} \sum_{n=0}^\infty \frac{(1-p)^{n}}{n!}\lambda^{n} = \frac{(\lambda p)^x e^{-\lambda}}{x!} \sum_{n=0}^\infty \frac{[\lambda(1-p)]^{n}}{n!}\\
+            &= \frac{(\lambda p)^x e^{-\lambda}}{x!} e^{\lambda(1-p)} = \frac{(\lambda p)^x}{x!}e^{-\lambda p}\\
+            X &\sim Poisson (\lambda p)\\
+            \text{So, we have: } E[X] &= \lambda p
+    \end{split}
+\end{equation*}
+
+\subsubsection{Theorem: (Law of Total Expectation)}
+Let $X$ and $Y$ be two random variables. Then:
+\begin{equation*}
+    E[X] = E[E[X|Y]]
+\end{equation*}
+
+\subsubsection*{Proof:}
+
+\begin{equation*}
+    \begin{split}
+        E_Y[E(X|Y)] &= \int_{-\infty}^\infty E[X|Y=y] f_Y(y) dy\\
+            &= \int_{-\infty}^\infty \int_{-\infty}^\infty x f_{X|Y}(x|y) dx f_Y(y) dy\\
+            &= \int_{-\infty}^\infty \int_{-\infty}^\infty x f_{X,Y}(x,y) dy dx\\
+            &= \int_{-\infty}^\infty x \int_{-\infty}^\infty f_{X,Y}(x,y) dy dx\\
+            &= \int_{-\infty}^\infty x f_X(x) dx = E[X]
+    \end{split}
+\end{equation*}
+
+
+\subsubsection*{Examples:}
+\begin{enumerate}
+    \item In the previous example, we had:
+    
+    \begin{equation*}
+        \begin{split}
+            X|N = n &\sim Binomial(n,p)\\
+            N &\sim Poisson(\lambda)\\
+            E[X] = E_N[E(X|N)] &= E[Np]\\
+            &= p E[N] = p\lambda
+        \end{split}
+    \end{equation*}
+    
+    \item A miner is trapped in a mine. There are three possible exits. 
+    \begin{enumerate}
+        \item Exit 1 leads to safety in 3 hours
+        \item Exit 2 leads back to the mine in 5 hours
+        \item Exit 3 leads back to the mine in 7 hours
+    \end{enumerate}
+    
+    Assuming that the miner selects an exit at random each time, what is the expected length of time to reach safety? Our two random variables are:
+    \begin{equation*}
+        \begin{split}
+            Y &= \text{ selected exit 1,2,3}\\
+            X &= \text{ length of time to safety}
+        \end{split}
+    \end{equation*}
+    
+    We are then interested in $E[X]$.
+    
+    \begin{equation*}
+        \begin{split}
+            E[X] &= E_Y[E(X|Y)]\\
+                &= E[X|Y=1]\cdot\frac{1}{3} + E[X|Y=2] \cdot \frac{1}{3} + E[X|Y=3] \cdot \frac{1}{3}\\
+                &= \frac{1}{3}\left( 3 + [5 + E[X]] + [7 + E[X]] \right)\\
+                E[X] &= 15
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsubsection*{Definition:}
+
+A random variable $X$ is said to have a \textbf{mixture distribution} if values of $X$ can be derived from more than one underlying \textit{random variable}. 
+
+\subsubsection{Generalization of the Binomial-Poisson Mixture}
+
+One example of a mixture model is the example before where $X \sim Poisson(\lambda p)$. It can be derived from 
+\begin{equation*}
+    \begin{split}
+        X|Y &\sim Binomial(n,p)\\
+        Y &\sim Poisson(\lambda)
+    \end{split}
+\end{equation*}
+
+But let's generalize this. Consider a case where:
+\begin{equation*}
+    \begin{split}
+        X|N &\sim Binomial(n,p)\\
+        N &\sim Poisson(\Lambda)\\
+        \Lambda &\sim exponential(\beta)
+    \end{split}
+\end{equation*}
+
+\noindent Now, when wanting to find expected count, we can use \textit{law of total expectation}:
+
+\begin{equation*}
+    \begin{split}
+        E[X] &= E_N[E(X|N)]\\
+            &= E_N[Np] = pE[N]\\
+            &= p E_\Lambda [E(N|\Lambda)]\\
+            &= pE[\Lambda] = p \beta
+    \end{split}
+\end{equation*}
+
+
+
+\end{document}
