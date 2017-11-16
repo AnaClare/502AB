@@ -1,0 +1,476 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 23}
+\author{Dr. Jamshidian}
+\date{November 15, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsubsection{Theorem:}
+
+Let $X_1,...,X_n \sim f(X|\theta)$ (\textbf{iid}), where $f(X|\theta)$ satisfies the conditions of the \textit{Cramer-Rao Lower Bound}. Let:
+\begin{equation*}
+    \mathcal{L}(\theta|X) = \prod_{i=1}^n f(x_i|\theta)
+\end{equation*}
+
+\noindent If $W(X)$ is any unbiased estimator of $\tau(\theta)$, then $W(X)$ attains the \textit{CRLB} \textbf{iff} there exists a function $a(\theta)$ such that:
+\begin{equation*}
+    \frac{\partial}{\partial \theta} \log \mathcal{L}(\theta|X) = a(\theta) [W(X)-\tau(\theta)]
+\end{equation*}
+
+\subsubsection*{Examples:}
+
+\begin{enumerate}
+    \item Let $X_1,...,X_n\sim Gamma\left(1,\frac{1}{\theta}\right)$ (\textbf{iid}). Investigate \textit{UMVUE} for $\theta$.
+    
+    \begin{equation*}
+        \mathcal{L}(\theta|X_1,...,X_n) = \prod_{i=1}^n \theta e^{-\theta x_i} = \theta^n e^{-\theta \sum x_i}
+    \end{equation*}
+    
+    So what might be a sufficient statistic? We have, by the factorization theorem, $\sum_{i=1}^n x_i$ is a sufficient statistic.
+    
+    \begin{equation*}
+        \ell (\theta) = n\log(\theta)-\theta \sum x_i \Rightarrow \hat{\theta} = \frac{1}{\overline{X}} = \frac{n}{\sum_{i=1}^n x_i}
+    \end{equation*}
+    
+    Is $\hat{\theta}$ \textit{unbiased?}?
+    \begin{equation*}
+        \begin{split}
+            \sum x_i &\sim Gamma\left( n, \frac{1}{\theta}\right)\\
+            E(\hat{\theta}) = n E \left(\frac{1}{\sum x_i} \right) &= n \int_{0}^\infty \frac{1}{y}\cdot \frac{\theta^n}{\Gamma(n)} y^{n-1} e^{-\theta y} dy = \frac{n\theta}{n-1}
+        \end{split}
+    \end{equation*}
+    
+    So, no it isn't. But if we let $W(X) = \frac{n-1}{n}\hat{\theta}$, then $W(X)$ \textit{is} unbiased. \textbf{Does} $W(X)$ \textbf{obtain the CRLB?} Using the theorem above, we have:
+    
+    \begin{equation*}
+        \begin{split}
+            \frac{\partial}{\partial \theta}\log \mathcal{L}(\theta|X) &= \frac{\partial}{\partial \theta} \left[ n \log \theta - \theta \sum x_i \right]\\
+            &= \frac{n}{\theta} - \sum x_i = \frac{n-\theta \sum x_i}{\theta} \quad \textbf{(1)}\\
+            w(X) - \theta &= \frac{n-1}{\sum x_i} - \theta = \frac{n-1-\theta \sum x_i}{\sum x_i} \quad \textbf{(2)}
+        \end{split}
+    \end{equation*}
+    
+    Since $\frac{\textbf{(1)}}{\textbf{(2)}}$ is \textbf{not} a function of $\theta$ only, $W(X)$ does \textbf{not} achieve the \textit{CRLB.}
+    
+    So, we want to know: is $W(X)$ the \textit{best} unbiased estimator?
+\end{enumerate}
+
+\subsubsection{Theorem (7.3.23)}
+
+Let $T$ be a complete sufficient statistic for a parameter $\theta$, and let $g(T)$ be an estimator based only on $T$, such that $E[g(T)] = \tau(\theta)$. Then $g(T)$ is the \textit{best unique unbiased estimator} of $\tau(\theta)$
+
+
+\subsubsection{The Rao-Blackwell Theorem}
+
+Given two random variables $X$ and $Y$
+
+\begin{equation*}
+    \begin{split}
+        E[X] &= E[E(X|Y)]\\
+        Var(X) &= Var(E[X|Y]) + E[Var(X|Y)] \geq Var(E[X|Y])
+    \end{split}
+\end{equation*}
+
+Now, let $W$ be a statistic for estimating $\theta$, and let $T$ be a sufficient statistic. Let $E[W] = \theta$, and define $\phi(T) = E[W|T]$.
+
+\begin{enumerate}
+    \item $\phi(T)$ is independent of $\theta$, because $T$ is a sufficient statistic. Thus $\phi(T)$ is itself an estimator of $\theta$.
+    
+    \item $E[\phi(T)] = E[E(W|T)] = E[W] = \theta$
+    
+    \item $Var(\phi(T)) = Var\left(E[W|T] \right)\leq Var(W)$
+\end{enumerate}
+
+
+\subsubsection{Theorem:}
+
+Let $X_1,...,X_n \sum f(X,\theta)$ (\textbf{iid}). Let $Y = U(X_1,...,X_n)$ be a sufficient statistic for $\theta$, provided it exists. If $\hat{\theta}$ is the unique MLE of $\theta$, it must be a function of $Y$.
+
+\subsubsection*{Proof:}
+
+Consider the likelihood function
+
+\begin{equation*}
+\begin{split}
+    L(\theta|X_1,...,X_n) &= \prod_{i=1}^n f(x_i|\theta)\\
+                \text{By factorization theorem: } &= f_Y[u(x_1,...,x_n),\theta] H(x_1,...,x_n)
+\end{split}
+\end{equation*}
+
+
+\subsection{Loss Functions}
+
+Sometimes we are interested in obtaining estimators that achieve certain goals. In such cases, we define ``loss functions" to achieve our goal.
+
+\subsubsection*{Examples:}
+
+
+
+\begin{enumerate}
+\item Suppose that $a$ is to estimate $\theta$. Two simple loss functions we can consider are:
+    \begin{enumerate}
+        \item Absolute error loss $= |\theta-a|$
+        \item Squared error loss $= (\theta-a)^2$
+    \end{enumerate}
+
+\item The following loss function penalized \textit{overestimation:}
+
+\begin{equation*}
+    L(\theta,a) = \begin{cases}
+                (a-\theta)^2 & a < \theta \\
+                10(a-\theta)^2 & a > \theta
+                \end{cases}
+\end{equation*}
+\end{enumerate}
+
+\subsubsection{Risk Function}
+
+Suppose that $\delta (X)$ is an estimator of $\theta$. Then the \textbf{risk function} is defined by:
+
+\begin{equation*}
+    \mathcal{R}(\theta,\delta (X)) = E\left[L(\theta,\delta(X) \right]
+\end{equation*}
+
+Therefore, the risk is the \textit{average loss at a given value} of $\theta$.
+
+\subsubsection*{Example:}
+\begin{equation*}
+    \begin{split}
+        L(\theta,\delta (X)) &= (\theta - \delta (X))^2\\
+        \mathcal{R}(\theta,\delta(X)) &= E[\theta-\delta(X)]^2 = MSE_\theta (\delta(X))
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Example:}
+
+Let $X_1,...,X_n\sim N(\mu,\sigma^2)$. Consider estimating $\sigma^2$, using squared error loss. Let's consider estimators of the form $\delta_b(X) = bS^2$, where $S^2 = \frac{1}{n-1}\sum_{i=1}^n(x_i-\overline{X})^2$.
+
+Recall that $E(S^2) = \sigma^2$ and $Var(S^2) = \frac{2\sigma^4}{n-1}$. Then, lets look at the risk:
+
+\begin{equation*}
+\begin{split}
+    \mathcal{R}(\theta,\delta(X)) &= Var(bS^2) + \left[E(bS^2) - \sigma^2 \right]^2\\
+    &= \frac{b^2(2\sigma^4)}{n-1} + [b\sigma^2 - \sigma^2]\\
+    &= \left[\frac{2b^2}{n-1} + (b-1)^2 \right] \sigma^4
+\end{split}
+\end{equation*}
+
+Now, let's consider three different $b$'s. For $S^2$, we have $b^2 = 1$, and for $\hat{\sigma}^2$, we have $b^2 = \frac{n-1}{n}$. But what about the \textbf{optimal} $b$? 
+
+\begin{equation*}
+    \begin{split}
+        g(b) &= \frac{2b^2}{n-1} + (b-1)^2\\
+        g'(b) &= \frac{4b}{n-1} + 2(b-1) = 0\\
+        \Rightarrow b &= \frac{n-1}{n+1}
+    \end{split}
+\end{equation*}
+
+\subsubsection{Stein's Loss Function}
+
+\begin{equation*}
+    L(\sigma^2,a) = \frac{a}{\sigma^2} - 1 - \log \frac{a}{\sigma^2}
+\end{equation*}
+
+Let's consider the same case with this new loss function:
+
+\begin{equation*}
+    \begin{split}
+        \mathcal{R}(\sigma^2 bS^2) &= E \left[\frac{bS^2}{\sigma^2} - 1 - \log \frac{bS^2}{\sigma^2} \right]\\
+                        &= bE \left[ \frac{S^2}{\sigma^2}\right] - 1 - \log b - E\left[\log \frac{S^2}{\sigma^2} \right]\\
+                    \Rightarrow    g(b) &= b-1-\log b\\
+                        g'(b) &= 1-\frac{1}{b} = 0 \Rightarrow b = 1
+    \end{split}
+\end{equation*}
+
+
+\subsection{Bayesian Point Estimation}
+
+In \textit{Bayesian estimation}, we minimize what is referred to as the \textbf{Bayes Risk}:
+
+\begin{equation*}
+    \min_{\delta(X)} \int_\Theta \mathcal{R}(\theta,\delta(X)) \pi(\theta) d\theta
+\end{equation*}
+
+Where $\pi(\theta)$ is the \textit{prior}. It can actually be shown that this is equivalent to:
+
+\begin{equation*}
+    \min \int_{-\infty}^\infty L(\theta,\delta(X)) f_{\Theta|X}(\theta|x) \theta d\theta= \min E\left[L(\Theta,\delta(X)) | X = x \right]
+\end{equation*}
+
+\noindent Then, if the loss function is:
+
+\begin{equation*}
+\begin{split}
+    L(\theta,\delta(X)) &= (\theta - \delta(X))^2 \Rightarrow \delta(X) = E[\Theta|X]\\
+    L(\theta,\delta(X)) &= |\theta - \delta(X)| \Rightarrow \delta(X) = median(\theta|X)
+\end{split}
+\end{equation*}
+
+
+\subsubsection*{Example:}
+
+Suppose $X_1,...,X_n \sim Bernouli(\theta)$ (\textbf{iid}). We have:
+
+\begin{equation*}
+    \begin{split}
+        \text{Prior:}\quad &\Theta \sim Beta(\alpha,\beta) \quad \text{Where $\alpha$ and $\beta$ are known}\\
+        \text{Posterior:}\quad &\Theta | X \sim Beta\left((\alpha + \sum x_i, \beta + n - \sum x_i\right)
+    \end{split}
+\end{equation*}
+
+Thus, using the \textit{squared error loss}, the Bayes estimate is:
+
+\begin{equation*}
+    \delta (X) = E[\Theta | X] = \frac{\alpha + \sum x_i}{\alpha + \beta + n}
+\end{equation*}
+
+Note, that we can rewrite $E(\Theta|X)$ as follows:
+
+\begin{equation*}
+    \begin{split}
+        E[\Theta|X] &= \left(\frac{n}{\alpha+\beta+n} \right) \frac{\sum x_i}{n} + \left(\frac{\alpha+\beta}{\alpha+\beta+n} \right)\frac{\alpha}{\alpha+\beta}
+    \end{split}
+\end{equation*}
+
+Thus, it is some linear combination of the mean of the prior and the maximum likelihood estimate.
+
+
+\section{Lecture - Part II}
+
+\subsection{Chapter 8: Test of Hypotheses}
+
+We wish to decide between:
+
+\begin{equation*}
+    \begin{cases}
+        H_0: & \theta \in \Theta_0\\
+        H_a: & \theta \in \Theta_a
+    \end{cases}
+\end{equation*}
+
+Given data $X_1,...,X_n$.
+
+\subsubsection*{Example:}
+
+Suppose that we have two coins:
+
+\begin{equation*}
+\begin{cases}
+\text{Coin 0:} & P(heads) = $0.5$\\
+\text{Coin 1:} & P(heads) = $0.7$
+\end{cases}
+\end{equation*}
+
+I choose a coin and flip it 5 times, and tell you $X = $ the number of heads. But based on this information, you are to decide which coin I flipped:
+
+\begin{equation*}
+    \begin{cases}
+        H_0: & p = 0.5\\
+        H_a: & p = 0.3
+    \end{cases}
+\end{equation*}
+
+
+\begin{equation*}
+    \begin{vmatrix}
+         &\text{Coin 1} & \text{Coin 2}\\
+        X & P_0(X) & P_1(X) \\
+        0 & 0.031 & 0.0024 \\
+        1 & 0.156 & 0.0028 \\
+        2 & 0.313 & 0.132 \\
+        3 & 0.313 & 0.309 \\
+        4 & 0.156 & 0.36 \\
+        5 & 0.031 & 0.168
+    \end{vmatrix}
+\end{equation*}
+
+Suppose that I tell you that I got $1$ head:
+
+\begin{equation*}
+    \frac{P_0(1)}{P_1(1)} = \frac{0.156}{0.12}
+\end{equation*}
+
+
+\begin{equation*}
+    \begin{vmatrix}
+        X & = & 0 & 1 & 2 & 3 & 4 & 5\\
+        \Rightarrow \frac{P_0(X)}{P_1(X)} & =  & 12.9 & 5.5 & 2.4 & 1.01 & 0.43 & 0.18
+    \end{vmatrix}
+\end{equation*}
+
+The values greater than 1 lead us to accept $H_0$ (ie. the acceptance region).
+
+\subsubsection{Possible Errors:}
+
+\begin{itemize}
+    \item \textbf{Type 1 Error:} Rejecting $H_0$ when it is true
+    \begin{equation*}
+        P(X=4,5|p=0.5) = 0.1875
+    \end{equation*}
+    
+    \item \textbf{Type 2 Error:} Failing to reject $H_0$ when it is false
+    \begin{equation*}
+        P(X=0,1,2,3|p=0.7) = 0.47
+    \end{equation*}
+\end{itemize}
+
+\noindent Consider another decision rule:
+
+\begin{itemize}
+    \item Accept $H_0$ if: $X = \{0,1,2,3,4\}$
+    \item Accept $H_1$ if: $X = \{5\}$
+    
+    \begin{itemize}
+        \item Type 1 Error: $P(X=5|p=0.5) = 0.031$
+        \item Type 2 Error: $P(X=0,1,2,3,4|p=0.7) = 0.83$
+    \end{itemize}
+\end{itemize}
+
+\noindent So which do you choose? A common heuristic is to choose which one has a less serious Type 1 Error.
+
+\subsection{Likelihood Ratio Test}
+
+A method for construction rules for a test of hypothesis is called the \textit{likelihood ratio test} (\textbf{LRT}).
+
+Suppose that $X_1,...,X_n \sim f(X|\theta)$ (\textbf{iid}). Then, the likelihood function:
+
+\begin{equation*}
+    \mathcal{L}(\theta|X) = \prod_{i=1}^n f(X_i|\theta)
+\end{equation*}
+
+\subsubsection*{Definition}
+
+The \textbf{likelihood ratio statistic} for testing:
+
+\begin{equation*}
+    \begin{cases}
+        H_0: & \theta \in \Theta_0\\
+        H_a: & \theta \in \Theta_0^c
+    \end{cases}
+\end{equation*}
+
+Is:
+
+\begin{equation*}
+    \Lambda(X) = \frac{\max_{\theta\in\Theta_0} \mathcal{L}(\theta|X)} {\max_{\theta\in\Theta} \mathcal{L}(\theta|X)}
+\end{equation*}
+
+Where:
+
+\begin{equation*}
+    \Theta = \Theta_0 \cup \Theta_0^c
+\end{equation*}
+
+
+A likelihood ratio tst is any test that has a rejection region of the form:
+\begin{equation*}
+    \left\{X: \Lambda(X) \leq c \right\}
+\end{equation*}
+
+Where $c$ is any constant satisfying $0\leq c \leq 1$
+
+
+\subsubsection*{Example:}
+
+Suppose $X_1,...,X_n$ (\textbf{iid}) coming from:
+\begin{equation*}
+    f(X|\theta) = \frac{1}{\theta} e^{-x/\theta} \quad \theta>0, x>0
+\end{equation*}
+
+Construct a likelihood ratio test to test:
+
+\begin{equation*}
+    \begin{cases}
+        H_0: & \theta = \theta_0\\
+        H_a: & \theta \neq \theta_0
+    \end{cases}
+\end{equation*}
+
+
+\begin{equation*}
+    \begin{split}
+        \Theta_0 &= \left\{\theta: \quad \theta = \theta_0 \right\}\\
+        \Theta &= \left\{\theta: \quad \theta >0 \right\}
+    \end{split}
+\end{equation*}
+
+
+We have:
+
+\begin{equation*}
+    \mathcal{L}(\theta|X) = \prod_{i=1}^n \frac{1}{\theta} e^{-x/\theta} = \frac{1}{\theta^n} e^{-\frac{1}{\theta} \sum x_i} 
+\end{equation*}
+
+Then,
+
+\begin{equation*}
+    \begin{split}
+        \max_{\theta\in\Theta_0} \mathcal{L}(\theta|X) &= \frac{1}{\theta^n} e^{-\frac{1}{\theta_0} \sum x_i} = \frac{1}{\theta_0^n} e^{- \frac{n\overline{X}}{\theta_0}}\\
+        \max_{\theta\in\Theta} \mathcal{L}(\theta|X) &= \left(\frac{1}{\overline{X}}\right)^n e^{-n} \quad \text{(Recall that $\hat{\theta} = \overline{X}$)}
+    \end{split}
+\end{equation*}
+
+This gives our likelihood ratio as:
+
+\begin{equation*}
+    \Lambda(X) = \left(\frac{\overline{X}}{\theta_0}\right)^n e^n e^{-\frac{n\overline{X}}{\theta_0}}
+\end{equation*}
+
+Our rejection region is then of the form:
+
+\begin{equation*}
+    \begin{split}
+        \left\{ X : \left(\frac{\overline{X}}{\theta_0} \right)^n e^n e^{-\frac{n\overline{X}}{\theta_0}} < c \right\} \\
+        \left\{ X : \left(\frac{\overline{X}}{\theta_0} \right)^n  e^{-\frac{n\overline{X}}{\theta_0}} < c' \right\}
+    \end{split}
+\end{equation*}
+
+Let $t = \frac{\overline{X}}{\theta_0}$, and consider the function:
+
+\begin{equation*}
+    \begin{split}
+        g(t) &= t^n \exp(-nt)\\
+        g'(t) &= t^{n-1}e^{-nt}(n-nt) = 0\\
+        t&= 1 \quad g''(1) < 0
+    \end{split}
+\end{equation*}
+
+Thus, we have:
+
+\begin{equation*}
+    \Lambda(X) = \left\{ X: \frac{\overline{X}}{\theta_0} < c_1 \text{ or } \frac{\overline{X}}{\theta_0} > c_2  \right\}
+\end{equation*}
+
+Now, provided that $H_0$ is true (ie. $\theta = \theta_0$):
+
+\begin{equation*}
+    \frac{2X_i}{\theta_0} \sim \chi^2_{(2)} \Rightarrow \frac{2}{\theta_0} \sum_{i=1}^n x_i \sim \chi^2_{(2n)}
+\end{equation*}
+
+\begin{equation*}
+    \frac{\overline{X}}{\theta_0} < c_1 \iff \frac{\sum x_i}{n\theta_0} < c_1 \iff \frac{2\sum x_i}{\theta_0} < 2c_1 n
+\end{equation*}
+
+Thus, the rejection region can be written as:
+
+\begin{equation*}
+    \Lambda(X) = \left\{ X: \frac{2\sum x_i}{\theta_0} < c_1' \text{ or } \frac{2\sum x_i}{\theta_0} > c_2'  \right\}
+\end{equation*}
+
+Suppose you are interested to test at $\alpha = 0.05$:
+
+\begin{equation*}
+    \begin{split}
+        0.05 &= P(\text{rejecting $H_0$ | $H_0$ is true})\\
+        &= P\left(\chi^2_{(2n)} < c_1 \text{ or } \chi^2_{(2n)} > c_2\right)
+    \end{split}
+\end{equation*}
+
+\end{document}
+
