@@ -1,0 +1,345 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 24}
+\author{Dr. Jamshidian}
+\date{November 27, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Likelihood Ratio Test, Cont'd}
+
+\subsubsection*{Example:}
+
+\begin{enumerate}
+    \item Suppose $X_1,...,X_n \sim N(\mu,\sigma^2)$ (\textbf{iid})
+    
+    \begin{equation*}
+        \begin{cases}
+            H_0: \quad \mu = \mu_0 & \text{$\mu_0$ is a given number}\\
+            H_a: \quad \mu > \mu_0 & 
+        \end{cases}
+    \end{equation*}
+    
+    Obtain the \textbf{LRT}:
+    \begin{equation*}
+        \begin{split}
+            \Theta_0 &= \left\{ (\mu,\sigma^2): \quad \mu=\mu_0,\quad \sigma^2>0 \right\}\\
+            \Theta &= \left\{ (\mu,\sigma^2): \quad \mu \geq \mu_0 ,\quad \sigma^2>0 \right\}\\
+            \Theta_1 &= \left\{ (\mu,\sigma^2): \quad \mu > \mu_0 ,\quad \sigma^2>0 \right\}\\
+            \mathcal{L}(\mu,\sigma^2) &= \left(\frac{1}{\sqrt{2\pi}} \right)^n \left( \frac{1}{\sigma^2}\right)^{n/2} \exp \left\{-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu)^2 \right\}
+        \end{split}
+    \end{equation*}
+    
+    If we maximize the likeilihood in $\Theta_0$, we get:
+    
+    \begin{equation*}
+        \widetilde{\mu} = \mu_0 \quad \text{ and } \quad \widetilde{\sigma^2} = \frac{1}{n} \sum_{i=1}^n (x_i-\mu_0)^2
+    \end{equation*}
+    
+    \textbf{Maximization over} $\Theta$:
+    \begin{enumerate}
+        \item Case 1: $\mu_0 > \overline{X}$
+        
+        This implies that $\hat{\mu} = \mu_0$ and we have:
+        \begin{equation*}
+        \begin{split}
+            \hat{\sigma^2} &= \frac{1}{n} \sum_{i=1}^n (x_i-\hat{\mu})^2\\
+            \Rightarrow \Lambda(X) &= 1 \quad \text{will not reject $H_0$}
+        \end{split}
+        \end{equation*}
+        
+        \item Case 2: $\mu_0 < \overline{X}$
+            
+        This implies that $\hat{\mu} = \overline{X}$. We then have our test as:
+        \begin{equation*}
+            \begin{split}
+                \frac{\exp\left\{-\frac{1}{2\widetilde{\sigma}^2} \sum_{i=1}^n (x_i-\mu_0)^2\right\}}{\exp\left\{-\frac{1}{2\hat{\sigma}^2} \sum_{i=1}^n (x_i-\overline{X})^2\right\}} &= \frac{\exp\left\{ -\frac{n}{2}\right\}}{\exp\left\{ -\frac{n}{2} \right\}} = 1\\
+               \Rightarrow \Lambda(X) = \left(\frac{\hat{\sigma}^2}{\widetilde{\sigma}^2} \right)^{n/2} &= \left(\frac{\sum (x_i-\overline{X})^2}{\sum (x_i-\mu_0)^2} \right)^{n/2}
+            \end{split}
+        \end{equation*}
+        
+        Which gives us the rejection region:
+        \begin{equation*}
+            \begin{split}
+                  R &= \left\{ \left(\frac{\sum (x_i-\overline{X})^2}{\sum (x_i-\mu_0)^2} \right)^{n/2} < c \right\}\\
+               \iff \frac{\sum (x_i-\overline{X})^2}{\sum (x_i-\mu_0)^2} &< c\\
+               \frac{\sum (x_i-\overline{X})^2}{\sum(x_i-\overline{X})^2 + n(\overline{X}-\mu_0)^2} &\leq c\\
+               \frac{\sum(x_i-\overline{X})^2 + n(\overline{X}-\mu_0)^2}{\sum (x_i-\overline{X})^2} &\geq c\\
+               \frac{n(\overline{X}-\mu_0)^2}{\sum(x_i-\overline{X})^2} \geq c\\
+               \frac{n(\overline{X}-\mu_0)^2}{S^2} \geq c
+            \end{split}
+        \end{equation*}
+        
+        The reason we want to do this, is because if we divide both sides by a constant, we get a rejection region of the (familiar) form:
+        
+        \begin{equation*}
+            \frac{(\overline{X}-\mu_0)}{S/\sqrt{n}} \geq c
+        \end{equation*}
+        
+        Which is a \textbf{$t$-statistic} with $n-1$ degrees of freedom.
+        
+    \end{enumerate}
+\end{enumerate}
+
+    \subsubsection{Theorem:}
+    
+    Under some smoothness conditions on the \textit{pdf} from which the data comes, $-2\log\Lambda(X)$ converges in distribution as the sample size increases to a $\chi^2$ distribution with degrees of freedom equal to:
+    \begin{equation*}
+        \dim\left( \Theta\right) - \dim \left(\Theta_0 \right)
+    \end{equation*}
+
+    \subsubsection*{Example:}
+    
+    Let $X_1,...,X_n\sim Poisson(\theta_1)$ and $Y_1,...,Y_n\sim Poisson(\theta_2)$. Suppose you wish to test the hypothesis:
+    \begin{equation*}
+        \begin{cases}
+            H_0: \quad  \theta_1 = \theta_2\\
+            H_a: \quad \theta_1 \neq \theta_2
+        \end{cases}
+    \end{equation*}
+    
+    We won't go through the derivation, but we end up with:
+    
+    \begin{equation*}
+    \begin{split}
+        \Lambda &= \frac{\frac{1}{2} (\overline{X} + \overline{Y})^{n(\overline{X}+\overline{Y})}}{\overline{X}^{n\overline{X}} \overline{Y}^{n\overline{Y}}}\\
+        -2\log \Lambda &\sim \chi^2_{(1)}
+    \end{split}
+    \end{equation*}
+    
+    \subsection{Bayesian Testing Procedure}
+    
+    Let $X$ be a random variable with \textit{pdf} (or \textit{pmf}) $f(X|\theta)$, with $\theta \in \Theta$. Suppose that we are to test:
+    
+    \begin{equation*}
+        \begin{cases}
+            H_0: \quad \theta \in \Theta_0\\
+            H_a: \quad \theta \in \Theta_1
+        \end{cases}
+    \end{equation*}
+    
+    \noindent Where $\Theta_0 \cap \Theta_1 = \emptyset$. Let $f_\Theta(\theta)$ be the prior, and let $X_1,...,X_n \sim f(X|\theta)$. Denote the posterior \textit{pdf} (or \textit{pmf}) by $f_{\Theta|X} (\theta|x)$, and compute the probabilities:
+    
+    \begin{equation*}
+        P(\theta \in \Theta_0 | X_1,...,X_n) \quad  \text{and} \quad P(\theta \in \Theta_1 | X_1,...,X_n) 
+    \end{equation*}
+    
+    \noindent Where we refer to these probabilities as ``\textbf{truth} of $H_0$" (and $H_1$), respectively. A simple rule is to accept $H_0$ if the truth of $H_0$ is greater than the truth of $H_1$. Otherwise, accept $H_1$.
+
+    \subsubsection*{Example:}
+    
+    Let $X_1,...,X_n \sim Poisson(\theta)$. Test $H_0: \theta \leq 10$ versus $H_a: \theta > 10$ where we have observed $X_1,...,X_{20}$ ($n=20$) with $\sum_{i=1}^{20} x_i = 177$. Suppose that you expect that $\theta$ is around 12. You choose the prior:
+    
+    \begin{equation*}
+    \begin{split}
+        \theta &\sim gamma(\alpha = 10, \beta = 1.2)\\
+        E[\theta] &= 12\\
+        Var(\theta) &= 14.4
+    \end{split}
+    \end{equation*}
+
+    This yields the posterior:
+    
+    \begin{equation*}
+        \begin{split}
+            \theta|X_1,...,X_n &\sim gamma\left(\alpha=177+10,\beta = \frac{1.2}{20(1.2) + 1}\right)\\
+                &\sim gamma(187,0.048)\\
+                E[\theta|X] &= 187(0.048) = 8.976
+        \end{split}
+    \end{equation*}
+    
+    So, we must calculate probabilities of the posterior, given the data:
+    
+    \begin{equation*}
+        \begin{split}
+            P\left(\theta \leq 10 | \sum x_i = 177\right) &= P[gamma(1.87,0.048) \leq 10]\\
+            &= 0.9368\\
+            P\left( \theta > 10 | \sum x_i = 177 \right) &= 0.0632
+        \end{split}
+    \end{equation*}
+    
+    And, thus, we accept $H_0$.
+    
+    \subsection{Power and Size of a Test}
+    
+    Given the hypothesis test:
+    
+    \begin{equation*}
+        \begin{cases}
+            H_0: \quad \theta \in \Theta_0\\
+            H_a: \quad \theta \in \Theta_0^c
+        \end{cases}
+    \end{equation*}
+    
+    We define:
+    \begin{enumerate}
+        \item \textbf{Type 1 Error:} Rejecting $H_0$ when $H_0$ is true
+        \item \textbf{Type 2 Error:} Accepting $H_0$ when $H_a$ is true
+        \item \textbf{Power:} Power is defined as the probability of rejecting $H_0$ when $H_a$ is true. In other words, \textit{correctly rejecting} $H_0$
+        
+            We can define a \textbf{power function} as:
+            \begin{equation*}
+                \beta(\theta) = P(\text{rejecting } H_0 | \theta)
+            \end{equation*}
+    \end{enumerate}
+
+    \subsubsection*{Definition:}
+    
+    A test is said said to have size $\alpha$ ($0\leq\alpha\leq 1$) if:
+    \begin{equation*}
+        \max_{\theta\in\Theta_0} P(\text{rejecting } H_0 | \theta) = \alpha
+    \end{equation*}
+    
+    \subsubsection*{Definition:}
+    
+    A \textbf{level $\alpha$} test is one for which
+    \begin{equation*}
+        \max_{\theta\in\Theta_0} P(\text{rejecting } H_0 | \theta) \leq \alpha
+    \end{equation*}
+    
+    \subsubsection{Examples}
+    \begin{enumerate}
+        \item Suppose $X\sim binomial(5,\theta)$
+        
+        \begin{equation*}
+            \begin{cases}
+                H_0: \theta \leq \frac{1}{2}\\
+                H_a: \theta > \frac{1}{2}
+            \end{cases}
+        \end{equation*}
+        
+        Let $R = \{4,5 \}$. 
+        
+        What is the size of the test if:
+        
+        \begin{equation*}
+            \max_{\theta \leq \frac{1}{2}} P (X = 4,5|\theta) = \binom{5}{4} \theta^4 (1-\theta) + \binom{5}{5}\theta^5 \Rightarrow \alpha = 0.1875
+        \end{equation*}
+        
+        What is the size if:
+        
+        \begin{equation*}
+            \alpha = \max_{\theta \leq \frac{1}{2}} P(X=5 | \theta) = \max_{\theta \leq \frac{1}{2}} \theta^5 = 0.03125.
+        \end{equation*}
+        
+        Which results in a \textit{level $0.05$ test}.
+        
+    \end{enumerate}
+        \section{Lecture - Part 2}
+        
+    \begin{enumerate}
+        \item Let $X_1,...,X_n \sim N(\theta,1)$. Consider the test:
+        \begin{equation*}
+            \begin{cases}
+                H_0: \quad \theta \leq \theta_0\\
+                H_a: \quad \theta > \theta_0
+            \end{cases}
+        \end{equation*}
+        
+        We then have the rejection region:
+        \begin{equation*}
+            R = \left\{ X: \quad \frac{\overline{X} - \theta_0}{1/\sqrt{n}} > c \right\}
+        \end{equation*}
+        
+        What's important here is the \textit{power function}. We have:
+        
+        \begin{equation*}
+            \begin{split}
+                \beta(\theta) &= P(\text{rejecting } H_0 | \theta)\\
+                            &= P(\sqrt{n}(\overline{X}-\theta_0) > c | \theta)\\
+                            &= P(\sqrt{n}(\overline{X} - \theta + \theta - \theta_0) > c | \theta)\\
+                            &= P(\sqrt{n}(\overline{X}-\theta) + \sqrt{n}(\theta-\theta_0) > c | \theta)\\
+                            &= P(Z \geq c - \sqrt{n}(\theta - \theta_0) | \theta)
+            \end{split}
+        \end{equation*}
+        
+        \begin{enumerate}
+            \item Determine $c$ so that you now have a size $\alpha$ test. ($\Theta_0: \{\theta \leq \theta_0 \}$)
+            
+            \begin{equation*}
+                \max_{\theta\in\Theta_0} P\left( Z \geq c - \sqrt{n}(\theta - \theta_0) | \theta \right)
+            \end{equation*}
+            
+            We notice that this probability is an \textbf{increasing} function of $\theta$. Thus, since we are maximizing over the region $\Theta_0$, this is maximized at $\theta_0$. Plugging this into the maximization above, we get $P(Z \geq c)$. To get the $c$ such that we have a size alpha test, we just need to calculate $c = Z_\alpha$.
+            
+            Therefore, we have the rejection region for a test of size $\alpha$ as:
+            \begin{equation*}
+                R = \left\{ X: \quad \sqrt{n}\left(\overline{X}-\theta_0\right) > Z_\alpha \right\}
+            \end{equation*}
+            
+            
+            \item Obtain the power of the test at $\theta_a$.
+            
+            \begin{equation*}
+                \begin{split}
+                    \beta(\theta_a) &= P(\text{rejecting } H_0 | \theta = \theta_a)\\
+                    &= P(\sqrt{n} ( \overline{X} - \theta_0) > Z_\alpha | \theta = \theta_a)\\
+                    &= P\left( \sqrt{n}(\overline{X}- \theta_a + \theta_a - \theta_0)> Z_\alpha | \theta = \theta_a \right)\\
+                    &= P\left(\sqrt{n}(\overline{X}-\theta_a) > Z_\alpha + \sqrt{n} (\theta_0-\theta_a) | \theta = \theta_a \right)\\
+                    &= P\left( Z > Z_\alpha + \sqrt{n}(\theta_0 - \theta_a) \right)\\
+                    &= 1 - \Phi\left( Z_\alpha - \sqrt{n}(\theta_a - \theta_0) \right)
+                \end{split}
+            \end{equation*}
+            
+            So we see that when \textbf{$\alpha$ increases}, the power of the test \textit{decreases}. Conversely, when the \textbf{sample size $n$ increases}, the power of the test increases.
+            
+            Given a formula like the one found above, we can also calculate the sample size needed given the $\theta_a$ and $\alpha$ by plugging in and solving.
+        \end{enumerate}
+    \end{enumerate}
+    
+    \subsection{P-Value}
+    
+    A practical definition of \textbf{p-value} is that the \textbf{p-value} is a measure of discrepancy between the null hypothesis $H_0$ and the observed data $X$. 
+    
+    If $T(X)$ is the test statistic used to test $H_0$, and the rejection region is of the form
+    \begin{equation}
+        \left\{X: \quad T(X) \leq c \right\}
+    \end{equation}
+    
+    and we have an observed value $T(X)$, then 
+    
+    \begin{equation*}
+        P-\text{value } = P(T(X) \leq T(x) | H_0 \text{ is true })
+    \end{equation*}
+    \\~\\
+    \noindent Suppose that $F_T$ is the \textit{cdf} of $T(X)$. Then we have:
+    
+    \begin{equation*}
+        P-\text{value } = F_T(T(X)) \text{ , provided $H_0$ is true}
+    \end{equation*}
+
+    \subsubsection*{Example:}
+    
+    \begin{enumerate}
+        \item Suppose $X_1,...,X_{25} \sim N(\mu,\sigma^2 = 4)$. Consider the test:
+        \begin{equation*}
+            \begin{cases}
+                H_0: \quad \mu = 77\\
+                H_a: \quad \mu < 77
+            \end{cases}
+        \end{equation*}
+        
+        Suppose $\overline{X} = 76.1$ and $Var(\overline{X}) = \frac{4}{25} = 0.16$. Under $H_0$:
+        
+        \begin{equation*}
+            Z = \frac{\overline{X}-77}{0.4} \sim N(0,1)
+        \end{equation*}
+        
+        Thus, we have:
+        \begin{equation*}
+            \begin{split}
+                P-\text{value } = P \left(\frac{\overline{X}-77}{0.4} < \frac{76.1-77}{0.4} \right) &= P(Z < -2.25)\\
+                        &= 0.012
+            \end{split}
+        \end{equation*}
+        
+    \end{enumerate}
+
+
+\end{document}
+
