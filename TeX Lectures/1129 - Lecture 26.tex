@@ -1,0 +1,303 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 26}
+\author{Dr. Jamshidian}
+\date{November 29, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Chapter 9: Interval Estimation}
+
+\subsubsection*{Example}
+\begin{enumerate}
+    \item Suppose that you have $X_1,X_2,X_3,X_4 \sim exponential(\lambda)$. You know that the \textbf{MLE} of $\hat{\lambda} = \overline{X}$. Now consider the interval estimate:
+    \begin{equation*}
+        \left[ \frac{\overline{X}}{4}, 4\overline{X} \right]
+    \end{equation*}
+    
+    Let's talk about some properties of this interval. For example, consider:
+    \begin{equation*}
+    \begin{split}
+        P\left(\lambda \in  \left[ \frac{\overline{X}}{4}, 4\overline{X} \right] \right) &= P\left(\frac{\overline{X}}{4} \leq \lambda \leq 4 \overline{X}\right)\\
+        &= P\left(\frac{1}{4\overline{X}} \leq \frac{1}{\lambda} \leq \frac{4}{\overline{X}} \right)\\ 
+        &= P\left(2 \leq \frac{8\overline{X}}{\lambda} \leq 32 \right)\\
+        &= P(2 \leq \chi^2_{(8)} \leq 32) = 0.98
+    \end{split}
+    \end{equation*}
+    
+    Thus, the interval $\left[ \frac{\overline{X}}{4}, 4\overline{X} \right]$ is called a 98\% Confidence interval for $\lambda$.
+\end{enumerate}
+
+\subsubsection{Confidence Interval}
+\subsubsection*{Definition:}
+
+Let $X = (X_1,...,X_n)$ be a random vector from a distribution with parameter $\theta$. Then, the interval $\left[L(X),U(X)\right]$ is an interval estimate of $\theta$ where $L(X)$ and $U(X)$ are functions such that $L(X) \leq U(X)$.If $P\left[\theta \in \left( L(X),U(X) \right)\right] = 1-\alpha$, then the interval is called a $100(1-\alpha)\%$ confidence interval for $\theta$. 
+
+In general:
+\begin{equation*}
+    P(\theta \in [L(X),U(X)])
+\end{equation*}
+is called the \textbf{coverage probability} of the interval.
+
+\subsubsection{Pivotal Quantity}
+\subsubsection*{Definition:}
+
+If $Q = q(X_1,...,X_n,\theta)$ is a random variable that is a function only of $X_1,...,X_n$ and $\theta$, then $q$ is called a \textbf{pivotal quantity} if its distribution does not depend on $\theta$. Such pivotal quantities can be used to obtain confidence intervals for $\theta$.
+
+\subsubsection{Example:}
+\begin{enumerate}
+    \item Let $X_1,...,X_n\sim exponential(\theta)$ . Then the quantity:
+    \begin{equation*}
+        \frac{2n\overline{X}}{\theta} \sim \chi^2_{(2n)}
+    \end{equation*}
+    
+    To obtain a $100(1-\alpha)\%$ confidence interval, we compute:
+    
+    \begin{equation*}
+        \begin{split}
+            1-\alpha &= P\left[ c_1 \leq \frac{2n\overline{X}}{\theta} \leq c_2 \right]\\
+            &= P\left[\frac{1}{c_2} \leq \frac{\theta}{2n\overline{X}} \leq \frac{1}{c_1} \right]\\
+            &= P\left[ \frac{2n\overline{X}}{c_2} \leq \theta \leq \frac{2n\overline{X}}{c_1} \right]
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsubsection*{Theorem:}
+Let $X_1,...,X_n$ be a random sample from a distribution with location-scale parameters:
+\begin{equation*}
+    f(x|\theta_1,\theta_2) = \frac{1}{\theta_2} f\left(\frac{x-\theta_1}{\theta_2}\right)
+\end{equation*}
+If \textbf{MLEs} $\hat{\theta}_1$ and $\hat{\theta}_2$ exist, then:
+\begin{equation*}
+    \frac{\hat{\theta}_1 - \theta_1}{\hat{\theta}_2} \text{ and } \frac{\hat{\theta}_2}{\theta_2} \text{ are pivotal quantities for $\theta_1$ and $\theta_2$.}
+\end{equation*}
+
+\subsubsection{Example}
+\begin{enumerate}
+    \item Let $X_1,...,X_n \sim N(\mu,\sigma^2)$ with both $\mu$ and $\sigma^2$ unknown. We have:
+    \begin{equation*}
+        \hat{\mu} = \overline{X} \quad \text{ and } \quad \hat{\sigma} = \sqrt{\frac{n-1}{n}S^2}
+    \end{equation*}
+    According to the theorem,
+    \begin{equation*}
+        Q = \frac{\overline{X}-\mu}{\sqrt{\frac{n-1}{n}S^2}} \quad \text{is a pivotal quantity}
+    \end{equation*}
+    
+    We then notice that,
+    \begin{equation*}
+        \sqrt{n-1} \cdot Q = \frac{\sqrt{n}(\overline{X}-\mu)}{S} \sim t^{(n-1)}
+    \end{equation*}
+    
+    Now, let's consider $\frac{\hat{\theta}_2}{\theta_2}$. We have:
+    \begin{equation*}
+        \begin{split}
+            Q &= \left(\frac{\sqrt{\frac{n-1}{n}S^2}}{\sigma} \right)\\
+            Q^2 &= \frac{(n-1)S^2}{n\sigma^2}\\
+            nQ^2 &= \frac{(n-1)S^2}{\sigma^2} \sim \chi_{(n-1)}^2
+        \end{split}
+    \end{equation*}
+    
+    We can construct a\textbf{ confidence interval for $\mu$} as:
+    
+    \begin{equation*}
+        \begin{split}
+            1-\alpha &= P\left(c_1 < \frac{\sqrt{n}(\overline{X}-\mu)}{S} \leq c_2 \right)\\
+            &= P\left( \overline{X}+c_1\frac{S}{\sqrt{n}} < \mu < \overline{X} + c_2\frac{S}{\sqrt{n}} \right)
+        \end{split}
+    \end{equation*}
+    
+    And a \textbf{confidence interval for } $\sigma^2$ as:
+    
+    \begin{equation*}
+        \begin{split}
+            1-\alpha &= P\left( c_1 \leq \frac{(n-1)S^2}{\sigma^2} \leq c_2 \right)\\
+            &= P \left(\frac{1}{c_2} \leq \frac{\sigma^2}{(n-1)S^2} \leq \frac{1}{c_1} \right)\\
+            &= P\left(\frac{(n-1)S^2}{c_2} \leq \sigma^2 \leq \frac{(n-1)S^2}{c_1} \right)
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsubsection{Approximate Confidence Intervals}
+\subsubsection*{Example}
+Let $X_1,..,X_n \sim Bernouli(\theta)$ with $\hat{\theta} = \overline{X}$. By the \textbf{CLT}, for large $n$, we have:
+
+\begin{equation*}
+    \begin{split}
+        \overline{X} &\sim N\left(\theta, \frac{\theta(1-\theta)}{n} \right) \\
+        \frac{\overline{X}-\theta}{\sqrt{\frac{\theta(1-\theta)}{n}}} &\sim N(0,1)
+    \end{split}
+\end{equation*}
+
+Suppose we want to obtain $\theta$ such that:
+
+\begin{equation*}
+    P\left(-Z_{\alpha/2} \leq \frac{\overline{X}-\theta}{\sqrt{\frac{\theta(1-\theta)}{n}}} \leq Z_{\alpha/2} \right) = 1-\alpha
+\end{equation*}
+
+\subsubsection{Inverting a Test Statistic (Duality between CI and Tests)}
+
+Confidence Intervals are intervals of the form $I = [L(X),U(X)]$ such that $P(\theta \in I) = 1-\alpha$. The acceptance region $ \mathcal{A} $ for a test of hypothesis is:
+\begin{equation*}
+    X: P(X\in A|H_0 \text{ is true}) = 1-\alpha
+\end{equation*}
+\subsubsection*{Example:}
+\begin{enumerate}
+        \item Let $X_1,...,X_n \sim N(\mu,\sigma^2)$. Suppose that we are testing:
+    \begin{equation*}
+        \begin{cases}
+            H_0: \quad \mu = \mu_0\\
+            H_a: \quad \mu \neq \mu_0
+        \end{cases}
+    \end{equation*}
+    The \textbf{LRT} uses the statistic,
+    \begin{equation*}
+        T = \frac{\sqrt{n}(\overline{X}-\mu_0}{S}
+    \end{equation*}
+    and accepts $H_0$ at the $\alpha$-level of significance for all $X$ in
+    \begin{equation*}
+        \mathcal{A}(\mu) = \left\{ X: -t^*_{\alpha/2} \leq \frac{\sqrt{n}(\overline{X}-\mu_0)}{S} \leq t_{\alpha/2}^*\right\}
+    \end{equation*}
+    
+    Now, if we find all $\mu_0$'s for which the $H_0$ is accepted, we obtain:
+    \begin{equation*}
+        c(X) = \left\{ \mu_0: \mu_0 \in \left[\overline{X} - t^*_{\alpha/2} \frac{S}{\sqrt{n}}, \overline{X} + t^*_{\alpha/2} \frac{S}{\sqrt{n}} \right] \right\}
+    \end{equation*}
+\end{enumerate}
+\section{Lecture - Part 2}
+
+\subsubsection{Examples, cont'd}
+\begin{enumerate}
+    \item \textbf{Inverting an LRT: Exponential}
+    
+    Suppose $X_1,...,X_n\sim exp(\theta)$ and consider the test:
+    \begin{equation*}
+        \begin{cases}
+            H_0: \quad \theta = \theta_0\\
+            H_a: \quad \theta \neq \theta_0
+        \end{cases}
+    \end{equation*}
+    
+    The \textit{LRT} acceptance region for this test is:
+    \begin{equation*}
+        \mathcal{A}(\theta_0) = \left\{X: \left( \frac{T}{\theta_0}\right) e^{-T/\theta_0} \geq c \right\}
+    \end{equation*}
+    
+    Where $T = \sum x_i$.
+    
+    To invert the test to get a $100(1-\alpha)\%$ confidence interval, we seek, for a given data $X$ and summary statistic $T(X) = \sum x_i$, a set:
+    \begin{equation*}
+        C(T(X)) = \left\{ \theta: \left( \frac{T(X)}{\theta} \right)^n e^{-T(X)/\theta} \geq c \right\}
+    \end{equation*}
+    Consider $g(T) = \left(\frac{T}{\theta}\right)^n e^{-T/\theta}$. Our confidence interval must take the form:
+    \begin{equation*}
+        C(T) = \{\theta: L(T) \leq \theta \leq U(T) \}
+    \end{equation*}
+    Now, $L(T)$ and $U(T)$ must satisfy:
+    \begin{equation*}
+        g(L(T)) = g(U(T)) \text{ or } \left(\frac{T}{L(T)}\right)^n e^{-T/L(T)} = \left( \frac{T}{U(T)} \right)^n e^{-T/U(T)}
+    \end{equation*}
+    
+    Let $a = \frac{T}{L(T)}$ and $b = \frac{T}{U(T)}$ where $a>b$. Then, the interval must satisfy:
+    \begin{equation*}
+        a^n e^{-a} = b^n e^{-b}
+    \end{equation*}
+    Then the interval is:
+    \begin{equation*}
+        \{\theta: \frac{T}{a}\leq \theta \leq \frac{T}{b} \}
+    \end{equation*}
+    Where $a$ and $b$ must satisfy:
+    \begin{equation*}
+        \begin{split}
+            1-\alpha &= P\left[\frac{T}{a} < \theta < \frac{T}{b} \right] = P \left[\frac{1}{a} < \frac{\theta}{T} < \frac{1}{b} \right]\\
+            &= P\left[ b < \frac{T}{\theta} < a \right]
+        \end{split}
+    \end{equation*}
+    
+    Remember:
+    \begin{equation*}
+        \begin{split}
+            T = \sum_{i=1}^n X_i &\sim gamma(n,\theta)\\
+            \frac{T}{\theta} &\sim gamma(n,1)
+        \end{split}
+    \end{equation*}
+    
+    Coming back, we must find $a$ and $b$ such that:
+     \begin{equation*}
+        a^n e^{-a} = b^n e^{-b} \text{ and } \int_{b}^a \frac{1}{\Gamma(n)} x^{n-1} e^{-x}dx = 1-\alpha
+    \end{equation*}
+    
+    We can do this with numerical methods as seen in class...
+\end{enumerate}
+
+\subsection{Bayesian Interval Estimation}
+
+Let $f_{\Theta|X}$ be the posterior distribution. An interval estimate for a parameter $\theta$ is the interval $[u(x),v(x)]$ such that
+\begin{equation*}
+    P[u(x) \leq \theta \leq v(x) | X=x] = \int_{u(x)}^{v(x)} f_{\Theta|X}(\theta|x) d\theta = 1-\alpha
+\end{equation*}
+
+In Bayesian estimation, these intervals are called \textbf{credible intervals}.
+
+\subsubsection{Examples}
+\begin{enumerate}
+    \item Suppose you have $X_1,...,X_n \sim N(\theta,\sigma^2)$ (where $\sigma^2$ is known). Consider a prior with $\theta \sim N(\theta_0,\sigma_0^2)$ (where both $\theta_0$ and $\sigma_0^2$ are known).
+    \begin{equation*}
+        \Theta|X \sim N \left( \frac{\overline{X}\sigma_0^2 + \theta_0 \sigma^2/n }{\sigma_0^2 + \frac{\sigma^2}{n}} , \frac{\sigma^2 \sigma_0^2}{n\left(\sigma_0^2 + \frac{\sigma^2}{n}\right)} \right)
+    \end{equation*}
+    
+    To get a $95\%$ confidence interval we then have:
+        \begin{equation*}
+            \frac{\overline{X}\sigma_0^2 + \theta_0 \sigma^2/n }{\sigma_0^2 + \frac{\sigma^2}{n}} \pm 1.96\sqrt{\frac{\sigma^2 \sigma_0^2}{n\left(\sigma_0^2 + \frac{\sigma^2}{n}\right)}}
+        \end{equation*}
+
+    \item Suppose you have $X_1,...,X_n \sim Poisson(\theta)$. Consider the prior $\theta \sim gamma(\alpha,\beta)$.
+    \begin{equation*}
+        \Theta|X \sim gamma\left(y+\alpha,\frac{\beta}{n\beta + 1}\right) \text{ , where } y = \sum x_i
+    \end{equation*}
+    We then have:
+    \begin{equation*}
+        2\left(\frac{n\beta + 1}{\beta} \right) \Theta  | X \sim \chi^2_{(2\sum x_i + \alpha)}
+    \end{equation*}
+    To find a $100(1-\alpha)\%$ credible interval for $\theta$, we have:
+    \begin{equation*}
+        \begin{split}
+            \frac{\beta}{2(n\beta +1)}\left(2\left(\sum x_i + \alpha \right) \right)\chi^2_{1-\alpha/2}, \frac{\beta}{2(n\beta +1)}\left(2\left(\sum x_i + \alpha \right) \right)\chi^2_{\alpha/2}
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+
+
+\subsubsection{``Best" (narrowest) Confidence interval}
+
+\subsubsection*{Theorem}
+Let $f(x)$ be a unimodal \textit{pdf}. If the interval $[a,b]$ satisfies:
+\begin{enumerate}
+    \item \begin{equation*}
+        \int_a^b f(x) dx = 1-\alpha
+    \end{equation*}
+    
+    \item $f(a) = f(b)$
+    
+    \item $a\leq X^* \leq b$, where $X^*$ is \textbf{the} mode of $f(x)$
+\end{enumerate}
+then $[a,b]$ is the shortest amongst all intervals which satisfy
+\begin{equation*}
+    \int_a^b f(x) dx = 1-\alpha
+\end{equation*}
+
+\subsubsection{Highest posterior Density}
+\subsubsection*{Definition:}
+
+The \textbf{Highest Posterior Density} (HPD) region corresponds to the shortest interval $c(X)$ such that $P(\theta \in C(X)) = 1 - \alpha$.
+
+
+
+
+\end{document}
+
