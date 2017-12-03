@@ -1,0 +1,380 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\newcommand{\ord}[1]{X_{(#1)}}
+
+\title{Math 502AB - Lecture 18}
+\author{Dr. Jamshidian}
+\date{October 25, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Order Statistics, Cont'd}
+
+\subsubsection{Quantiles}
+
+\subsubsection*{Definition}
+
+Let $X$ be a continuous random variable with \textit{cdf} $F(x)$. Then, for $0<p<1$, the $p^{th}$ quantile for $X$ is defined to be:
+\begin{equation*}
+    \xi_p = F^{-1}(p)
+\end{equation*}
+
+
+\subsubsection{Sample Quantile}
+
+Strictly speaking, for $0<p<1$, the $p^{th}$ sample quantile is the observation such that approximately $np$ of the observations fall below it and $n(1-p)$ of the observations fall above it.
+
+An example of \textbf{sample quantile} is, consider:
+\begin{equation*}
+    F_X\left(X_{(k)} \right) = P(X \leq X_{(k)}) \cong \text{ proportion of observations below $X_{(k)}$}
+\end{equation*}
+
+\noindent Essentially, if we know enough about this \textit{cdf}, we can infer what the sample quantile might be. Consider:
+\begin{equation*}
+    \begin{split}
+        E\left[F\left(X_{(k)} \right)\right] &= \int_{-\infty}^\infty F(y) \frac{n!}{(k-1)!(n-k)!} [F(y)]^{k-1}[1-F(y)]^{n-k} f(y) dy\\
+        &\text{Now, let } Z = F(y) \Rightarrow dZ = f(y) dy\\
+        \Rightarrow &= \frac{n!}{(k-1)!(n-k)!} \int_0^1 Z^k(1-Z)^{n-k}dZ\\
+        \text{Since kernel of Beta dist'n}\quad   &= \frac{n!\cdot k!}{(k-1)!(n-k)!} \cdot \frac{(n-k)!}{(n+1)!} = \frac{k}{n+1}
+    \end{split}
+\end{equation*}
+
+\noindent So, which order statistic do you expect to have the property that approximately a proportion $p$ of the observations fall below it?
+
+\begin{equation*}
+    \frac{k}{n+1} = p \Rightarrow k = [p(n+1)]
+\end{equation*}
+
+And this is an \textit{example} of a \textbf{sample quantile}.
+
+
+\subsection{Order Statistics for Discrete Random Variables}
+
+Let $X$ be a \textit{discrete} random variable, and let $X_1,...,X_n$ be observations from $X$. We are interested in the distribution of $\ord{k}$, or $P(\ord{k} = x)$. The issue that we run into with \textit{discrete distributions} is that there is a nonzero probability that two observations of $X$ are equal to $a$, for some $a\in \mathcal{S}$.
+
+We write:
+\begin{equation*}
+    \begin{split}
+        P(\ord{k} = x) &= P(\ord{k} \leq x) - P(\ord{k}<x)\\
+        \\
+        (1) \quad P(\ord{k}\leq x) &= P(\text{no more than $n-k$ obs. fall above $x$})\\
+        (2) \quad P(\ord{k}< x) &= 1-P(\ord{k}\geq x)\\
+        &= 1-P(\text{No more than $k-1$ obs. fall below x})\\
+        \\
+        \text{We denote: } N_1 &= \text{\# of observations $< x$}\\
+                N_2 &= \text{\# of observations $= x$}\\
+                N_3 &= \text{\# of observations $> x$}
+    \end{split}
+\end{equation*}
+
+The distributions of these variables are \textit{binomial}, with $P(X<x) = p_1$, $P(X=x) = p_2$, and $P(X>x) = p_3$. Now, we can show:
+
+\begin{equation*}
+    \begin{split}
+        (1) \quad P(\ord{k} \leq x) &= P(N_3 \leq n-k)\\
+                                    N_3&\sim Binomial(n,p_3)\\
+                                    (2) \quad P(\ord{k} <x) &= 1 - P(N_1 \leq k-1)\\
+                                    \\
+                                    \Rightarrow P(\ord{k} = x) &= P(N_3 \leq n-k) + P(N_1 \leq k-1) - 1
+    \end{split}
+\end{equation*}
+
+\subsubsection*{Example:}
+\begin{enumerate}
+    \item Consider a random variable $X$ with \textit{pmf}:
+    \begin{equation*}
+        f(x) = \frac{1}{5} \quad x=1,2,3,4,5
+    \end{equation*}
+    
+    Something like:
+    
+    \begin{equation*}
+        X = \begin{cases}
+            1 & \text{Freshman}\\
+            2 & \text{Sophomore}\\
+            3 & \text{Junior}\\
+            4 & \text{Senior}\\
+            5 & \text{Graduate}
+        \end{cases}
+    \end{equation*}
+    
+    We pick a  random sample of size $20$ students. What is the probability that $\ord{12} = 3$?
+    
+    \begin{equation*}
+    \begin{split}
+        P(\ord{12} = 3) &= P(N_3 \leq 20-12) + P(N_1 \leq 12-1) - 1\\
+            &= pbinom(20-12,20,0.4) + pbinom(12-1, 20, 0.4) - 1
+    \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsection{Convergence Concepts in Probability}
+
+Consider a sequence of random variables:
+\begin{equation*}
+    \left\{ X_n\right\}_{n=1}^\infty
+\end{equation*}
+
+We are interested in investigating its behavior as $n\to\infty$. To look at these properties, let's start with sequences of real numbers. 
+
+Consider a sequence:
+\begin{equation*}
+    \left\{ x_n\right\}_{n=1}^\infty \quad x_n \in \mathbb{R}
+\end{equation*}
+
+\noindent If we had $x_n\to a$, what does this mean? Well, we go back to our analysis definition where $\forall \epsilon > 0,$ $\exists N_0$ such that $\forall n \geq N_0$, we have $|x_n - a| < \epsilon$. But this method \textit{will not} work with random variables. Because of this, we need different approaches.
+
+\subsubsection{Convergence in Probability}
+\subsubsection*{Definition:}
+We say that a sequence of random variables $\{X_n\}_{n=1}^\infty$ converges in probability to $\alpha$ if:
+\begin{equation*}
+    \lim_{n\to\infty} P(|X_n - \alpha| \geq \epsilon) = 0
+\end{equation*}
+Or, equivalently:
+\begin{equation*}
+    \lim_{n\to\infty} P(|X_n - \alpha| \leq \epsilon) = 1
+\end{equation*}
+
+\subsubsection{Weak Law of Large Numbers (WLLN)}
+Let $X_1,...,X_n$ be a sample from a random variable with mean $\mu$ and variance $\sigma^2<\infty$. Let
+\begin{equation}
+    \overline{X}_n = \frac{1}{n}\sum_{i=1}^n X_i
+\end{equation}
+Then
+\begin{equation*}
+    \overline{X}_n \xrightarrow{P} \mu \quad \text{ as } n\to\infty
+\end{equation*}
+
+Recall that $E[\overline{X}_n] = \mu$ and $Var(\overline{X}_n) = \frac{\sigma^2}{n}$.
+
+\begin{equation*}
+\begin{split}
+    P\left( |\overline{X}_n - \mu| > \epsilon \right) &\leq \frac{Var(\overline{X}_n)}{\epsilon^2}\text{ , by Chebychev}\\
+        &= \frac{\sigma^2}{n\epsilon^2}\\
+        \\
+        \Rightarrow \lim_{n\to\infty} P(|\overline{X}_n - \mu| > \epsilon) &= 0
+\end{split}
+\end{equation*}
+
+\subsubsection*{Example:}
+\begin{enumerate}
+    \item \textbf{Application} - \textit{Monte-Carlo Integration}: Suppose that we wished to obtain the value of:
+    \begin{equation*}
+        I = \int_0^1 g(x)dx
+    \end{equation*}
+    
+    for some function $g(x)$. Let $X \sim Unif(0,1)$. Then:
+    \begin{equation*}
+        E[g(x)] = \int_0^1 g(x)dx
+    \end{equation*}
+    On the other hand, by the \textbf{Weak Law of Large Numbers}:
+    \begin{equation*}
+        \frac{1}{n}\sum_{i=1}^n g(X_i) \xrightarrow{P} E[g(X_i)]
+    \end{equation*}
+    
+    So, we can use this property to get our total (Computer example given in class).
+    
+    \item \textbf{WLLN for } $S_n^2$
+    
+    Let $X_1,...,X_n$ (\textbf{iid}), with:
+    \begin{equation*}
+        S_n^2 = \frac{1}{n-1}\sum_{i=1}^n (X_i-\overline{X}_n)^2
+    \end{equation*}
+    Then:
+    \begin{equation*}
+        P(|S_n^2 - \sigma^2| \geq \epsilon) \leq \frac{E\left[(S_n^2-\sigma^2)^2\right]}{\epsilon^2} = \frac{Var(S_n^2)}{\epsilon^2}
+    \end{equation*}
+    
+    So, $S_n^2 \xrightarrow{P} \sigma^2$ if $Var(S_n^2)\to 0$ as $n\to\infty$.
+\end{enumerate}
+
+\section{Lecture - Part 2}
+
+\subsection{Convergence in Probability, Cont'd}
+\subsubsection{Theorem:}
+Suppose that $X_n \xrightarrow{P} X$, $Y_n \xrightarrow{P} Y$, then $X_n + Y_n \xrightarrow{P} X+Y$
+\subsubsection*{Proof:}
+\begin{equation*}
+    \begin{split}
+        |(X_n + Y_n) - (X+Y)| &\leq |X_n-X| + |Y_n - Y|\\
+        \Rightarrow P\left[|X_n - X| + |Y_n - Y| \geq \epsilon\right] &\geq P\left[|(X_n + Y_n) - (X+Y)| \geq \epsilon\right]
+    \end{split}
+\end{equation*}
+
+On the other hand, using the result that if $U>0$, $V>0$:
+\begin{equation*}
+    P(U+V\geq \epsilon) \leq P\left(U \geq \frac{\epsilon}{2} \right) + P\left(V \geq \frac{\epsilon}{2} \right)
+\end{equation*}
+We can then write:
+\begin{equation*}
+    \begin{split}
+          P\left[|(X_n + Y_n) - (X+Y)| \geq \epsilon\right] &\leq P\left[|X_n - X| + |Y_n - Y| \geq \epsilon\right]\\
+          &\leq P\left(|X_n - X| \geq \frac{\epsilon}{2} \right) + P\left(|Y_n - Y| \geq \frac{\epsilon}{2} \right)
+    \end{split}
+\end{equation*}
+
+Take limits as $n\to\infty$, and you are done.
+
+\subsubsection{Theorem:}
+
+Suppose that $X_n \to a$, and $h(x)$ is a continuous function at $a$. Then $h(X_n) \to h(a)$
+\subsubsection*{Proof:}
+Since $h$ is continuous at $x=a$, then for every $\epsilon >0$, there $\exists \delta > 0$, such that $|x-a|<\delta\Rightarrow |h(x)-h(a)|<\epsilon$ (or, equivalently, $|h(x)-h(a)|>\epsilon \Rightarrow |x-a|<\delta$. Substituding $X_n$ for $x$, we have:
+\begin{equation*}
+    |h(X_n) - h(a)| > \epsilon \Rightarrow |X_n-a|>\delta
+\end{equation*}
+Because of this condition (ie. the left side is a subset of the rightside), we have:
+\begin{equation*}
+    P(|h(X_n)-h(a)| > \epsilon) \leq P(|X_n-a|<\delta)
+\end{equation*}
+Since the right hand side converges to zero, the left must be zero as well and we are done.  
+
+\subsubsection{Theorem}
+Suppose $X_n \xrightarrow{P} X$, $Y_n\xrightarrow{P}Y$. Then $X_nY_n \xrightarrow{P} XY$.
+
+\subsubsection*{Proof:}
+\begin{equation*}
+    \begin{split}
+        X_nY_n &= \frac{1}{2}X_n^2 + \frac{1}{2}Y_n^2 - \frac{1}{2}(X_n - Y_n)^2 \xrightarrow{P} \frac{1}{2}X^2 + \frac{1}{2}Y^2 - \frac{1}{2}(X-Y)^2 = XY
+    \end{split}
+\end{equation*}
+
+\subsubsection{Examples}
+\begin{enumerate}
+    \item Let $X_1,...,X_n$ be a sample from a population with mean $\mu$, variance $\sigma^2$, and $E[X_1^4] < \infty$. Then $S_n^2 \xrightarrow{P} \sigma^2$.
+    \begin{equation*}
+        \begin{split}
+            S_n^2 &= \frac{1}{n-1}\sum_{i=1}^n (X_i - \overline{X})^2\\
+            &= \left(\frac{n}{n-1} \right)\left(\frac{1}{n} \sum_{i=1}^n X_i^2 - \left(\overline{X}_n \right)^2 \right)\\
+            &\xrightarrow[n\to\infty]{P} 1 \cdot \left(E[X_1^2] - (E[X_1])^2 \right) = \sigma^2
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsection{Convergence in Distribution}
+\subsubsection*{Definition}
+Let $X_1,X_2,...$ be a sequence of random variables with \textit{cdf}s $F_{X_1},F_{X_2},...$, respectively. Let $X$ be a random vairable with cdf $F_X$. We say that $X_n$ \textbf{Converges in Distribution} to $X$ if
+\begin{equation*}
+    \lim_{n\to\infty} F_{X_n}(x) = F_X(x)
+\end{equation*}
+at every point at which $X$ is continuous.
+
+\subsubsection*{Example}
+\begin{enumerate}
+    \item Consider:
+    \begin{equation*}
+        F_{X_n}(x) = \begin{cases}
+            1 & x\geq \frac{1}{n}\\
+            0 & \text{otherwise}
+        \end{cases}
+    \end{equation*}
+    This means, we have:
+    \begin{equation*}
+        \begin{split}
+            F_{X_n}(x)\xrightarrow{n\to\infty} F_X(x) = \begin{cases}
+                1 & x \geq 0\\
+                0 & \text{otherwise}
+            \end{cases}
+        \end{split}
+    \end{equation*}
+    Note that, though $F_{X_n}(0) = 0$, by definition:
+    \begin{equation*}
+        \lim_{n\to\infty}F_{X_n}(0) = F_X(0) = 1
+    \end{equation*}
+
+    \item Let $X_1,...,X_n$ be a sample from $Unif(0,1)$. Define $Y_n = \ord{n}$. We know that:
+    \begin{equation*}
+        F_{Y_n}(y) = \begin{cases}
+            0 & \text{if } y<0\\
+            y^n & \text{if } 0<y\leq 1\\
+            1 & \text{if } y>1
+        \end{cases}
+    \end{equation*}
+    But, as $n\to\infty$, $Y_n \xrightarrow{D}1$:
+    \begin{equation*}
+        \begin{cases}
+            1 & y\geq 1\\
+            0 & y < 1
+        \end{cases}
+    \end{equation*}
+    
+    This is referred to as a \textit{degenerate distribution}, that is, a distribution where all mass is at one point.
+    
+    \item Suppose that $X_1,...,X_n$ is a sample from the \textit{Pareto distribution}, with \textit{cdf}:
+    \begin{equation*}
+        F_{X_i}(x) = 1-\frac{1}{1+x} \quad x >0
+    \end{equation*}
+    Define $Y_n = n\ord{1}$. It can be shown that:
+    \begin{equation*}
+        \begin{split}
+            F_{Y_n}(y) &= 1 - \left(1 + \frac{y}{n} \right)^{-n}\\
+            \lim_{n\to\infty} F_{Y_n}(y) &= 1-e^{-y}\\
+            Y_n &\xrightarrow{D} Y\sim exp(1)
+        \end{split}
+    \end{equation*}
+    
+    \item Let $X_1,...,X_n\sim Bernouli(p)$. We have:
+    \begin{equation*}
+        Y_n = \sum_{i=1}^n X_i \sim Binomial(n,p)
+    \end{equation*}
+    Consider $W_n = \frac{Y_n}{n}$. Show that $W_n \xrightarrow{D} p$. To show this, consider the moment generating functions:
+    \begin{equation*}
+    \begin{split}
+        M_{W_n}(t) = M_{Y_n}\left(\frac{t}{n}\right) &= \left(pe^{t/n} + 1-p \right)^n \quad \text{(the MGF for binomial distn.)}\\
+        &= \left[p\left(1 + \frac{t}{n} + \frac{t^2}{2n^2} + \cdots \right) + 1-p \right]^n\\
+        &= \left[1 + \frac{pt}{n} + \mathcal{O}\left(\frac{1}{n^2}\right) \right]^n \rightarrow e^{pt}
+    \end{split}
+    \end{equation*}
+    
+    Since we know that $e^{pt}$ is the \textit{moment generating function} for a degenerate random variable of a single point.
+\end{enumerate}
+
+\subsubsection{The Central Limit Theorem}
+
+Let $X_1,...,X_n$ be a set of \textbf{iid} random variables with mean $\mu$ and variance $\sigma^2$. Then,
+\begin{equation*}
+    \frac{\sum X_i - n\mu}{\sigma\sqrt{n}} = \frac{\overline{X}_n - \mu}{\sigma/\sqrt{n}} \xrightarrow{Dist.} N(0,1)
+\end{equation*}
+
+\subsubsection*{Proof:}
+Let
+\begin{equation*}
+    Z_n = \frac{\sqrt{n}\left(\overline{X}_n - \mu \right)}{\sigma} = \frac{1}{\sqrt{n}} \sum_{i=1}^n Y_i, \quad \text{where } Y_i = \frac{X_i-\mu}{\sigma}
+\end{equation*}
+We need to show that:
+\begin{equation*}
+    M_{Z_n}(t) = \left[ M_{Y_1}\left(\frac{t}{\sqrt{n}} \right) \right]^n \xrightarrow{n\to\infty} e^{t^2/2}
+\end{equation*}
+It is sufficient to show that:
+\begin{equation*}
+    \log M_{Z_n}(t) \xrightarrow{n\to\infty} \frac{t^2}{2}
+\end{equation*}
+Let $L(t) = \log\left(M_{Y_1}(t) \right)$. Then:
+\begin{equation*}
+    \begin{split}
+        L\left( \frac{t}{\sqrt{n}}\right) &= L(0) + L'(0)\frac{t}{\sqrt{n}} + L''(0) \frac{t^2}{2n} + \mathcal{O}\left(\frac{t}{\sqrt{n}} \right)^3\\
+        \\
+        L(0) &= \log\left( M_{Y_1}(0) \right) = 0\\
+        L'(t) = \frac{M'_{Y_1}(t)}{M_{Y_1}(t)}\Rightarrow L'(0) &= \frac{M'_{Y_1}(0)}{M_{Y_1}(0)} = \frac{E[Y_1]}{1} = 0\\
+        L''(t) &= \frac{M''_{Y_1}(t) M_{Y_1}(t) - \left[M'_{Y_1}(t) \right]^2}{\left(M_{Y_1}(t)\right)^2}\\
+        \Rightarrow L''(0) &= \frac{M''_{Y_1}(0) M_{Y_1}(0) - \left[M'_{Y_1}(0) \right]^2}{\left(M_{Y_1}(0)\right)^2} = \frac{M''_{Y_1}(0)= 1 - 0}{1} \\
+        &=  M''_{Y_1}(0) = E\left[Y_1^2\right] = 1
+    \end{split}
+\end{equation*}
+Now we look at:
+\begin{equation*}
+    \begin{split}
+        n\log M_{Y_1}\left(\frac{t}{\sqrt{n}} \right) &= nL\left(\frac{t}{\sqrt{n}} \right)\\
+        &= n\left[ L(0) + L'(0)\frac{t}{\sqrt{2n}} + L''(0) \frac{t^2}{n} + \mathcal{O}\left(\frac{t}{\sqrt{n}} \right)^3 \right]\\
+        &= n\left[0 + 0 + 1\cdot \frac{t^2}{2n} + \mathcal{O}\left(\frac{t}{\sqrt{n}} \right)^3\right]\\
+        &= \frac{t^2}{2} +  \mathcal{O}\left(\frac{1}{n^{1/2}} \right) \rightarrow \frac{t^2}{2}
+    \end{split}
+\end{equation*}
+
+
+\end{document}
