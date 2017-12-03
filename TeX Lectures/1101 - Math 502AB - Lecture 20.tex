@@ -1,0 +1,274 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 20}
+\author{Dr. Jamshidian}
+\date{November 1, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Chapter 6 - Section 6.2.1 - Sufficient Statistics}
+
+Suppose that we have a sample $X_1,...,X_n$ from a density (or \textit{pmf}) $f(x|\theta)$ and we are interested in estimating $\theta$ based on our sample. We would usually use a statistic $T(X_1,...,X_n)$ to estimate $\theta$.
+
+If $X_1,...,X_n|T(X_1,...,X_n)$ is \textbf{not} a function of $\theta$, then $T(X_1,...,X_n)$ is a \textit{sufficient statistic}.
+
+\subsubsection*{Example}
+\begin{enumerate}
+    \item Let $X_1,..,X_n$ be a random sample from a distribution with \textit{pmf}
+    \begin{equation*}
+        f(X|\theta) = \begin{cases}
+            \theta^x(1-\theta)^{1-x} & x = 0,1 \quad 0 \leq \theta \leq 1\\
+            0 & \text{otherwise}
+        \end{cases}
+    \end{equation*}
+    Consider the statistic,
+    \begin{equation*}
+        Y=T(X) = \sum_{i=1}^n x_i \sim Binomial(n,p)
+    \end{equation*}
+    \begin{equation*}
+        f_{T(X)} (y) = \binom{n}{y}\theta^y (1-\theta)^{n-y} \quad y=0,1,...,n
+    \end{equation*}
+    Now consider the conditional probability
+    \begin{equation*}
+        P(X_1=x_1, X_2=x_2,...,X_n=x_n|T(X) = y)
+    \end{equation*}
+    There are two cases here:
+    \begin{enumerate}
+        \item If $\sum x_i \neq y$,
+        \begin{equation*}
+        \Rightarrow    P(X_1=x_1,...,X_n=x_n|T(X)=y) = 0
+        \end{equation*}
+        \item If $\sum x_i = y$. We then have that $X_1 = x_1, ...,X_n = x_n$ is a \textit{subset} of $T(X)=y$, since it is only one way we can get $\sum X_i = y$. Then we have:
+        \begin{equation*}
+            \begin{split}
+                P(A|B) &= \frac{P(A\cap B)}{P(B)} = \frac{P(A)}{P(B)} = \frac{P(X_1=x_1,...,X_n=x_n)}{P(T(X)=y)}\\
+                &= \frac{\prod_{i=1}^n \theta^{x_i}(1-\theta){1-x_i}}{\binom{n}{y}\theta^y (1-\theta)^{n-y}}\\
+                &= \frac{\theta^{\sum x_i}(1-\theta)^{n-\sum x_i}}{\binom{n}{y}\theta^{y}(1-\theta)^{n-y}}\\
+                &= \frac{\theta^{y}(1-\theta)^{n-y}}{\binom{n}{y}\theta^{y}(1-\theta)^{n-y}}\\
+                &= \frac{1}{\binom{n}{y}}
+            \end{split}
+        \end{equation*}
+        Thus, this isn't a function of $\theta$, and we have a sufficient statisitc.
+    \end{enumerate}
+\end{enumerate}
+
+\subsubsection{Sufficient Statistic (Discrete Case)}
+Let $f_Y(y|\theta)$ be the \textit{pmf} of the statistic $Y=T(X_1,...,X_n)$, where $X_1,...,X_n$ is a random sample from a discrete distribution with \textit{pmf} $f(x|\theta)$. Then,
+\begin{equation*}
+    P(X_1 = x_1,...,X_n=x_n|Y=y) = \frac{\prod_{i=1}^n f(x_i|\theta)}{f_Y(T(X_1,...,X_n|\theta)}
+\end{equation*}
+We say that $Y=T(X_1,...,X_n)$ is a sufficient statistic for $\theta$ if this ratio \textbf{does not} depend on $\theta$.
+
+\subsubsection{Sufficient Statistic (Continuous Case)}
+Let $X_1,...,X_n$ be a sample of size $n$ from a distribution with \textit{pdf} $f(x|\theta)$. Let $Y=T(X_1,...,X_n)$ be a statistic with \textit{pdf} $f_Y(y|\theta)$. Then $Y$ is a sufficient statistic for $\theta$ \textbf{if and only if}
+\begin{equation*}
+    \frac{\prod_{i=1}^n f(x_i|\theta)}{f_Y(T(X_1,...,X_n|\theta)} = H(X_1,...,X_n)
+\end{equation*}
+where $H(X_1,...,X_n)$ does not depend on $\theta$.
+
+\subsubsection*{Examples:}
+\begin{enumerate}
+    \item Let $X_1,...,X_n \sim gamma(\alpha=2,\beta = \theta)$ (\textbf{iid}). Consider $Y = \sum X_i$. Is this a sufficient statistic to estimate $\theta$.
+    \begin{equation*}
+        Y = \sum_{i=1}^n X_i \sim gamma(\alpha = 2n, \beta = \theta)
+    \end{equation*}
+    Then, we look at,
+    \begin{equation*}
+        \begin{split}
+            \frac{\prod_{i=1}^n f(x_i|\theta)}{f_Y(\sum X_i|\theta)} &= \frac{\prod_{i=1}^n \left[ \frac{1}{\Gamma(2)\theta^2}x_i^{2-1} e^{-x_i/\theta} \right]}{\frac{1}{\Gamma(2n)\theta^{2n}} \left(\sum X_i\right)^{2n-1} e^{-\sum X_i/\theta} }\\
+            &= \frac{\frac{1}{\theta^{2n}}e^{-\sum X_i/\theta}\prod_{i=1}^n X_i}{\frac{1}{\Gamma(2n)\theta^{2n}} \left(\sum X_i\right)^{2n-1} e^{-\sum X_i/\theta}}\\
+            &= \frac{\Gamma(2n) \prod_{i=1}^n X_i}{\left(\sum X_i \right)^{2n-1}}
+        \end{split}
+    \end{equation*}
+    Since this is not a function of $\theta$, we have a sufficient statistic.
+
+    \item Let $X_{(1)},...,X_{(n)}$ denote the order statistics of a random sample of size $n$ from a distribution with \textit{pdf}
+    \begin{equation*}
+        f(x|\theta) = e^{-(x-\theta)}\mathcal{I}_{(\theta,\infty)}(x)
+    \end{equation*}
+    Show that $Y=X_{(1)} = min(X_1,...,X_n)$ is a sufficient statistic to estimate $\theta$.
+
+    First, we must find the distribution for $Y$:
+    \begin{equation*}
+    \begin{split}
+        f_Y(y) &= n(1-F_{X_1}(y))^{n-1} f_{X_1}(y)\\
+        F_{X_1}(y) &= \int_{\theta}^y e^{-(x_1-\theta)}dx = 1-e^{-(y-\theta)}\\
+        f_Y(y) &= ne^{-n(y-\theta)}\mathcal{I}_{(\theta,\infty)}(y)
+    \end{split}
+    \end{equation*}
+    Now, we consider the ratio:
+    \begin{equation*}
+        \begin{split}
+            \frac{\prod_{i=1}^n f_{X_1}(X_i|\theta)}{f_Y(T(X_i|\theta))} &= \frac{\prod_{i=1}^n e^{-(x_i-\theta)}\mathcal{I}_{\theta,\infty}(x_i)}{ne^{-n\left(min(X_1,...,X_n)\right)} \mathcal{I}_{(\theta,\infty)}}\\
+            &= \frac{e^{-\sum x_i} e^{n\theta} \prod_{i=1}^n \mathcal{I}_{(\theta,\infty)(x_i)}}{ne^{n\theta}e^{-min(x_1,...,x_n)} \mathcal{I}_{(\theta,\infty)}(min\left(x_1,...,x_n)\right)}
+        \end{split}
+    \end{equation*}
+    We must consider:
+    \begin{equation*}
+    \begin{split}
+        \prod_{i=1}^n \mathcal{I}_{(\theta,\infty)}(x_i) = 1 &\iff X_1>\theta,...,X_n > \theta\\
+        &\iff min(x_1,...,x_n)>\theta\\
+        &\iff \mathcal{I}_{(\theta,\infty)}(min(x_1,...,x_n)) = 1
+    \end{split}
+    \end{equation*}
+    This is important since if the minimum is below $\theta$, the probability is zero anyway so these indicator functions cancel out. This leaves us with terms that are \textit{not} dependent upon $\theta$, and thus it is a sufficient statistic.
+\end{enumerate}
+
+\section{Lecture - Part 2}
+
+So, now we have looked at how to determine if something is a sufficient statistic. How can we figure out what a sufficient statistic might be?
+
+\subsection{Factorization Theorem}
+Let $X_1,...,X_n$ be \textbf{iid} from a distribution with \textit{pdf} (or \textit{pmf}) $f(X|\theta)$, where $\theta \in \Theta$ is an unknown parameter. A statistic $T(X_1,...,X_n)$ is a sufficient statistic for $\theta$ \textbf{if and only if} the joint \textit{pdf}, or the joint \textit{pmf} function $f(x_1,...,x_n|\theta)$ of $X_1,...,X_n$ can be factorized as follows for all $x = (x_1,...,x_n) \in \mathbb{R}^n$ and values of $\theta \in \Theta$
+\begin{equation*}
+    f(x_1,...,x_n|\theta) = U(x_1,...,x_n) V\left[ T(x_1,...,x_1|\theta) \right]
+\end{equation*}
+Here $U$ and $V$ are non-negative functions where $U$ does not involve $\theta$, and $V$ depends on $x_1,...,x_n$ \textit{only} through $T(X_1,...,X_n)$.
+
+\subsubsection*{Proof (Discrete Case):}
+($\Rightarrow$) Suppose that the joint density can be factored as above. Let $T(X) = t$.
+\begin{equation*}
+    \begin{split}
+        P(X_1=x_1,...,X_n=x_n|T(X_1,...,X_n) = t) &= \frac{P(X_1=x_1,...,X_n=x_n \cap T(X_1,...,X_n) = t)}{P(T(X_1,...,X_n)=t)}\\
+        &= \frac{P(X_1=x_1,...,X_n=x_n)}{P(T(X_1,...,X_n)=t)}
+    \end{split}
+\end{equation*}
+We already know that the top part of this equation is the joint density (U). So, let's look at the bottom term:
+\begin{equation*}
+    \begin{split}
+        P(T(X_1,...,X_n)=t) &= \sum_{x:T(x)=t} f(x)\\
+        &= \sum_{x:T(x)=t} U(X) V(T(X|\theta)),\quad\text{by assumption}\\
+        &= \sum_{x:T(x)=t} U(x) V(t|\theta) = V(t|\theta) = \sum_{x:T(x)=t} U(x)\\
+    \end{split}
+\end{equation*}
+So, now we have:
+\begin{equation*}
+\begin{split}
+    P(X=x) = f(x|\theta) &= u(x)v(T(x)|\theta)\\
+    &= u(x) v(t|\theta)\\
+\end{split}
+\end{equation*}
+Putting it back together, we have:
+\begin{equation*}
+\begin{split}
+    \frac{P(X=x)}{P(T(x)=t)} &= \frac{u(x)v(t|\theta)}{v(t|\theta) \sum_{x:T(x)=t} u(x)}
+\end{split}
+\end{equation*}
+The result is independent of $\theta$, and thus $T(X)$ must be a sufficient statisitic.
+
+($\Leftarrow$): Assume that $T(X)$ is a sufficient statistic for $\theta$. This means that
+\begin{equation*}
+    P(X=x|T=t) \text{ is independent of $\theta$}
+\end{equation*}
+But,
+\begin{equation*}
+    \begin{split}
+        P(X=x) &= P(X=x \cap T(x) = t)\\
+            &= P(X=x|T(x)=t)P(T(x)=t)\\
+            &= U(x) V(T(x)|\theta) \text{, by sufficiency}
+    \end{split}
+\end{equation*}
+
+\subsubsection{Examples}
+\begin{enumerate}
+    \item Let $X_1,...,X_n$ be a sample from a \textit{Poisson} distribution with mean $\theta$ ($\theta$ > 0). Obtain a sufficient statistic for $\theta$.
+    \begin{equation*}
+        f(x_1,...,x_n|\theta) = \frac{\prod_{i=1}^n e^{-\theta} \theta^{x_i}}{x_i!} = e^{-n\theta}\theta^{\sum x_i}\left(\frac{1}{\prod_{i=1}^n x_i!} \right)
+    \end{equation*}
+    $\Rightarrow$ that $\sum x_i$ is a sufficient statistic
+
+    \item Suppose that $X_1,...,X_n$ are a sample from a continuous distribution with \textit{pdf}
+    \begin{equation*}
+        \begin{cases}
+            \theta x^{\theta-1} & \text{for } 0<X<1\\
+            0 & \text{otherwise}
+        \end{cases}
+    \end{equation*}
+    Obtain a sufficient statistic for $\theta$
+    \begin{equation*}
+        f(x_1,...,x_n|\theta) = \prod_{i=1}^n \theta x_i^{\theta-1} = \theta^n\left(\prod_{i=1}^n x_i \right)^{\theta-1}
+    \end{equation*}
+    Well, we can see that $U(X) = 1$ so this trivially implies to us that $\prod x_i$ is a sufficient statistic, and we are done.
+
+    \item Let $X_1,...,X_n \sim N(\theta,\sigma^2)$ (\textbf{iid}) where $\sigma^2$ is known.
+    \begin{equation*}
+        \begin{split}
+            f(x_1,...,x_n|\theta) &= \prod_{i=1}^n f(x_i|\theta)\\
+            &= \left(\frac{1}{\sqrt{2\pi}\sigma} \right)^n \exp\left\{-\frac{1}{2\sigma^2} \sum_{i=1}^n (x_i-\theta)^2 \right\}
+        \end{split}
+    \end{equation*}
+    The left term is fine, but the right hand term is not clearly separable. So, let's take a look at:
+    \begin{equation*}
+        \begin{split}
+            \sum_{i=1}^n (x_i-\theta)^2 &= \sum_{i=1}^n (x_i - \overline{x} + \overline{x} - \theta)^2\\
+            &= \sum(x_i-\overline{x})^2 + n(\overline{x}-\theta)
+        \end{split}
+    \end{equation*}
+    Now, we can rewrite our function as
+    \begin{equation*}
+        \begin{split}
+            f(x_1,...,x_n|\theta) &= \left(\frac{1}{\sqrt{2\pi}\sigma} \right)^n
+     \exp \left\{-\frac{1}{2\sigma^2}\left[\sum (x_i-\overline{x})^2 + n(\overline{x} - \theta)^2 \right]\right\}\\
+     &= \left(\frac{1}{\sqrt{2\pi}\sigma} \right)^n
+     \exp \left\{-\frac{1}{2\sigma^2} \sum (x_i-\overline{x})^2\right\}\exp\left\{ -\frac{n}{2\sigma^2}(\overline{x} - \theta)^2 \right\}
+     \end{split}
+    \end{equation*}
+    The left two terms are our $U(X)$ since it does not depend on $\theta$ ($\sigma^2$ is known). The statistic on the right hand side is $\overline{X}$, so that is our sufficient statistic.
+
+    \item Let $f(x|\theta) = e^{-(x-\theta)}\mathcal{I}_{\theta,\infty}$. You recall that the sufficient statistic from earlier was $min(X_1,...,X_n)$. Consider a sample of size $n=3$. We then have,
+    \begin{equation*}
+        \begin{split}
+            e^{-(x_1-\theta)}e^{-(x_2-\theta)}e^{-(x_3-\theta)} &= e^{-3X_{(3)} + 3\theta}e^{-(x_1+x_2+x_3) + 3X_{(3)}}
+        \end{split}
+    \end{equation*}
+    However, it is important to be mindful of the \textbf{domain} of $X$. Since the domain itself is a function of $\theta$, we must include it in these terms. Thus, the above is \textbf{incorrect}.
+
+    We should have written the following
+    \begin{equation*}
+    \begin{split}
+        \prod_{i=1}^3 \left[ e^{-(x_i-\theta)} \mathcal{I}_{(\theta,\infty)}(x_i)\right] &= e^{3\theta}\prod_{i=1}^3 \mathcal{I}_{(\theta,\infty)}(x_i) e^{-\sum x_i}\\
+        &= e^{3\theta}\mathcal{I}_{\theta,\infty}(min(x_i)) e^{-\sum x_i}
+    \end{split}
+    \end{equation*}
+    Since the left two terms are functions of the sample and $\theta$, we see that it is $V$. The right term is only in terms of the sample, so it composes $U$. Thus, $min(X_i)$ is our sufficient statistic.
+\end{enumerate}
+\subsection{Properties of Sufficient Statistics}
+Let $X_1,...,X_n$ be a sample from a \textit{pdf} (or \textit{pmf}). Suppose that $T(X_1,...,X_n)$ and $T'(X_1,...,X_n)$ are two statistics, and there exists a \textit{bijective} (1-1 and onto) function $g$ such that $T'=g(T)$. In particular, $T'$ can be determined from $T$, without knowing $X_1,...,X_n$. Then $T'$ is a \textit{sufficient statistic} for $\theta$ \textbf{if and only if} $T$ is a sufficient statistic for $\theta$.
+\subsubsection*{Example}
+\begin{enumerate}
+    \item Suppose that $T_1 = \sum X_i$ and $T_2 = \frac{1}{n}\sum X_i = \overline{X}$. If one is a sufficient statistic than the other is as well, since there is a \textit{bijective} function between them. In this case $g(T) = \frac{1}{n}T$
+\end{enumerate}
+\subsubsection*{Proof:}
+Let $T' = g(T) \Rightarrow T=g^{-1}(T')$. This is a sufficient statistic \textbf{if and only if}
+\begin{equation*}
+\begin{split}
+    f_n(x_1,...,x_n|T=t) &= U(X_1,...,X_n)V(T(X_1,...,X_n|\theta)\\
+    &= U(X_1,...,X_n) V(g^{-1}(T'(X_1,...,X_n)),\theta)
+\end{split}
+\end{equation*}
+This says that $T'$ must be also a sufficient statistic, and we are done.
+
+\subsubsection{Examples}
+\begin{enumerate}
+    \item Let $X_1,...,X_n\sim Beta(\alpha,\beta)$ (\textbf{iid}) where $\alpha$ is known, but $\beta$ is unknown. Show that the following statistic is sufficient for $\beta$
+    \begin{equation*}
+        T = \frac{1}{n}\left(\sum_{i=1}^n \log \frac{1}{1-X_i} \right)^3
+    \end{equation*}
+    \begin{equation*}
+        \begin{split}
+            f(x|\beta) &= \prod_{i=1}^n \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} x_i^{\alpha-1}(1-x_i)^{\beta-1}\\
+            &= \left(\Gamma(\alpha)\right)^{-n} \left( \prod_{i=1}^n x_i\right)^{\alpha-1} \left[\left(\frac{\Gamma(\alpha + \beta)}{\Gamma(\beta)}\right)^n \left(\prod_{i=1}^n (1-x_i) \right)^{\beta-1} \right]
+        \end{split}
+    \end{equation*}
+    We know $\prod (1-X_i)$ is the sufficient statistic, but it doesn't look like the $T$ given. However, if we apply this function, we get our $T$:
+    \begin{equation*}
+        g(T') = \frac{-\log (T')^3 }{n}
+    \end{equation*}
+\end{enumerate}
+
+\end{document}
