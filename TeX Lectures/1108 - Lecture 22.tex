@@ -1,0 +1,204 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 22}
+\author{Dr. Jamshidian}
+\date{November 8, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+\subsection{Maximum Likelihood Continued}
+\subsubsection{A Justification for Using MLE}
+
+Let $\theta_0$ be the true value of $\theta$, and consider the following regularity conditions:
+\begin{enumerate}
+    \item For $\theta \neq \theta' \Rightarrow f(x|\theta) \neq f(x|\theta')$. That is, the parameter identifies the distribution. This is not a restrictive assumption since distributions with 2 different sets of parameters are different.
+    \item The \textit{pdf}'s have common support for all $\theta$. In other words, the support is independent of $\theta$.
+    \item The point $\theta_0$ is in the interior of the support of $f$.
+\end{enumerate}
+
+\subsubsection{Theorem:}
+Let $\theta_0$ be the true parameter value, then, under the given assumptions above, we have
+\begin{equation*}
+    \lim_{n\to\infty} P\left[\mathcal{L}(\theta_0|X) > \mathcal{L}(\theta|X) \right] = 1
+\end{equation*}
+for all $\theta \neq \theta_0$ where $\mathcal{L}(\theta|X)$ is a likelihood function based on a sample $X = (X_1,...,X_n)$. This says that, for large $n$, the likelihood is maximized at the true value $\theta_0$, with probability 1.
+
+\subsubsection*{Proof:}
+We start with the likelihood function
+\begin{equation*}
+\begin{split}
+    \mathcal{L}(\theta_0|X) > \mathcal{L}(\theta|X) &\iff \log \mathcal{L}(\theta_0|X) > \log \mathcal{L}(\theta|X)\\
+    &\iff \sum_{i=1}^n \log f(x_i|\theta_0) > \sum_{i=1}^n \log f(x_i|\theta)\\
+    &\iff \frac{1}{n} \sum_{i=1}^n \log \left(\frac{f(x_i|\theta)}{f(x_i|\theta_0)} \right) < 0\\
+    \frac{1}{n}\sum_{i=1}^n \log \left(\frac{f(x_i|\theta)}{f(x_i|\theta_0)} \right) &\xrightarrow{P} E_{\theta_0}\left[\log \frac{f(x_i|\theta)}{f(x_i|\theta_0)} \right]
+\end{split}
+\end{equation*}
+By Jensen's Inequality,
+\begin{equation*}
+    E_{\theta_0}\left[\log \frac{f(x_i|\theta)}{f(x_i|\theta_0)} \right] < \log E_{\theta_0}\left[ \frac{f(x_i|\theta)}{f(x_i|\theta_0)} \right]
+\end{equation*}
+But now,
+\begin{equation*}
+    E_{\theta_0}\left[ \frac{f(x_i|\theta)}{f(x_i|\theta_0)} \right] = \int_{-\infty}^\infty \frac{f(x|\theta)}{f(x|\theta_0)}\cdot f(x|\theta_0) dx = 1 
+\end{equation*}
+We have thus shown that,
+\begin{equation*}
+    \lim_{n\to\infty} P\left[ \frac{1}{n} \sum_{i=1}^n \log \frac{f(x_i|\theta)}{f(x_i|\theta_0)} < 0 \right] = 1
+\end{equation*}
+
+
+\subsubsection{Examples}
+\begin{enumerate}
+    \item Obtain the \textit{MLE} for $\lambda$ if $X_1,...,X_n \sim Poisson(\lambda)$
+    \begin{equation*}
+        \begin{split}
+            \ell(\lambda) &= \sum_{i=1}^n \log f(x_i|\lambda)\\
+            &= \sum_{i=1}^n \log \left(\frac{e^{-\lambda} \lambda^{x_i}}{x_i!} \right)\\
+            &= \sum_{i=1}^n \left[-\lambda + x_1 \log \lambda - \log x_i! \right]\\
+            &= -n\lambda + \log \lambda \sum_{i=1}^n x_i\\
+            \ell'(\lambda) &= -n + \frac{\sum_{i=1}^n x_i}{\lambda} = 0 \Rightarrow \lambda = \overline{x}
+        \end{split}
+    \end{equation*}
+    
+    \item Obtain the \textit{MLE} of $\mu$ and $\sigma^2$ if $X_1,...,X_n \sim N(\mu,\sigma^2)$ (\textbf{iid})
+    \begin{equation*}
+        \begin{split}
+            \ell(\theta) &= \sum_{i=1}^n \log \left[ \frac{1}{\sqrt{2\pi}\sigma} \exp \left\{ -\frac{1}{2\sigma^2}(x_i-\mu)^2 \right\} \right]\\
+            &= C + \sum_{i=1}^n \left[-\log \sigma - \frac{1}{2\sigma^2}(x_i-\mu)^2 \right]\\
+            &= C - \frac{n}{2}\log \sigma^2 - \frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu)^2\\
+            \\
+            \frac{\partial \ell}{\partial \hat{\mu}} &= \frac{1}{\hat{\sigma}^2} \sum_{i=1}^n (x_i-\hat{\mu}) = 0\\
+            \frac{\partial \ell}{\partial \hat{\sigma}^2} &= -\frac{n}{2 \hat{\sigma}^2}  + \frac{1}{2}\left(\frac{1}{\hat{\sigma}^2} \right)^2 \sum_{i=1}^n (x_i - \hat{\mu}) = 0\\
+            \\
+            \sum(x_i-\hat{\mu}) &= 0 \Rightarrow \sum x_i = n\hat{\mu} \Rightarrow \hat{\mu} = \frac{1}{n}\sum x_i = \overline{x}\\
+            -n\hat{\sigma}^2 + \sum_{i=1}^n (x_i - \overline{x})^2 &= 0 \Rightarrow \hat{\sigma}^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \overline{x})^2
+        \end{split}
+    \end{equation*}
+    
+    \textbf{An aside (for next quarter):} Recall from linear algebra that, to show that these are maximums, we would need to verify the Hessian matrix is \textit{negative definite} at that point.
+    \begin{equation*}
+       \mathcal{H} = \begin{bmatrix}
+            \dfrac{\partial^2 \ell}{\partial \mu \partial \mu} & \dfrac{\partial^2\ell}{\partial \mu \partial \sigma^2}\\[2ex]
+            \dfrac{\partial^2\ell}{\partial \mu \partial\sigma} & \dfrac{\partial^2 \ell}{\partial \sigma^2 \partial \sigma^2}
+        \end{bmatrix}
+    \end{equation*}
+    
+    \item Let $X_1,...,X_n \sim Unif(1,2,...,\theta)$. Obtain the \textit{MLE} of $\theta$. (Estimating population size).
+    
+    \textbf{Recall:}
+    \begin{equation*}
+        f(x|\theta) = \begin{cases}
+            \frac{1}{\theta} & x=1,2,...,\theta\\
+            0 & \text{otherwise}
+        \end{cases}
+    \end{equation*}
+    
+    \begin{equation*}
+        \begin{split}
+            \mathcal{L}(\theta) &= \frac{1}{\theta^n} \prod_{i=1}^n \mathcal{I}_{[1,...,\theta]}(x_i)\\
+            &= \frac{1}{\theta^n} \mathcal{I}_{[1,...,\theta]}\left(x_{(n)}\right)
+        \end{split}
+    \end{equation*}
+    To \textit{maximize} this function, we have to find the \textit{smallest} $\theta$ possible, so that the indicator function holds. But the indicator is true for $1 \leq X_{(n)} \leq \theta$, so this value is $\hat{\theta} = X_{(n)}$, the maximum.
+    
+    \item Let $X_1,...,X_n \sim gamma(\alpha,\beta)$. Obtain \textit{MLE} for $\alpha$ and $\beta$. Recall that:
+    \begin{equation*}
+        f(X|\alpha,\beta) = \frac{1}{\Gamma(\alpha)} \beta^\alpha x^{\alpha-1} e^{-\beta x}
+    \end{equation*}
+    So, we have
+    \begin{equation*}
+        \begin{split}
+            \ell (\alpha,\beta) &= \sum_{i=1}^n \left\{\alpha\log\beta + (\alpha-1)\log x_i - \beta x_i - \log\Gamma(\alpha) \right\}\\
+            &= n\alpha\log\beta + (\alpha-1)\sum_{i=1}^n \log x_i - \beta\sum_{i=1}^n x_i - n\log\left(\Gamma(\alpha)\right)\\
+            \\
+           (1)\quad \frac{\partial\ell}{\partial\alpha} &= n\log(\beta) + \sum_{i=1}^n \log (x_i) - n\frac{\Gamma'(\alpha)}{\Gamma(\alpha)} = 0\\
+            (2) \quad \frac{\partial\ell}{\partial\beta} &= \frac{n\alpha}{\beta} - \sum_{i=1}^n x_i =0\\
+            (2) \Rightarrow \hat{\beta} &= \frac{n\hat{\alpha}}{\sum_{i=1}^n x_i} = \frac{\hat{\alpha}}{\overline{x}}\\
+            (1) \Rightarrow  0 &= n\log\left(\frac{\hat{\alpha}}{\overline{x}}\right) + \sum \log x_i - n\frac{\Gamma'(\hat{\alpha})}{\Gamma(\hat{\alpha})} 
+        \end{split}
+    \end{equation*}
+    Here, there is no closed form solution for $\hat{\alpha}$. This is an example that you may at times have to use iterative methodds to get your answer.
+\end{enumerate}
+
+\section{Lecture - Part 2}
+
+\subsection{Examples Continued}
+
+\begin{enumerate}
+    \item Suppose that there are $n$ independent trials, each resulting in one of $m$ outcomes with respect to probabilities $p_1,p_2,...,p_m$. Let $X_i$ be the number of $i^{th}$ outcomes. Use $X_1,...,X_m$ to obtain \textit{MLE} for $p_1,...,p_m$.
+    
+    In this case, the joint density is:
+    \begin{equation*}
+        f(x_1,...,x_m|p_1,...,p_m) = \binom{n}{x_1,...,x_m} p_1^{x_1} \cdots p_m^{x_m}
+    \end{equation*}
+    This gives us the log likelihood:
+    \begin{equation*}
+        \begin{split}
+            \ell (p_1,...,p_m) &= c + x_1\log p_1 + \cdots + x_m \log p_m\\
+            \ell(p_1,...,p_m) &= c + x_1\log p_1 + \cdots + x_{m-1}\log p_{m-1} + x_m \log \left(1 - \sum_{i=1}^{m-1} p_i \right)\\
+            \frac{\partial\ell}{\partial p_1} &= \frac{x_1}{p_1} - \frac{x_m}{1-\sum_{i=1}^m p_m} = 0 \Rightarrow \frac{x_1}{x_m} = \frac{\hat{p}_1}{\hat{p}_m}\\
+            \frac{\partial\ell}{\partial p_2} &= \frac{x_2}{\hat{p}_2} - \frac{x_m}{\hat{p_m}} = 0 \Rightarrow \frac{x_2}{x_m} = \frac{\hat{p}_2}{\hat{p}_m}\\
+            &\vdots \\
+            \frac{\partial\ell}{\partial p_{m-1}} &= \frac{x_{m-1}}{\hat{p}_{m-1}} - \frac{x_m}{\hat{p_m}} = 0 \Rightarrow \frac{x_{m-1}}{x_m} = \frac{\hat{p}_{m-1}}{\hat{p}_m}\\
+            \\
+            \Rightarrow \frac{\sum_{i=1}^{m-1} x_i}{x_m} &= \frac{\sum_{i=1}^{m-1} \hat{p}_i }{\hat{p}_m} \Rightarrow \frac{n-x_m}{x_m} = \frac{1-\hat{p}_m}{\hat{p}_m} \Rightarrow \hat{p}_m = \frac{x_m}{n}\\
+            \text{This implies: } \hat{p}_1 &= \frac{x_1}{n}, \cdots, \hat{p}_{m-1} = \frac{x_{m-1}}{n}
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+\subsection{Invariance Property of MLE}
+
+\subsubsection{Theorem}
+Let $X_1,...,X_n$ be \textbf{iid} with \textit{pdf} $f(x|\theta)$, for $\theta \in \Omega$. For a specified function $g$, let $\eta = g(\theta)$ be a parameter of interest. Suppose that $\hat{\theta}$ is the \textit{MLE} of $\theta$. Then, $g(\hat{\theta})$ is the \textit{MLE} of $\eta = g(\theta)$.
+
+\subsubsection*{Proof:}
+First, suppose that $g$ is a one to one function. The likelihood of interest is $\mathcal{L}\left(g(\theta) \right)$. Since $g(\theta)$ is one to one, we have $\theta = g^{-1}(\eta)$, since the inverse exists. And, the likelihood of $g(\theta)$, written as a function of $\eta$, is given by
+\begin{equation*}
+    \mathcal{L}^*(\eta) = \prod_{i=1}^n f\left(x_i|g^{-1}(\eta)\right) = \mathcal{L}\left(g^{-1}(\eta)\right) = \mathcal{L}(\theta)
+\end{equation*}
+
+\subsubsection{Examples}
+\begin{enumerate}
+    \item (\textbf{Olkin, et al. (1981)}: Suppose $X_1,...,X_5 \sim binomial(k,p)$. Suppose we have two sets of data: 
+    \begin{enumerate}
+        \item $(16,18,22,25,27)$ with $\hat{k} = 99$
+        \item $(16,18,22,25,28)$ with $\hat{k} = 199$
+    \end{enumerate}
+    As we can see, a small change in the observed data has a \textit{huge} effect on the \textit{MLE}. This can be mitigated by increasing the sample size. The issue with the \textit{MLE} is that we have a large flat part of the graph causing a massive change in estimate with a small change in data.
+\end{enumerate}
+
+\subsection{The Bayesian Approach to Estimation}
+
+\subsubsection{An Example:}
+
+Suppose that we have a Poisson distribution with parameter $\theta > 0$. Moreover, suppose that we know that $\theta$ is either equal to 2, or equal to 3.
+
+So, what is different here? In \textit{Bayesian} estimation, we treat the parameters as \textit{random variables}. 
+
+Suppose that, based on our knowledge of the problem (``prior" knowledge), we know that
+\begin{equation*}
+    P(\Theta = 2) = \frac{1}{3} \quad P( \Theta = 3) = \frac{2}{3}
+\end{equation*}
+We take a sample of size 2, and we get $X_1 = 2$ and $X_2 = 4$. With \textit{MLE}, we would find the sample mean and find $\hat{\theta} = 3$. But with \textit{Bayesian}, now we need to take the prior and, given the data, compute the posteriior:
+\begin{equation*}
+    \begin{split}
+        P(\Theta = 2 | x_1 = 2, x_2 = 4) &= \frac{P(\Theta = 2, x_1 = 2, x_2 = 4)}{P(x_1 = 2, x_2 = 4)}\\
+        &= \frac{P(x_1 = 2, x_2 = 4|\Theta = 2) P(\Theta = 2)}{P(x_1 = 2, x_2 = 4|\Theta = 2) P(\Theta = 2) + P(x_1 = 2, x_2 = 4|\Theta = 3) P(\Theta = 3)}\\
+        &= \frac{\frac{1}{3}\left[ \frac{1}{2!} e^{-2}2^2 \cdot \frac{1}{4!}e^{-2}2^4\right] }{\frac{1}{3}\left[ \frac{1}{2!} e^{-2}2^2 \cdot \frac{1}{4!}e^{-2}2^4\right]  + \frac{2}{3}\left[ \frac{1}{2!} e^{-3}3^2 \cdot \frac{1}{4!}e^{-3}3^4\right] }\\
+        &= 0.245\\
+        \\
+        \Rightarrow P(\Theta = 2 | x_1 = 2, x_3 = 4) &= 0.245\\
+        P(\Theta = 3 | x_1 = 2, x_3 = 4) &= 0.755
+    \end{split}
+\end{equation*}
+The \textit{prior} told us that the distribution would be roughly $0.33$ and $0.66$, but the \textit{posterior} has higher probability of $\Theta = 3$. Why? Because the \textit{data} caused it to go more in that direction.
+
+
+
+
+\end{document}
