@@ -1,0 +1,165 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amsmath,mathtools}
+
+\title{Math 502AB - Lecture 28}
+\author{Dr. Jamshidian}
+\date{December 6, 2017}
+\begin{document}
+
+\maketitle
+
+\section{Lecture - Part 1}
+
+\subsection{Testing Hypotheses Using \textit{Parametric} Bootstrap}
+
+Suppose you have a set of data $X_1,...,X_n \sim gamma(\alpha,1)$ and you would like to test the hypothesis
+\begin{equation*}
+    \begin{cases}
+        H_0: \quad \alpha = 2\\
+        H_a: \quad \alpha \neq 2
+    \end{cases}
+\end{equation*}
+To do this, we would need to come up with a statistic to test this hypothesis. We know that $\alpha$ is the \textit{expected value} for the gamma. Therefore, a reasonable rejection region would be
+\begin{equation*}
+    \mathcal{R} = \left\{\overline{X} > c \right\}
+\end{equation*}
+Under normal circumstances, we would look at $\overline{X}$ and come up with a distribution for it. However, in a real example where you don't know what the distribution is, you would have to use \textit{bootstrapping}.
+\\~\\
+\noindent \textit{Bootstrapping} is concerned with finding $p$-values where,
+\begin{equation*}
+    p\text{-value} = P(\text{having observed a value} | \text{ $H_0$ is true})
+\end{equation*}
+In a parametric bootstrap, we assume that we \textit{know} what the distribution of $X$ is. To conduct the bootstrap, we would:
+\begin{enumerate}
+    \item Generate $X_1,...,X_{n_1}$ samples under the assumption that $H_0$ is true, and compute $\overline{x}_1$.
+    \item Repeat this $b$ times, and store all of the $\overline{x}_i$'s
+    \item Calculate the proportion of bootstrapped $\overline{x}_i$ which lie above the \textit{observed}, $\overline{x}_{obs}$
+\end{enumerate}
+\textbf{Note:} Take note that you must be careful with \textit{bootstrap}. If you arbitrarily increase sample size, you will make the test \textit{too powerful}.
+
+\subsection{Testing Hypotheses with \textit{Non-Parametric} Bootstrap}
+
+In the \textit{non-parametric} bootstrap situation, all we have is the observed data:
+\begin{equation*}
+    \begin{matrix}
+        & X_1, & X_2, & \dots ,& X_n\\
+        & \uparrow & \uparrow & & \uparrow\\
+    \text{Probability:}    & \frac{1}{n} & \frac{1}{n} & \cdots & \frac{1}{n}
+    \end{matrix}
+\end{equation*}
+In \textit{non-parametric} bootstrapping, essentially the goal is to model generating a population characterized by the observed data.
+\\~\\
+Suppose we wanted to test $\mu$ by using the statistic $\overline{X}\sim N$. Then, we could come up with a confidence interval to test
+\begin{equation*}
+    \overline{X} \pm Z^* S.E.\left(\overline{X}\right)
+\end{equation*}
+where we estimate the ``distribution" of $\overline{X}$ by sampling $b$ times, calculating $\overline{x}_i$, and calculating the $p$-value as
+\begin{equation*}
+    p\text{-value} = P(\overline{X} > \overline{x}_{obs} | \text{ $H_0$ is true})
+\end{equation*}
+
+\subsubsection{\textit{Non-Parametric} Bootstrap with Two Populations}
+
+Suppose we have $X_1,...,X_n$ and $Y_1,...,Y_n$. Suppose we were interested in testing the hypothesis
+\begin{equation*}
+    \begin{cases}
+        H_0: \quad \mu_X - \mu_Y = 0\\
+        H_a: \quad \mu_X - \mu_Y \neq 0
+    \end{cases}
+\end{equation*}
+Recall, that if you had the statistic
+\begin{equation*}
+    \frac{\overline{X}_1 - \overline{X}_2}{\sqrt{sp^2\left(\frac{1}{n_1} + \frac{1}{n_2}\right)}}
+\end{equation*}
+this is a $t$-distribution with $n_1 + n_2 - 2$ degrees of freedom, \textbf{if} the two populations have the same variance.
+
+If the populations have different variance, then you'd use the statistic
+\begin{equation*}
+    \frac{\overline{X}_1 - \overline{X}_2}{\sqrt{\frac{S_1^2}{n_1} + \frac{S_2^2}{n_2}}}
+\end{equation*}
+This is a great opportunity to use \textit{bootstrapping}. Suppose that
+\begin{equation*}
+    \overline{W} = \frac{1}{n_1 + n_2} \left\{\sum_{i=1}^{n_1} X_i + \sum_{i=1}^{n_2} Y_i \right\}
+\end{equation*}
+Then consider
+\begin{equation*}
+    \begin{split}
+        X_i^* &= X_i - \overline{X} + \overline{W}\\
+        Y_i^* &= Y_i - \overline{Y} + \overline{W}
+    \end{split}
+\end{equation*}
+Thus, the expected value of both $X_i^*$ and $Y_i^*$ are the same. So our process will be
+\begin{enumerate}
+    \item Generate $X_1^*,...,X_{n_1}^*$ and $Y_1^*,...,Y_{n_2}^*$, and generate a statistic $\overline{W}$.
+    \item Repeat this process $b$ times
+    \item Calculate the $p$-value, this time based on the statistic $\overline{W}$
+\end{enumerate}
+
+\section{Lecture - Part 2}
+
+\subsection{Asymptotic Results}
+
+\subsubsection{Definition}
+Let $X_1,...,X_n$ be a sample from a distribution with \textit{pdf} (or \textit{pmf}) $f(x|\theta)$. Let $T_n = T(X_1,...,X_n)$ denote a statistic. We say that $T_n$ is a \textbf{consistent estimator} of $\theta$ if 
+\begin{equation*}
+    T_n \xrightarrow{P} \theta
+\end{equation*}
+
+\subsubsection{Theorem}
+If $T_n$ is a sequence of estimators for a parameter $\theta$ that satisfy
+\begin{enumerate}
+    \item \begin{equation*}
+        \lim_{n\to\infty} E[T_n] = \theta \leftarrow \text{ asymptotically unbiased}
+    \end{equation*}
+    \item \begin{equation*}
+        \lim_{n\to\infty} Var(T_n) = 0
+    \end{equation*}
+\end{enumerate}
+then $T_n$ is a \textbf{consistent estimator} of $\theta$.
+\subsubsection*{Example}
+\begin{enumerate}
+    \item Consider $T = \overline{X}$. Then,
+    \begin{equation*}
+    Var(\overline{X}) = \frac{\sigma^2}{n}
+\end{equation*}
+    Thus, $var \to 0$ as $n \to \infty$.
+\end{enumerate}
+
+\subsubsection*{Proof:}
+Let $\epsilon > 0$. By the \textit{Chebychev Inequality}, we have
+\begin{equation*}
+    P(|T_n - \theta| > \epsilon) \leq \frac{E[T_n - \theta]^2}{\epsilon^2}
+\end{equation*}
+
+\begin{equation*}
+    \begin{split}
+        E[T_n-\theta]^2 &= E[T_n - E(T_n) + E(T_n) - \theta ] ^2\\
+        &= E[T_n - E(T_n)]^2 + E[E(T_n)-\theta]^2 + 2E[(T_n - E(T_n))(E(T_n)-\theta)]\\
+        &= Var(T_n) + \left(E[T_n] - \theta \right)^2 + 2[E(T_n)-\theta](E[T_n]-E[T_n])\\
+        E[T_n-\theta]^2 &= Var(T_n) + [E(T_n)-\theta]^2\\
+        &= 0 + 0 \text{ , by assumption 2 and 1, respectively}
+    \end{split}
+\end{equation*}
+
+\subsubsection{Theorem}
+If $\hat{\theta}_n$ is the \textit{MLE} of $\theta$ based on a sample of size $n$, then, under certain regularity conditions,
+\begin{equation*}
+    \hat{\theta}_n \xrightarrow{P} \theta_0
+\end{equation*}
+where $\theta_0$ is the true value of $\theta$.
+
+\subsubsection{Definition}
+A sequence of estimators $T_n$ is \textit{asymptotically efficient} for a parameter $\theta$, if
+\begin{equation*}
+    \sqrt{n}(T_n - \theta) \to N(0,V(\theta))
+\end{equation*}
+Where
+\begin{equation*}
+    V(\theta) = \frac{1}{E\left[\frac{\partial}{\partial \theta} \log f(x|\theta) \right]^2}
+\end{equation*}
+
+In other words, if the variance of the estimator satisfies the \textit{Cramer-Rao Lower Bound}, then the estimator is \textit{asymptotically efficient}.
+
+\end{document}
+
